@@ -12,6 +12,7 @@ int main()
 	struct sockaddr_in address;
 	int newSocket;
 	int addrlen = sizeof(address);
+	const char* hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 	const int port = 8080;
 	std::memset(reinterpret_cast<char*>(&address), 0, sizeof(address));
 	address.sin_family = AF_INET;
@@ -30,7 +31,7 @@ int main()
 		std::cerr << "bind failed\n";
 		exit(EXIT_FAILURE);
 	}
-	if (listen(socketFd, 3) < 0)
+	if (listen(socketFd, 10) < 0)
 	{
 		std::cerr << "In listen\n";
 		exit(EXIT_FAILURE);
@@ -52,7 +53,6 @@ int main()
 			std::cerr << "Error reading from socket\n";
 		else
 			std::cerr << "No data received\n";
-		const char* hello = "hello from the server";
 		write(newSocket, hello, strlen(hello));
 		std::cout << "------------------Hello message sent-------------------\n";
 		close(newSocket);
