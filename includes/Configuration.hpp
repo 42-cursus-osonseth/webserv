@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/06 01:22:27 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/09 00:46:19 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ class Configuration
 		static bool	handleToken(const std::string &token);
 		static bool	handleServer();
 		static void	parseBlock();
+
+		class	BraceNotClosedException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+
+		class	NoserverFoundException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
 };
 
 
