@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/13 08:17:30 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:05:00 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <string>
 #include <map>
 #include "colors.hpp"
+#include "Server.hpp"
 #include "utils.hpp"
 class Configuration
 {
