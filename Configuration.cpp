@@ -24,6 +24,8 @@ std::string readNextWord(std::ifstream& infile)
   }
 
   while (infile && !isspace(infile.peek())) {
+	if (infile.peek() == '#')
+		skipComments(infile);
     infile.get(c);
     word += c;
   }
@@ -45,15 +47,58 @@ void	skipComments(std::istream &istream)
 	}
 }
 
+std::string getFirstWord(const std::string& line)
+{
+    std::string::size_type start = 0;
+    while (start < line.length() && std::isspace(line[start]))
+        ++start;
+    std::string::size_type end = start;
+    while (end < line.length() && !std::isspace(line[end]))
+        ++end;
+    return line.substr(start, end - start);
+}
+
+void	Configuration::parseLocation(const std::string &line)
+{
+
+}
+
+void	Configuration::parseCgi(const std::string &line)
+{
+
+}
+
+void	checkSemiColon(const std::string &line)
+{
+	if (line[line.size() - 1] != ';')
+		throw()
+}
+
+void	Configuration::chooseDirectives(const std::string &line)
+{
+	if (line == "listen")
+		parsePorts();
+	else if (line == "server_name")
+		parseServerName();
+	else if (line == "error_page")
+		parseErrorPage();
+	else if (line == "client_max_body_size")
+		parseMaxClients();
+}
+
 void	Configuration::parseBlock()
 {
 	int	nestedLevel = 1, lineNbr = 1;
-	bool	isQuoted = false;
+	bool	isQuoted = false, blockFound;
 	std::string line;
 	do
 	{
 		getline(infile, line);
 		line = trim(line);
+		if (getFirstWord(line) == "location")
+			parseLocation(line);
+		else if (getFirstWord(line) == "cgi")
+			parseCgi(line);
 		for (size_t i = 0; i < line.size();i++)
 		{
 			if (line[i] == '"')
@@ -64,15 +109,20 @@ void	Configuration::parseBlock()
 				nestedLevel++;
 			else if (line[i] == '}' && --nestedLevel == 0)
 			{
+				std::cout << "block found line: "<< lineNbr++ << '\n';
+				blockFound = true;
 				break;
 			}
 			else if (line[i] == '}' && nestedLevel < 0)
 			{
 				throw BraceNotClosedException();
 			}
+			else if (i+1 == line.size() && line[i] != ';')
+				throw MissingSemicolonException();
 		}
+		chooseDirectives(line);
 		lineNbr++;
-	} while (infile.good() && !infile.eof());
+	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)
 		throw BraceNotClosedException();
 }
@@ -119,7 +169,7 @@ void	Configuration::parseFile(const std::string &filename)
 					if (!handleToken(readNextWord(infile))){
 						throw std::runtime_error("Error: parsing file: " + line + '\n');
 					}
-					// std::cout << MAGENTA << "loop properly\n" << RESET;
+					std::cout << MAGENTA << "loop properly\n" << RESET;
 			}
 			catch(const std::exception& e)
 			{
@@ -127,11 +177,13 @@ void	Configuration::parseFile(const std::string &filename)
 			}
 		}
 		if (nbServer < 1)
-			throw()
+			throw NoserverFoundException();
 	}
 	std::cout << "number of server = "<< nbServer << '\n';
 	infile.close();
+	(void)nbPort;
 }
 
 const char* Configuration::BraceNotClosedException::what() const throw() {return "Error: braces not close";}
 const char* Configuration::NoserverFoundException::what() const throw() {return "Error: 0 server block found";}
+const char* Configuration::MissingSemicolonException::what() const throw() {return "Error: Missing semicolon at the end of the line";}

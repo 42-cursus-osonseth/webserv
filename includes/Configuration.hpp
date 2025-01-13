@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/09 00:46:19 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/13 08:17:30 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Configuration
 	private:
 		static int nbServer;
 		static std::ifstream infile;
-		int nbPort;
+		static int nbPort;
 		static bool	insideServer;
 	public:
 		Configuration();
@@ -36,6 +36,9 @@ class Configuration
 		static bool	handleToken(const std::string &token);
 		static bool	handleServer();
 		static void	parseBlock();
+		static void	chooseDirectives(const std::string &line);
+		static void	parseLocation(const std::string &line);
+		static void	parseCgi(const std::string &line);
 
 		class	BraceNotClosedException : public std::exception
 		{
@@ -44,6 +47,12 @@ class Configuration
 		};
 
 		class	NoserverFoundException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+
+		class MissingSemicolonException : public std::exception
 		{
 			public:
 				virtual const char* what() const throw();
