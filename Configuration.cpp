@@ -3,6 +3,14 @@
 int Configuration::nbServer = 0; 
 std::ifstream Configuration::infile; 
 
+std::vector<std::string> split(const std::string& str) {
+  std::vector<std::string> tokens;
+  std::istringstream iss(str);
+  std::string token;
+  while (iss >> token) 
+    tokens.push_back(token);
+  return tokens;
+}
 
 std::string trim(const std::string& str) 
 {
@@ -33,6 +41,16 @@ std::string readNextWord(std::ifstream& infile)
   return word;
 }
 
+std::string skipWord(const std::string &line)
+{
+	std::istringstream iss(line);
+	std::string wordRemove;
+	iss >> wordRemove;
+	std::stringstream lineWithoutFirstWord;
+	lineWithoutFirstWord << iss.rdbuf();
+	return lineWithoutFirstWord.str();
+}
+
 void	skipComments(std::istream &istream)
 {
 	char	c;
@@ -60,18 +78,36 @@ std::string getFirstWord(const std::string& line)
 
 void	Configuration::parseLocation(const std::string &line)
 {
-
+	return;
 }
 
 void	Configuration::parseCgi(const std::string &line)
 {
-
+	return;
 }
 
-void	checkSemiColon(const std::string &line)
+void	Configuration::parsePorts(const std::string &line, Server &server)
 {
-	if (line[line.size() - 1] != ';')
-		throw()
+	std::vector<std::string> serverPorts = split(skipWord(line));
+	if (serverPorts.size() == 0)
+	{
+		
+	}
+	for (std::vector<std::string>::const_iterator it = serverPorts.begin();it != serverPorts.end();it++)
+	{
+
+	}
+}
+// void	checkSemiColon(const std::string &line)
+// {
+// 	if (line[line.size() - 1] != ';')
+// 		throw()
+// }
+
+
+void	fillHost(Server &host)
+{
+		
 }
 
 void	Configuration::chooseDirectives(const std::string &line)
@@ -88,6 +124,7 @@ void	Configuration::chooseDirectives(const std::string &line)
 
 void	Configuration::parseBlock()
 {
+	Server	host;
 	int	nestedLevel = 1, lineNbr = 1;
 	bool	isQuoted = false, blockFound;
 	std::string line;
@@ -125,6 +162,7 @@ void	Configuration::parseBlock()
 	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)
 		throw BraceNotClosedException();
+	fillHost(host);
 }
 
 bool	Configuration::handleServer()

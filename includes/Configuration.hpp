@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/13 16:05:00 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/20 03:05:45 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ class Configuration
 		static void	chooseDirectives(const std::string &line);
 		static void	parseLocation(const std::string &line);
 		static void	parseCgi(const std::string &line);
-
+		static void parsePorts(const std::string &line, Server &server);
+		static void parseServerName(const std::string &line, Server &server);
+		static void parseErrorPage(const std::string &line, Server &server);
+		static void parseMaxClients(const std::string &line, Server &server);
 		class	BraceNotClosedException : public std::exception
 		{
 			public:
