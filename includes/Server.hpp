@@ -18,10 +18,13 @@ typedef struct s_cgi
 class Server
 {
 	private:
-		std::list<std::string> server_names;
+		std::vector<std::string>server_names;
+		std::vector<std::string>listenPorts;
 	public:
 		Server();
 		~Server();
+		void	addPorts(const std::string &portStr);
+		void	addServerNames(const std::string &serverName);
 };
 
 #endif

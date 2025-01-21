@@ -12,6 +12,70 @@ std::vector<std::string> split(const std::string& str) {
   return tokens;
 }
 
+size_t findFirstOf(const std::string &str, char c)
+{
+	for (size_t i = 0;i < str.size();i++)
+		if (str[i] == 'c')
+			return i;
+	return std::string::npos;
+}
+
+bool	strIsAlpha(const std::string &str)
+{
+	for (size_t i =0; i < str.size();i++)
+		if (!isalpha(str[i]))
+			return false;
+	return true;
+}
+
+bool	isValidDns(const std::string &str)
+{
+	std::vector<std::string> args;
+	std::stringstream ss(str);
+	std::string token;
+	while (std::getline(ss, token, '.'))
+		args.push_back(token);
+	if (args.size() < 2)
+		return false;
+	else if (args.size() == 3)
+	{
+		if (args[0] != "www")
+			return (false);
+	}
+	return true;
+}
+
+bool	isIpAddress(const std::string &line)
+{	
+	size_t	sep = line.find(':');
+	if (!line[sep])
+		return false;
+	std::string ipStr = line.substr(0, sep);
+	std::string port = line.substr(sep + 1, line.size());
+	std::vector<std::string> octets;
+	std::istringstream iss(ipStr);
+	std::string tmp;
+	while (std::getline(iss, tmp, '.'))
+	{
+		if (!isStringDigit(tmp) || (std::atoi(tmp.c_str()) < 0 || std::atoi(tmp.c_str()) > 255))
+			return (false);
+		octets.push_back(tmp);
+	}
+	if (octets.size() != 4)
+		return (false);
+	if (!isStringDigit(port) || (std::atoi(port.c_str()) < 0 || std::atoi(port.c_str()) > 65535))
+		return (false);	
+	return (true);
+}
+
+bool	isStringDigit(const std::string &line)
+{
+	for (size_t i = 0; i < line.size();i++)
+		if (!std::isdigit(line[i]))
+			return (false);
+	return (true);
+}
+
 std::string trim(const std::string& str) 
 {
     size_t start = str.find_first_not_of(" \t\n\r");
@@ -90,15 +154,44 @@ void	Configuration::parsePorts(const std::string &line, Server &server)
 {
 	std::vector<std::string> serverPorts = split(skipWord(line));
 	if (serverPorts.size() == 0)
-	{
-		
-	}
+		throw EmptyPortsException();
 	for (std::vector<std::string>::const_iterator it = serverPorts.begin();it != serverPorts.end();it++)
 	{
-
+		if (!isStringDigit(*it) && *it != "default_server" && isIpAddress(*it))
+			throw InvalidPortsException();
+		server.addPorts(*it);
 	}
 }
-// void	checkSemiColon(const std::string &line)
+
+
+void	Configuration::parseServerName(const std::string &line, Server &server)
+{
+	std::vector<std::string>serversName = split(skipWord(line));
+	if (serversName.size() == 0)
+		throw EmptyServerNameException();
+	for (std::vector<std::string>::const_iterator it = serversName.begin(); it != serversName.end();it++)
+	{
+		if (findFirstOf(*it, '.') != std::string::npos)
+			if (!isValidDns(*it))
+				throw InvalidDnsException();
+		server.addServerNames(*it);
+	}
+}
+
+void	Configuration::parseErrorPage(const std::string &line, Server &server)
+{
+	std::vector<std::string>args = split(skipWord(line));
+	if (args.size() == 0)
+		throw EmptyErrorPageException();
+	for (std::vector<std::string>::const_iterator it = args.begin();it != args.end();it++)
+	{
+		if (!isStringDigit(*it))
+		{
+			if()
+		}
+	}
+}
+ // void	checkSemiColon(const std::string &line)
 // {
 // 	if (line[line.size() - 1] != ';')
 // 		throw()
@@ -110,16 +203,16 @@ void	fillHost(Server &host)
 		
 }
 
-void	Configuration::chooseDirectives(const std::string &line)
+void	Configuration::chooseDirectives(const std::string &line, Server &server)
 {
 	if (line == "listen")
-		parsePorts();
+		parsePorts(line, server);
 	else if (line == "server_name")
-		parseServerName();
+		parseServerName(line, server);
 	else if (line == "error_page")
-		parseErrorPage();
+		parseErrorPage(line, server);
 	else if (line == "client_max_body_size")
-		parseMaxClients();
+		parseMaxClients(line, server);
 }
 
 void	Configuration::parseBlock()
@@ -157,7 +250,7 @@ void	Configuration::parseBlock()
 			else if (i+1 == line.size() && line[i] != ';')
 				throw MissingSemicolonException();
 		}
-		chooseDirectives(line);
+		chooseDirectives(line, host);
 		lineNbr++;
 	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)
@@ -225,3 +318,7 @@ void	Configuration::parseFile(const std::string &filename)
 const char* Configuration::BraceNotClosedException::what() const throw() {return "Error: braces not close";}
 const char* Configuration::NoserverFoundException::what() const throw() {return "Error: 0 server block found";}
 const char* Configuration::MissingSemicolonException::what() const throw() {return "Error: Missing semicolon at the end of the line";}
+const char* Configuration::EmptyPortsException::what() const throw() {return "Error: empty ports listen";}
+const char* Configuration::InvalidPortsException::what() const throw() {return "Error: ports syntax invalid";}
+const char* Configuration::EmptyServerNameException::what() const throw() {return "Error: empty server name";}
+const char* Configuration::InvalidDnsException::what() const throw() {return "Error: Invalid dns syntax";}

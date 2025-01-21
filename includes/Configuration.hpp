@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/20 03:05:45 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:30:54 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Configuration
 		static bool	handleToken(const std::string &token);
 		static bool	handleServer();
 		static void	parseBlock();
-		static void	chooseDirectives(const std::string &line);
+		static void	chooseDirectives(const std::string &line, Server &server);
 		static void	parseLocation(const std::string &line);
 		static void	parseCgi(const std::string &line);
 		static void parsePorts(const std::string &line, Server &server);
@@ -57,6 +57,28 @@ class Configuration
 		};
 
 		class MissingSemicolonException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+		
+		class EmptyPortsException : public std::exception
+		{
+			public:
+				virtual const char* what() const	throw();
+		};
+
+		class InvalidPortsException : public std::exception
+		{
+			public:
+				virtual const char* what() const	throw();
+		};
+		class EmptyServerNameException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+		class InvalidDnsException : public std::exception
 		{
 			public:
 				virtual const char* what() const throw();
