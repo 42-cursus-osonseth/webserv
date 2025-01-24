@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/21 18:30:54 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/24 22:01:26 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Configuration
 		static bool	handleToken(const std::string &token);
 		static bool	handleServer();
 		static void	parseBlock();
-		static void	chooseDirectives(const std::string &line, Server &server);
+		static bool	chooseDirectives(const std::string &line, Server &server);
 		static void	parseLocation(const std::string &line);
 		static void	parseCgi(const std::string &line);
 		static void parsePorts(const std::string &line, Server &server);
@@ -83,8 +83,21 @@ class Configuration
 			public:
 				virtual const char* what() const throw();
 		};
+		class EmptyPageErrorException: public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+		class InvalidPageErrorException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+		class InvalidMaxBodySizeException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
 };
-
-
 
 #endif

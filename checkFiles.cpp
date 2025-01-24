@@ -16,6 +16,8 @@ bool	isValidFormat(const std::string &filename) {
 
 bool	isValidFile(const std::string &filename)
 {
+	// if (filename[0] == '/')
+	// 	filename = filename.substr(1);
 	if (!isValidFormat(filename) || access(filename.c_str(), R_OK))
 		return false;
 	return true;
