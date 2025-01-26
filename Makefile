@@ -6,7 +6,7 @@
 #    By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
-#    Updated: 2025/01/24 21:34:01 by mekherbo         ###   ########.fr        #
+#    Updated: 2025/01/26 19:28:13 by mekherbo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,10 +30,11 @@ PURPLE= \033[38;2;255;105;180m
 RESET= \033[0m
 
 OBJ = $(SRC:.cpp=.o)
+DEPENDENCIES := $(OBJ:.o=.d)
 
 CC = c++
 
-CPPFLAGS = -g3 -Wall -Wextra -Werror -std=c++98
+CPPFLAGS = -g3 -Wall -Wextra -Werror -std=c++98 -MMD -MP
 
 RM = rm -f
 
@@ -46,8 +47,10 @@ all : $(NAME)
 $(NAME) : $(LIBFT) $(OBJ)
 	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
 
+-include $(DEPENDENCIES)
+
 clean :
-	$(RM) $(NAME) $(OBJ)
+	$(RM) $(OBJ) $(DEPENDENCIES)
 	@echo "$(BLUE)object files cleaned!$(DEF_COLOR)"
 
 fclean : clean

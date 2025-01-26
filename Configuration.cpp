@@ -1,7 +1,7 @@
 #include "includes/Configuration.hpp"
 #include <functional>
 int Configuration::nbServer = 0; 
-std::ifstream Configuration::infile; 
+std::ifstream Configuration::infile;
 
 std::vector<std::string> split(const std::string& str) {
   std::vector<std::string> tokens;
@@ -153,6 +153,22 @@ std::string getFirstWord(const std::string& line)
 // 	return;
 // }
 
+void	Configuration::parseRoot(const std::string &line, Server &server)
+{
+	std::string root = trim(skipWord(line));
+	if (root.empty())
+		throw MissingRootException();
+	server.setRoot(root);
+}
+
+void	Configuration::parseIndex(const std::string &line, Server &server)
+{
+	std::string index = trim(skipWord(line));
+	if (index.empty())
+		throw MissingIndexException();
+	server.setIndex(index);
+}
+
 void	Configuration::parsePorts(const std::string &line, Server &server)
 {
 	std::vector<std::string> serverPorts = split(skipWord(line));
@@ -183,24 +199,25 @@ void	Configuration::parseServerName(const std::string &line, Server &server)
 
 void	Configuration::parseErrorPage(const std::string &line, Server &server)
 {
-	bool	e = false;
 	std::vector<std::string>args = split(skipWord(line));
 	if (args.size() == 0)
 		throw EmptyPageErrorException();
-	for (std::vector<std::string>::iterator it = args.begin();it != args.end();it++)
+	for (std::vector<std::string>::iterator it = args.begin();it != args.end() - 1;it++)
 	{
-		if (e)
-			throw InvalidPageErrorException();
 		if (!isStringDigit(*it))
 		{
-			if ((*it)[0] == '/')
-				*it = (*it).substr(1);
-			if(!isValidFile(*it))
-				throw InvalidPageErrorException();
-			e = true;
+			throw InvalidPageErrorException();
 		}
 	}
-	(void)server;
+	if (args.back()[0] == '/'){
+		args.back() = args.back().substr(1);
+		if (!isValidFile(args.back()))
+		throw InvalidPageErrorException();
+	}
+	std::vector<int>v;
+	for (std::vector<std::string>::iterator it = args.begin(); it != args.end()-1;it++)
+		v.push_back(convert<int>(*it));
+	server.addErrorPage(std::make_pair(v, args.back()));
 }
 
 void	Configuration::parseMaxClients(const std::string &line, Server &server)
@@ -253,13 +270,17 @@ bool	Configuration::chooseDirectives(const std::string &line, Server &server)
 		return (parseErrorPage(line, server), true);
 	else if (line == "client_max_body_size")
 		return (parseMaxClients(line, server), true);
+	else if (line == "root")
+		return (parseRoot(line,server), true);
+	else if (line == "index")
+		return (parseIndex(line,server), true);
 	return (false);
 }
 
 void	Configuration::parseBlock()
 {
 	Server	host;
-	int	nestedLevel = 1, lineNbr = 1;
+	int	nestedLevel = 1, lineNbr = 2;
 	bool	isQuoted = false, blockFound=false;
 	std::string line;
 	do
@@ -296,8 +317,8 @@ void	Configuration::parseBlock()
 		}
 		if (chooseDirectives(line, host) && line[line.size()-1] != ';')
 				throw MissingSemicolonException();
-		if (lineNbr == 7)
-			exit(1);
+		// if (lineNbr == 7)
+		// 	exit(1);
 		lineNbr++;
 	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)
@@ -371,3 +392,5 @@ const char* Configuration::InvalidDnsException::what() const throw() {return "Er
 const char* Configuration::EmptyPageErrorException::what() const throw() {return "Error: Missing page error";}
 const char* Configuration::InvalidPageErrorException::what() const throw() {return "Error: Invalid page";}
 const char* Configuration::InvalidMaxBodySizeException::what() const throw() {return "Error: Invalid Max body Size";}
+const char* Configuration::MissingRootException::what() const throw() {return "Error: Missing root";}
+const char* Configuration::MissingIndexException::what() const throw() {return "Error: Missing index";}

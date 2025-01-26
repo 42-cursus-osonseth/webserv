@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/01/24 22:01:26 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/01/26 18:57:06 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <map>
+#include <iomanip>
 #include "colors.hpp"
 #include "Server.hpp"
 #include "utils.hpp"
@@ -44,6 +45,8 @@ class Configuration
 		static void parseServerName(const std::string &line, Server &server);
 		static void parseErrorPage(const std::string &line, Server &server);
 		static void parseMaxClients(const std::string &line, Server &server);
+		static void	parseRoot(const std::string &line, Server &server);
+		static void	parseIndex(const std::string &line, Server &server);
 		class	BraceNotClosedException : public std::exception
 		{
 			public:
@@ -94,6 +97,16 @@ class Configuration
 				virtual const char* what() const throw();
 		};
 		class InvalidMaxBodySizeException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+		class MissingRootException : public std::exception
+		{
+			public:
+				virtual const char* what() const throw();
+		};
+		class MissingIndexException : public std::exception
 		{
 			public:
 				virtual const char* what() const throw();

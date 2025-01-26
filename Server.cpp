@@ -17,3 +17,18 @@ void	Server::setMaxBodySize(size_t value)
 {
 	clientMaxBodySize = value;
 }
+
+void	Server::setRoot(const std::string &root)
+{
+	this->root = root;
+}
+
+void	Server::setIndex(const std::string &index)
+{
+	this->index = index;
+}
+
+void	Server::addErrorPage(const std::pair<std::vector<int>, std::string> errorInfo)
+{
+	errorPages.insert(errorInfo);
+}
