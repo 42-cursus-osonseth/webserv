@@ -259,8 +259,10 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 		
 // }
 
-bool	Configuration::chooseDirectives(const std::string &line, Server &server)
+bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Server &server)
 {
+	std::string line = lineWithSemicolon;
+	line.resize(line.length()-1);
 	std::cout << "line = " << line << '\n';
 	if (line == "listen")
 		return (parsePorts(line, server), true);
@@ -275,6 +277,42 @@ bool	Configuration::chooseDirectives(const std::string &line, Server &server)
 	else if (line == "index")
 		return (parseIndex(line,server), true);
 	return (false);
+}
+
+bool	Configuration::chooseLocationDirectives(const std::string &line, Server &server)
+{
+	if (line == "root")
+		return(parseRoot(line,server), true);
+	else if (line == "allow_methods")
+		return (parseMethods(line,server),true);
+	else if (line == "redirection")
+		return (parseRedirection(line,server),true);
+	else if (line == "directory_listing")
+		return (parseDirListing(line,server),true);
+	else if (line == "directory_file")
+		return (parseDirFile(line,server),true);
+	return (false);
+}
+
+void	Configuration::parseLocation(const std::string &line, Server &server)
+{
+	std::string	uri;
+	std::vector<std::string> lineSplited = split(skipWord(line));
+	if (lineSplited.empty())
+		throw	LocationArgsException("Error: missing uri for location");
+	else if (lineSplited.size() > 2)
+		throw	LocationArgsException("Error: Too more arguments for location");
+	else if (lineSplited.size() == 2){
+		if (trim(lineSplited[1]) != "{")
+			throw BraceNotClosedException();
+	}
+	uri  = lineSplited[0];
+	
+}
+
+void	Configuration::parseCgi()
+{
+
 }
 
 void	Configuration::parseBlock()
