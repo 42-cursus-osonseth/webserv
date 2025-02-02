@@ -2,6 +2,9 @@
 #include <functional>
 int Configuration::nbServer = 0; 
 std::ifstream Configuration::infile;
+bool Configuration::locationFlag = false;
+bool Configuration::cgiFlag = false;
+int	 Configuration::lineNbr = 2;
 
 std::vector<std::string> split(const std::string& str) {
   std::vector<std::string> tokens;
@@ -209,11 +212,10 @@ void	Configuration::parseErrorPage(const std::string &line, Server &server)
 			throw InvalidPageErrorException();
 		}
 	}
-	if (args.back()[0] == '/'){
+	if (args.back()[0] == '/')
 		args.back() = args.back().substr(1);
-		if (!isValidFile(args.back()))
-		throw InvalidPageErrorException();
-	}
+	if (!isValidFile(args.back()))
+			throw InvalidPageErrorException();
 	std::vector<int>v;
 	for (std::vector<std::string>::iterator it = args.begin(); it != args.end()-1;it++)
 		v.push_back(convert<int>(*it));
@@ -247,56 +249,54 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 	server.setMaxBodySize(value);
 }
 
- // void	checkSemiColon(const std::string &line)
-// {
-// 	if (line[line.size() - 1] != ';')
-// 		throw()
-// }
-
-
-// void	fillHost(Server &host)
-// {
-		
-// }
 
 bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Server &server)
 {
 	std::string line = lineWithSemicolon;
+	if (line.empty() || line.size() < 2)
+		return (false);
+	if (line[line.size()-1] != ';')
+		return true;
 	line.resize(line.length()-1);
-	std::cout << "line = " << line << '\n';
-	if (line == "listen")
+	std::string lineSplitted = split(line)[0];
+	if (lineSplitted == "listen")
 		return (parsePorts(line, server), true);
-	else if (line == "server_name")
+	else if (lineSplitted == "server_name")
 		return (parseServerName(line, server), true);
-	else if (line == "error_page")
+	else if (lineSplitted == "error_page")
 		return (parseErrorPage(line, server), true);
-	else if (line == "client_max_body_size")
+	else if (lineSplitted == "client_max_body_size")
 		return (parseMaxClients(line, server), true);
-	else if (line == "root")
+	else if (lineSplitted == "root")
 		return (parseRoot(line,server), true);
-	else if (line == "index")
+	else if (lineSplitted == "index")
 		return (parseIndex(line,server), true);
 	return (false);
 }
 
-bool	Configuration::chooseLocationDirectives(const std::string &line, Server &server)
+bool	Configuration::chooseLocationDirectives(const std::string &line, t_location &location)
 {
-	if (line == "root")
-		return(parseRoot(line,server), true);
-	else if (line == "allow_methods")
-		return (parseMethods(line,server),true);
-	else if (line == "redirection")
-		return (parseRedirection(line,server),true);
-	else if (line == "directory_listing")
-		return (parseDirListing(line,server),true);
-	else if (line == "directory_file")
-		return (parseDirFile(line,server),true);
+	(void)line;
+	std::cout << "uri location: "<<location.uri << '\n';
+	// if (line == "{")
+		// return (false);
+	// if (line == "root")
+		// return(parseRoot(line,location), true);
 	return (false);
+// 	else if (line == "allow_methods")
+// 		return (parseMethods(line,server),true);
+// 	else if (line == "redirection")
+// 		return (parseRedirection(line,server),true);
+// 	else if (line == "directory_listing")
+// 		return (parseDirListing(line,server),true);
+// 	else if (line == "directory_file")
+// 		return (parseDirFile(line,server),true);
+// 	return (false);
 }
 
 void	Configuration::parseLocation(const std::string &line, Server &server)
 {
-	std::string	uri;
+	t_location	location;
 	std::vector<std::string> lineSplited = split(skipWord(line));
 	if (lineSplited.empty())
 		throw	LocationArgsException("Error: missing uri for location");
@@ -306,19 +306,20 @@ void	Configuration::parseLocation(const std::string &line, Server &server)
 		if (trim(lineSplited[1]) != "{")
 			throw BraceNotClosedException();
 	}
-	uri  = lineSplited[0];
-	
+	location.uri  = lineSplited[0];
+	locationFlag = true;
+	server.setLocation(location);
 }
 
-void	Configuration::parseCgi()
-{
+// void	Configuration::parseCgi()
+// {
 
-}
+// }
 
 void	Configuration::parseBlock()
 {
 	Server	host;
-	int	nestedLevel = 1, lineNbr = 2;
+	int	nestedLevel = 1;
 	bool	isQuoted = false, blockFound=false;
 	std::string line;
 	do
@@ -327,13 +328,10 @@ void	Configuration::parseBlock()
 		line = trim(line);
 		if (getFirstWord(line) == "location" || getFirstWord(line) == "cgi")
 		{
+			parseLocation(line, host);
 			lineNbr++;
 			continue;
 		}
-			// parseLocation(line);
-		// else if (getFirstWord(line) == "cgi")
-			// continue;
-			// parseCgi(line);
 		for (size_t i = 0; i < line.size();i++)
 		{		
 			if (line[i] == '"')
@@ -352,11 +350,23 @@ void	Configuration::parseBlock()
 			{
 				throw BraceNotClosedException();
 			}
+			else if (line[i] == '}')
+			{
+				if (locationFlag)
+					locationFlag = false;
+			}
 		}
-		if (chooseDirectives(line, host) && line[line.size()-1] != ';')
+		if (locationFlag){
+			if (chooseLocationDirectives(line, host.getLocation()) && line[line.size()-1] != ';')
 				throw MissingSemicolonException();
-		// if (lineNbr == 7)
-		// 	exit(1);
+		}
+		else if (chooseDirectives(line, host) && line[line.size()-1] != ';')
+				throw MissingSemicolonException();
+		if (lineNbr == 5){
+				std::cerr << line << " [" << lineNbr << "]\n";
+				std::cerr << locationFlag;
+				exit(1);
+		}
 		lineNbr++;
 	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)
@@ -410,6 +420,7 @@ void	Configuration::parseFile(const std::string &filename)
 			catch(const std::exception& e)
 			{
 				std::cerr << SUPA_RED <<  e.what() << "\n\n" << RESET;
+				return ;
 			}
 		}
 		if (nbServer < 1)

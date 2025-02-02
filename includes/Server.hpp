@@ -30,6 +30,7 @@ class Server
 		size_t	clientMaxBodySize;
 		std::string	index;
 		std::string	root;
+		t_location &location;
 		std::map<std::vector<int>, std::string> errorPages; 
 	public:
 		Server();
@@ -40,6 +41,9 @@ class Server
 		void	setRoot(const std::string &root);
 		void	setIndex(const std::string &index);
 		void	addErrorPage(const std::pair<std::vector<int>, std::string>);
+		void	setLocation(const t_location &location);
+		void	addLocation(const std::list<std::string> &locationList, t_location &location);
+		t_location	&getLocation();
 };
 
 #endif

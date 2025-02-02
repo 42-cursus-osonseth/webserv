@@ -32,3 +32,13 @@ void	Server::addErrorPage(const std::pair<std::vector<int>, std::string> errorIn
 {
 	errorPages.insert(errorInfo);
 }
+
+void	Server::setLocation(const t_location &location)
+{
+	this->location = location;
+}
+
+t_location	&Server::getLocation()
+{
+	return this->location;
+}

@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/02/01 20:18:50 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/02/02 21:54:44 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ class Configuration
 		static std::ifstream infile;
 		static int nbPort;
 		static bool	insideServer;
+		static bool	locationFlag;
+		static bool cgiFlag;
+		static int	lineNbr;
 	public:
 		Configuration();
 		~Configuration();
@@ -39,8 +42,8 @@ class Configuration
 		static bool	handleServer();
 		static void	parseBlock();
 		static bool	chooseDirectives(const std::string &line, Server &server);
-		static bool	chooseLocationDirectives(const std::string &line, Server &server);
-		static void	parseLocation(const std::string &line);
+		static bool	chooseLocationDirectives(const std::string &line, t_location &location);
+		static void	parseLocation(const std::string &line, Server &server);
 		static void	parseCgi(const std::string &line);
 		static void parsePorts(const std::string &line, Server &server);
 		static void parseServerName(const std::string &line, Server &server);
@@ -48,7 +51,6 @@ class Configuration
 		static void parseMaxClients(const std::string &line, Server &server);
 		static void	parseRoot(const std::string &line, Server &server);
 		static void	parseIndex(const std::string &line, Server &server);
-		static void	parseLocation(const std::string &line, Server &server);
 		class	BraceNotClosedException : public std::exception
 		{
 			public:
