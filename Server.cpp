@@ -35,10 +35,13 @@ void	Server::addErrorPage(const std::pair<std::vector<int>, std::string> errorIn
 
 void	Server::setLocation(const t_location &location)
 {
-	this->location = location;
+	std::list<t_location>::iterator it;
+	it = std::find(locations.begin(), locations.end(), location);
+	if (it == locations.end())
+		locations.insert(it, location);
 }
 
-t_location	&Server::getLocation()
-{
-	return this->location;
-}
+// t_location	&Server::getLocation()
+// {
+// 	return this->location;
+// }

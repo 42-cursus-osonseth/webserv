@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <algorithm>
 #define DEFAULT_PORT 8080
 #define DEFAULT_ADDR "localhost"
 typedef struct s_location
@@ -15,6 +16,10 @@ typedef struct s_location
 	int			redir;
 	bool		dirListing;
 	std::list<std::string> methods;
+	bool operator==(const s_location &location) const
+	{
+		return (location.uri == uri);
+	}
 }	t_location;
 
 typedef struct s_cgi
@@ -30,7 +35,7 @@ class Server
 		size_t	clientMaxBodySize;
 		std::string	index;
 		std::string	root;
-		t_location &location;
+		std::list<t_location> locations;
 		std::map<std::vector<int>, std::string> errorPages; 
 	public:
 		Server();
