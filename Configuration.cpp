@@ -5,7 +5,7 @@ std::ifstream Configuration::infile;
 bool Configuration::locationFlag = false;
 bool Configuration::cgiFlag = false;
 int	 Configuration::lineNbr = 2;
-
+t_location Configuration::currentLocation = { "", "", "",0, std::make_pair(0,""), std::list<std::string>()};
 std::vector<std::string> split(const std::string& str) {
   std::vector<std::string> tokens;
   std::istringstream iss(str);
@@ -146,16 +146,6 @@ std::string getFirstWord(const std::string& line)
     return line.substr(start, end - start);
 }
 
-// void	Configuration::parseLocation(const std::string &line)
-// {
-// 	return;
-// }
-
-// void	Configuration::parseCgi(const std::string &line)
-// {
-// 	return;
-// }
-
 void	Configuration::parseRoot(const std::string &line, Server &server)
 {
 	std::string root = trim(skipWord(line));
@@ -250,6 +240,47 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 }
 
 
+void	Configuration::parseRootLocation(const std::string &line)
+{
+	currentLocation.root = trim(skipWord(line));
+	currentLocation.uri = currentLocation.root + currentLocation.uri;
+}
+
+void	Configuration::parseMethods(const std::string &line)
+{
+	std::vector<std::string> lineSplited = split(skipWord(line));
+	while (!lineSplited.empty())
+	{
+		if (lineSplited[0] != "GET" || lineSplited[0] != "POST")
+			throw std::runtime_error("Error: Invalid method");
+		currentLocation.methods.push_back(lineSplited[0]);
+		lineSplited.erase(lineSplited.begin());
+	}
+}
+
+void	Configuration::parseRedirection(const std::vector<std::string> &lineSplitted)
+{
+	if (lineSplitted.size() != 3)
+		throw std::runtime_error("Error: Invalid redirection");
+	currentLocation.redir.first = convert<int>(lineSplitted[1]);
+	currentLocation.redir.second = lineSplitted[2];
+}
+
+void	Configuration::parseDirListing(const std::string &line)
+{
+	if (line == "on")
+		currentLocation.dirListing = true;
+	else if (line == "off")
+		currentLocation.dirListing = false;
+	else
+		throw std::runtime_error("Error: Invalid directive for autoindex");
+}
+
+void	Configuration::parseIndexLocation(const std::string &line)
+{
+	currentLocation.index = trim(skipWord(line));
+}
+
 bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Server &server)
 {
 	std::string line = lineWithSemicolon;
@@ -274,31 +305,31 @@ bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Serve
 	return (false);
 }
 
-bool	Configuration::chooseLocationDirectives(const std::string &line, t_location &location)
+bool	Configuration::chooseLocationDirectives(const std::string &lineWithSemicolon)
 {
-	(void)line;
-	std::cout << "uri location: "<<location.uri << '\n';
-	// if (line == "{")
-		// return (false);
-	// if (line == "root")
-		// return(parseRoot(line,location), true);
+	if (lineWithSemicolon == "{")
+		return (true);
+	std::string line = lineWithSemicolon.substr(0, lineWithSemicolon.size()-1);
+	std::cout << "uri location: "<< currentLocation.uri << "\tline = " << line << '\n';
+	std::vector<std::string> lineSplited = split(skipWord(line));
+	if (line == "root")
+		return(parseRootLocation(line), true);
+	else if (line == "allow_methods")
+		return (parseMethods(line),true);
+	else if (line == "return")
+		return (parseRedirection(lineSplited), true);
+	else if (line == "autoindex")
+		return (parseDirListing(line),true);
+	else if (line == "index")
+		return (parseIndexLocation(line),true);
 	return (false);
-// 	else if (line == "allow_methods")
-// 		return (parseMethods(line,server),true);
-// 	else if (line == "redirection")
-// 		return (parseRedirection(line,server),true);
-// 	else if (line == "directory_listing")
-// 		return (parseDirListing(line,server),true);
-// 	else if (line == "directory_file")
-// 		return (parseDirFile(line,server),true);
-// 	return (false);
 }
 
 void	Configuration::parseLocation(const std::string &line, Server &server)
 {
 	t_location	location;
 	std::vector<std::string> lineSplited = split(skipWord(line));
-	if (lineSplited.empty())
+	if (lineSplited.empty())                        
 		throw	LocationArgsException("Error: missing uri for location");
 	else if (lineSplited.size() > 2)
 		throw	LocationArgsException("Error: Too more arguments for location");
@@ -308,13 +339,9 @@ void	Configuration::parseLocation(const std::string &line, Server &server)
 	}
 	location.uri  = lineSplited[0];
 	locationFlag = true;
-	server.setLocation(location);
+	server.addLocation(location);
+	currentLocation = location;
 }
-
-// void	Configuration::parseCgi()
-// {
-
-// }
 
 void	Configuration::parseBlock()
 {
@@ -357,12 +384,14 @@ void	Configuration::parseBlock()
 			}
 		}
 		if (locationFlag){
-			if (chooseLocationDirectives(line, host.getLocation()) && line[line.size()-1] != ';')
+			if (chooseLocationDirectives(line) && line[line.size()-1] != ';')
 				throw MissingSemicolonException();
+			else if (!chooseLocationDirectives(line))
+				throw std::runtime_error("Error: Invalid directive for location");
 		}
 		else if (chooseDirectives(line, host) && line[line.size()-1] != ';')
 				throw MissingSemicolonException();
-		if (lineNbr == 5){
+		if (lineNbr == 6){
 				std::cerr << line << " [" << lineNbr << "]\n";
 				std::cerr << locationFlag;
 				exit(1);
@@ -404,14 +433,12 @@ void	Configuration::parseFile(const std::string &filename)
 	infile.open(filename.c_str());
 	if (!isValidFile(filename) || !infile.is_open())
 		throw std::runtime_error("Error: Failed to open file: " + filename + '\n');
-	int i = 1;
 	if (infile.good())
 	{
 		while (infile.good())
 		{
 			try
 			{
-					std::cout << "ligne " << i << '\n';
 					if (!handleToken(readNextWord(infile))){
 						throw std::runtime_error("Error: parsing file: " + line + '\n');
 					}
@@ -419,7 +446,7 @@ void	Configuration::parseFile(const std::string &filename)
 			}
 			catch(const std::exception& e)
 			{
-				std::cerr << SUPA_RED <<  e.what() << "\n\n" << RESET;
+				std::cerr << SUPA_RED <<  e.what() << "\t line ["<< lineNbr <<"]\n\n" << RESET;
 				return ;
 			}
 		}

@@ -13,8 +13,9 @@ typedef struct s_location
 {
 	std::string root;
 	std::string uri;
-	int			redir;
+	std::string index;
 	bool		dirListing;
+	std::pair<int, std::string>			redir;
 	std::list<std::string> methods;
 	bool operator==(const s_location &location) const
 	{
@@ -47,8 +48,7 @@ class Server
 		void	setIndex(const std::string &index);
 		void	addErrorPage(const std::pair<std::vector<int>, std::string>);
 		void	setLocation(const t_location &location);
-		void	addLocation(const std::list<std::string> &locationList, t_location &location);
-		t_location	&getLocation();
+		void	addLocation(const t_location &location);
 };
 
 #endif

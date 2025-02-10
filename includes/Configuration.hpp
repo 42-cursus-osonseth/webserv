@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/02/02 21:54:44 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/02/10 20:58:29 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class Configuration
 		static bool	locationFlag;
 		static bool cgiFlag;
 		static int	lineNbr;
+		static t_location currentLocation;
 	public:
 		Configuration();
 		~Configuration();
@@ -42,7 +43,7 @@ class Configuration
 		static bool	handleServer();
 		static void	parseBlock();
 		static bool	chooseDirectives(const std::string &line, Server &server);
-		static bool	chooseLocationDirectives(const std::string &line, t_location &location);
+		static bool	chooseLocationDirectives(const std::string &line);
 		static void	parseLocation(const std::string &line, Server &server);
 		static void	parseCgi(const std::string &line);
 		static void parsePorts(const std::string &line, Server &server);
@@ -51,6 +52,14 @@ class Configuration
 		static void parseMaxClients(const std::string &line, Server &server);
 		static void	parseRoot(const std::string &line, Server &server);
 		static void	parseIndex(const std::string &line, Server &server);
+
+		// fill Location
+		static void	parseRootLocation(const std::string &line);
+		static void	parseMethods(const std::string &line);
+		static void	parseRedirection(const std::vector<std::string> &lineSplitted);
+		static void	parseDirListing(const std::string &line);
+		static void	parseDirFile(const std::string &line);
+		static void parseIndexLocation(const std::string &line);
 		class	BraceNotClosedException : public std::exception
 		{
 			public:

@@ -33,7 +33,7 @@ void	Server::addErrorPage(const std::pair<std::vector<int>, std::string> errorIn
 	errorPages.insert(errorInfo);
 }
 
-void	Server::setLocation(const t_location &location)
+void	Server::addLocation(const t_location &location)
 {
 	std::list<t_location>::iterator it;
 	it = std::find(locations.begin(), locations.end(), location);
