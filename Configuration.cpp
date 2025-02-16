@@ -307,20 +307,19 @@ bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Serve
 
 bool	Configuration::chooseLocationDirectives(const std::string &lineWithSemicolon)
 {
-	if (lineWithSemicolon == "{")
-		return (true);
 	std::string line = lineWithSemicolon.substr(0, lineWithSemicolon.size()-1);
 	std::cout << "uri location: "<< currentLocation.uri << "\tline = " << line << '\n';
 	std::vector<std::string> lineSplited = split(skipWord(line));
-	if (line == "root")
+	std::string firstWord = getFirstWord(line);
+	if (firstWord == "root")
 		return(parseRootLocation(line), true);
-	else if (line == "allow_methods")
+	else if (firstWord == "allow_methods")
 		return (parseMethods(line),true);
-	else if (line == "return")
+	else if (firstWord == "return")
 		return (parseRedirection(lineSplited), true);
-	else if (line == "autoindex")
+	else if (firstWord == "autoindex")
 		return (parseDirListing(line),true);
-	else if (line == "index")
+	else if (firstWord == "index")
 		return (parseIndexLocation(line),true);
 	return (false);
 }
@@ -353,7 +352,19 @@ void	Configuration::parseBlock()
 	{
 		getline(infile, line);
 		line = trim(line);
-		if (getFirstWord(line) == "location" || getFirstWord(line) == "cgi")
+		if (lineNbr == 98){
+				std::cerr << line << " [" << lineNbr << "]\n";
+				std::cerr <<  currentLocation.uri << '\n';
+				std::cerr <<  currentLocation.root << '\n';
+				std::cerr <<  currentLocation.index << '\n';
+				exit(1);
+		}
+		if (line.empty() || line[0] == '#')
+		{
+			lineNbr++;
+			continue;
+		}
+		if (getFirstWord(line) == "location")
 		{
 			parseLocation(line, host);
 			lineNbr++;
@@ -367,35 +378,32 @@ void	Configuration::parseBlock()
 				break;
 			else if (line[i] == '{')
 				nestedLevel++;
-			else if (line[i] == '}' && --nestedLevel == 0)
-			{
-				std::cout << "block found line: "<< lineNbr++ << '\n';
-				blockFound = true;
-				break;
-			}
-			else if (line[i] == '}' && nestedLevel < 0)
-			{
-				throw BraceNotClosedException();
-			}
 			else if (line[i] == '}')
 			{
+				--nestedLevel;
+				if (nestedLevel == 0)
+				{
+					std::cout << "block found line: "<< lineNbr++ << '\n';
+					blockFound = true;
+					Server::addServer(host);
+					return ;
+				}
+				else if (nestedLevel < 0)
+					throw BraceNotClosedException();
 				if (locationFlag)
 					locationFlag = false;
 			}
 		}
 		if (locationFlag){
-			if (chooseLocationDirectives(line) && line[line.size()-1] != ';')
-				throw MissingSemicolonException();
-			else if (!chooseLocationDirectives(line))
+			if (chooseLocationDirectives(line)){
+				if (line[line.size()-1] != ';')
+					throw MissingSemicolonException();
+				}
+			else if (trim(line) != "{")
 				throw std::runtime_error("Error: Invalid directive for location");
 		}
 		else if (chooseDirectives(line, host) && line[line.size()-1] != ';')
 				throw MissingSemicolonException();
-		if (lineNbr == 6){
-				std::cerr << line << " [" << lineNbr << "]\n";
-				std::cerr << locationFlag;
-				exit(1);
-		}
 		lineNbr++;
 	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)

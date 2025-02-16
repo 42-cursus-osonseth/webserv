@@ -1,8 +1,8 @@
 #include "includes/Server.hpp"
 
+std::list<Server> Server::serversList;
 Server::Server(){}
 Server::~Server(){}
-
 void	Server::addPorts(const std::string &portStr)
 {
 	listenPorts.push_back(portStr);
@@ -41,7 +41,22 @@ void	Server::addLocation(const t_location &location)
 		locations.insert(it, location);
 }
 
-// t_location	&Server::getLocation()
+void	Server::addServer(Server &server)
+{
+	Server::serversList.push_back(server);
+}
+
+// std::list<Server>	Server::findHost(Server	& server)
 // {
-// 	return this->location;
+// 	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)
+// 	{
+// 		if (*it == server)
+// 			return (it);
+// 	}
+// 	return (it);
+// }
+
+// void	Server::removeServer(Server &server)
+// {
+// 	serversList.remove(server);
 // }

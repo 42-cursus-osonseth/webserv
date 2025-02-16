@@ -6,24 +6,19 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/02/10 20:58:29 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/02/16 16:41:20 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGURATION_HPP
 #define CONFIGURATION_HPP
 
-#include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <sstream>
 #include <cstdlib>
-#include <string>
-#include <map>
-#include <iomanip>
-#include "colors.hpp"
+#include "library.hpp"
 #include "Server.hpp"
-#include "utils.hpp"
 class Configuration
 {
 	private:

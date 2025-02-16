@@ -1,12 +1,7 @@
 #ifndef	SERVER_HPP
 #define SERVER_HPP
 
-
-#include <map>
-#include <list>
-#include <vector>
-#include <string>
-#include <algorithm>
+#include "library.hpp"
 #define DEFAULT_PORT 8080
 #define DEFAULT_ADDR "localhost"
 typedef struct s_location
@@ -37,10 +32,14 @@ class Server
 		std::string	index;
 		std::string	root;
 		std::list<t_location> locations;
+		static std::list<Server> serversList;
 		std::map<std::vector<int>, std::string> errorPages; 
 	public:
 		Server();
 		~Server();
+		static void	addServer(Server &server);
+		static void	printServer();
+		void	removeServer(Server &server);
 		void	addPorts(const std::string &portStr);
 		void	addServerNames(const std::string &serverName);
 		void	setMaxBodySize(size_t value);
@@ -49,6 +48,7 @@ class Server
 		void	addErrorPage(const std::pair<std::vector<int>, std::string>);
 		void	setLocation(const t_location &location);
 		void	addLocation(const t_location &location);
+		std::list<Server>	findHost(Server	& server);
 };
 
 #endif
