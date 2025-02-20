@@ -352,7 +352,7 @@ void	Configuration::parseBlock()
 	{
 		getline(infile, line);
 		line = trim(line);
-		if (lineNbr == 98){
+		if (lineNbr == 25){
 				std::cerr << line << " [" << lineNbr << "]\n";
 				std::cerr <<  currentLocation.uri << '\n';
 				std::cerr <<  currentLocation.root << '\n';
@@ -474,7 +474,7 @@ const char* Configuration::InvalidPortsException::what() const throw() {return "
 const char* Configuration::EmptyServerNameException::what() const throw() {return "Error: empty server name";}
 const char* Configuration::InvalidDnsException::what() const throw() {return "Error: Invalid dns syntax";}
 const char* Configuration::EmptyPageErrorException::what() const throw() {return "Error: Missing page error";}
-const char* Configuration::InvalidPageErrorException::what() const throw() {return "Error: Invalid page";}
+const char* Configuration::InvalidPageErrorException::what() const throw() {return "Error: Invalid error_path";}
 const char* Configuration::InvalidMaxBodySizeException::what() const throw() {return "Error: Invalid Max body Size";}
 const char* Configuration::MissingRootException::what() const throw() {return "Error: Missing root";}
 const char* Configuration::MissingIndexException::what() const throw() {return "Error: Missing index";}
