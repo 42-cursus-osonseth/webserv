@@ -13,6 +13,7 @@ template < typename T > T convert(const std::string& str) {
 
 bool						isValidFormat(const std::string &filename);
 bool						isValidFile(const std::string &filename);
+bool                                            isEmptyLine(const std::string &line);
 std::string					trim(const std::string& str);
 bool						isStringDigit(const std::string &line);
 bool						strIsAlpha(const std::string &str);

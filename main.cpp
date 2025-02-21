@@ -15,6 +15,6 @@ int main(int ac, char **av)
 	{
 		std::cerr << SUPA_RED << e.what() << '\n';
 	}
-	
+	Server::printServer();	
 	return (0);
 }

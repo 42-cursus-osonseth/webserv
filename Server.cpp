@@ -46,6 +46,19 @@ void	Server::addServer(Server &server)
 	Server::serversList.push_back(server);
 }
 
+
+void	Server::addHostAddress(const std::string &hostAddress)
+{
+	this->hostAddress = hostAddress;
+}
+
+void  	Server::printServer()
+{
+	Server host = Server::serversList.front(); 
+	std::cout << CYAN << std::setw(42) << std::setfill('*') << '\n';
+	std::cout << '*' << std::setw(15) << std::setfill(' ') << "Server\t" << host.host << std::setw(21-host.index.size()) << std::setfill(' ') << '*' << '\n';
+	std::cout << std::setw(42) << std::setfill('*') << '\n' << RESET;
+}
 // std::list<Server>	Server::findHost(Server	& server)
 // {
 // 	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)

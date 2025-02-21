@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/02/16 16:41:20 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/02/20 05:52:26 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Configuration
 		static void parseMaxClients(const std::string &line, Server &server);
 		static void	parseRoot(const std::string &line, Server &server);
 		static void	parseIndex(const std::string &line, Server &server);
+		static void	parseHostAddress(const std::string &line, Server &server);
 
 		// fill Location
 		static void	parseRootLocation(const std::string &line);

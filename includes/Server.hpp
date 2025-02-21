@@ -31,6 +31,7 @@ class Server
 		size_t	clientMaxBodySize;
 		std::string	index;
 		std::string	root;
+		std::string hostAddress;
 		std::list<t_location> locations;
 		static std::list<Server> serversList;
 		std::map<std::vector<int>, std::string> errorPages; 
@@ -42,6 +43,7 @@ class Server
 		void	removeServer(Server &server);
 		void	addPorts(const std::string &portStr);
 		void	addServerNames(const std::string &serverName);
+		void	addHostAddress(const std::string &hostAddress);
 		void	setMaxBodySize(size_t value);
 		void	setRoot(const std::string &root);
 		void	setIndex(const std::string &index);

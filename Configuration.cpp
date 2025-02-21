@@ -4,7 +4,7 @@ int Configuration::nbServer = 0;
 std::ifstream Configuration::infile;
 bool Configuration::locationFlag = false;
 bool Configuration::cgiFlag = false;
-int	 Configuration::lineNbr = 2;
+int	 Configuration::lineNbr = 0;
 t_location Configuration::currentLocation = { "", "", "",0, std::make_pair(0,""), std::list<std::string>()};
 std::vector<std::string> split(const std::string& str) {
   std::vector<std::string> tokens;
@@ -13,6 +13,17 @@ std::vector<std::string> split(const std::string& str) {
   while (iss >> token) 
     tokens.push_back(token);
   return tokens;
+}
+
+
+bool	isEmptyLine(const std::string &line)
+{
+	if (line.empty())
+		return true;
+	for (size_t i = 0; i < line.size();i++)
+		if (!isspace(line[i]))
+			return false;
+	return true;
 }
 
 size_t findFirstOf(const std::string &str, char c)
@@ -239,7 +250,12 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 	server.setMaxBodySize(value);
 }
 
-
+void	Configuration::parseHostAddress(const std::string &line, Server &server)
+{
+	std::string host = trim(skipWord(line));
+	if (host.empty())
+		throw std::runtime_error("Error: Missing host address");
+}
 void	Configuration::parseRootLocation(const std::string &line)
 {
 	currentLocation.root = trim(skipWord(line));
@@ -294,6 +310,8 @@ bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Serve
 		return (parsePorts(line, server), true);
 	else if (lineSplitted == "server_name")
 		return (parseServerName(line, server), true);
+	else if (lineSplitted == "host")
+		return (parseHostAddress(line, server), true);
 	else if (lineSplitted == "error_page")
 		return (parseErrorPage(line, server), true);
 	else if (lineSplitted == "client_max_body_size")
@@ -344,6 +362,7 @@ void	Configuration::parseLocation(const std::string &line, Server &server)
 
 void	Configuration::parseBlock()
 {
+	lineNbr+=2;
 	Server	host;
 	int	nestedLevel = 1;
 	bool	isQuoted = false, blockFound=false;
@@ -352,13 +371,6 @@ void	Configuration::parseBlock()
 	{
 		getline(infile, line);
 		line = trim(line);
-		if (lineNbr == 25){
-				std::cerr << line << " [" << lineNbr << "]\n";
-				std::cerr <<  currentLocation.uri << '\n';
-				std::cerr <<  currentLocation.root << '\n';
-				std::cerr <<  currentLocation.index << '\n';
-				exit(1);
-		}
 		if (line.empty() || line[0] == '#')
 		{
 			lineNbr++;
@@ -386,6 +398,7 @@ void	Configuration::parseBlock()
 					std::cout << "block found line: "<< lineNbr++ << '\n';
 					blockFound = true;
 					Server::addServer(host);
+					lineNbr++;
 					return ;
 				}
 				else if (nestedLevel < 0)
@@ -393,6 +406,13 @@ void	Configuration::parseBlock()
 				if (locationFlag)
 					locationFlag = false;
 			}
+		}
+		if (lineNbr == 29){
+				std::cerr << line << " [" << lineNbr << "]\n";
+				std::cerr <<  currentLocation.uri << '\n';
+				std::cerr <<  currentLocation.root << '\n';
+				std::cerr <<  currentLocation.index << '\n';
+				exit(1);
 		}
 		if (locationFlag){
 			if (chooseLocationDirectives(line)){
@@ -424,7 +444,7 @@ bool	Configuration::handleToken(const std::string &token)
 	std::string line;
 	if (token == "server")
 		return handleServer();
-	else if (token == "#")
+	else if (token == "#" || isEmptyLine(token))
 		getline(infile, line);
 	else
 		return false;
