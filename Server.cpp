@@ -1,8 +1,22 @@
 #include "includes/Server.hpp"
-
 std::list<Server> Server::serversList;
-Server::Server(){}
+Server::Server():clientMaxBodySize(0){}
 Server::~Server(){}
+
+template <typename T>
+void printTabInline(const std::vector<T>& vec) {
+    if (vec.empty()) {
+        return;
+    }
+
+    for (size_t i = 0; i < vec.size(); ++i) {
+        std::cout << toString(vec[i]);
+        if (i < vec.size() - 1) { 
+            std::cout << " "; 
+        }
+    }
+}
+
 void	Server::addPorts(const std::string &portStr)
 {
 	listenPorts.push_back(portStr);
@@ -46,19 +60,86 @@ void	Server::addServer(Server &server)
 	Server::serversList.push_back(server);
 }
 
+void  	Server::printServer()
+{
+	int i = 1;
+	Server host = Server::serversList.front();
+	for (std::list<Server>::const_iterator it = Server::serversList.begin(); it != Server::serversList.end();it++)
+	{
+		host = *it;
+		std::cout << CYAN << std::setw(42) << std::setfill('*') << '\n';
+		if (host.server_names.size() > 0)
+		{
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Server Name:\t" << host.server_names[0] << std::setw(17-host.server_names[0].size()) << std::setfill(' ') << '*' << '\n';
+		}
+		if (host.listenPorts.size() > 0)
+		{
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Listen:\t";
+			for (std::vector<std::string>::const_iterator it = host.listenPorts.begin(); it != host.listenPorts.end();it++)
+			{
+				std::cout << *it << '\t';
+				if (it + 1 == host.listenPorts.end())
+					std::cout << std::setw(17-it->size()) << std::setfill(' ') << '*' << '\n';
+			}
+		}
+		std::cout << '*' << std::setw(16) << std::setfill(' ') << "Host:\t" << host.hostAddress << std::setw(17-host.hostAddress.size()) << std::setfill(' ') << '*' << '\n';
+		if (host.errorPages.size() > 0)
+		{
+			for (std::map<std::vector<int>, std::string>::const_iterator it = host.errorPages.begin(); it != host.errorPages.end();it++)
+			{
+				std::cout << '*' << std::setw(16) << std::setfill(' ') << "Error Pages:\t"; 
+				printTabInline(it->first); 
+				std::cout << '-' << it->second << std::setw(17-it->second.size()) << std::setfill(' ') << '*' << '\n';
+			}
+		}
+		if (!host.index.empty())
+		{
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Index:\t" << host.index << std::setw(17-host.index.size()) << std::setfill(' ') << '*' << '\n';
+		}
+		if (!host.root.empty())
+		{
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Root:\t" << host.root << std::setw(17-host.root.size()) << std::setfill(' ') << '*' << '\n';
+		}
+		if (host.clientMaxBodySize > 0)
+		{
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Max Body Size:\t" << host.clientMaxBodySize << std::setw(17-5) << std::setfill(' ') << '*' << '\n';
+		}
+		std::cout << std::setw(42) << std::setfill('*') << '\n' << RESET;
+		for (std::list<t_location>::const_iterator it = host.locations.begin(); it != host.locations.end();it++)
+		{
+			std::cout << "\n\n";
+			std::cout << YELLOW "Location numero: [" <<  i++ << "]\n" << RESET;
+			host.printLocation(*it);
+		}
+		std::cout << "\n\n\n\n";
+	}
+}
 
 void	Server::addHostAddress(const std::string &hostAddress)
 {
 	this->hostAddress = hostAddress;
 }
 
-void  	Server::printServer()
+
+void	Server::printLocation(const t_location &location)
 {
-	Server host = Server::serversList.front(); 
-	std::cout << CYAN << std::setw(42) << std::setfill('*') << '\n';
-	std::cout << '*' << std::setw(15) << std::setfill(' ') << "Server\t" << host.host << std::setw(21-host.index.size()) << std::setfill(' ') << '*' << '\n';
+	std::cout << MAGENTA << std::setw(42) << std::setfill('*') << '\n';
+	std::cout << "Location:\t" << location.uri << '\n';
+	std::cout << "Root:\t" << location.root << '\n';
+	std::cout << "Index:\t" << location.index << '\n';
+	std::cout << "Dir Listing:\t" << (location.dirListing ? "on" : "off") << '\n';
+	if (location.redir.first != 0)
+		std::cout << "Redirection:\t" << location.redir.first << " " << location.redir.second << '\n';
+	std::cout << "Methods:\t";
+	for (std::list<std::string>::const_iterator it = location.methods.begin(); it != location.methods.end();it++)
+	{
+		std::cout << *it << '\t';
+	}
+	std::cout << '\n';
 	std::cout << std::setw(42) << std::setfill('*') << '\n' << RESET;
 }
+
+
 // std::list<Server>	Server::findHost(Server	& server)
 // {
 // 	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)

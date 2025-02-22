@@ -252,10 +252,12 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 
 void	Configuration::parseHostAddress(const std::string &line, Server &server)
 {
-	std::string host = trim(skipWord(line));
-	if (host.empty())
+	std::string hostAddress = trim(skipWord(line));
+	if (hostAddress.empty())
 		throw std::runtime_error("Error: Missing host address");
+	server.addHostAddress(hostAddress);
 }
+
 void	Configuration::parseRootLocation(const std::string &line)
 {
 	currentLocation.root = trim(skipWord(line));
@@ -265,9 +267,10 @@ void	Configuration::parseRootLocation(const std::string &line)
 void	Configuration::parseMethods(const std::string &line)
 {
 	std::vector<std::string> lineSplited = split(skipWord(line));
+	std::cerr << YELLOW << "method = " << lineSplited[0] << '\n';
 	while (!lineSplited.empty())
 	{
-		if (lineSplited[0] != "GET" || lineSplited[0] != "POST")
+		if (lineSplited[0] != "GET" && lineSplited[0] != "POST" && lineSplited[0] != "DELETE")
 			throw std::runtime_error("Error: Invalid method");
 		currentLocation.methods.push_back(lineSplited[0]);
 		lineSplited.erase(lineSplited.begin());
@@ -276,17 +279,18 @@ void	Configuration::parseMethods(const std::string &line)
 
 void	Configuration::parseRedirection(const std::vector<std::string> &lineSplitted)
 {
-	if (lineSplitted.size() != 3)
+	if (lineSplitted.size() != 2)
 		throw std::runtime_error("Error: Invalid redirection");
-	currentLocation.redir.first = convert<int>(lineSplitted[1]);
-	currentLocation.redir.second = lineSplitted[2];
+	currentLocation.redir.first = convert<int>(lineSplitted[0]);
+	currentLocation.redir.second = lineSplitted[1];
 }
 
 void	Configuration::parseDirListing(const std::string &line)
-{
-	if (line == "on")
+{	
+	std::string status = trim(skipWord(line));
+	if (status == "on")
 		currentLocation.dirListing = true;
-	else if (line == "off")
+	else if (status == "off")
 		currentLocation.dirListing = false;
 	else
 		throw std::runtime_error("Error: Invalid directive for autoindex");
@@ -342,7 +346,7 @@ bool	Configuration::chooseLocationDirectives(const std::string &lineWithSemicolo
 	return (false);
 }
 
-void	Configuration::parseLocation(const std::string &line, Server &server)
+void	Configuration::parseLocation(const std::string &line)
 {
 	t_location	location;
 	std::vector<std::string> lineSplited = split(skipWord(line));
@@ -356,7 +360,6 @@ void	Configuration::parseLocation(const std::string &line, Server &server)
 	}
 	location.uri  = lineSplited[0];
 	locationFlag = true;
-	server.addLocation(location);
 	currentLocation = location;
 }
 
@@ -378,7 +381,7 @@ void	Configuration::parseBlock()
 		}
 		if (getFirstWord(line) == "location")
 		{
-			parseLocation(line, host);
+			parseLocation(line);
 			lineNbr++;
 			continue;
 		}
@@ -404,16 +407,19 @@ void	Configuration::parseBlock()
 				else if (nestedLevel < 0)
 					throw BraceNotClosedException();
 				if (locationFlag)
+				{
+					host.addLocation(currentLocation);
 					locationFlag = false;
+				}
 			}
 		}
-		if (lineNbr == 29){
-				std::cerr << line << " [" << lineNbr << "]\n";
-				std::cerr <<  currentLocation.uri << '\n';
-				std::cerr <<  currentLocation.root << '\n';
-				std::cerr <<  currentLocation.index << '\n';
-				exit(1);
-		}
+		// if (lineNbr == 11){
+		// 		std::cerr << line << " [" << lineNbr << "]\n";
+		// 		std::cerr <<  currentLocation.uri << '\n';
+		// 		std::cerr <<  currentLocation.root << '\n';
+		// 		std::cerr <<  currentLocation.index << '\n';
+		// 		exit(1);
+		// }
 		if (locationFlag){
 			if (chooseLocationDirectives(line)){
 				if (line[line.size()-1] != ';')

@@ -15,6 +15,11 @@ int main(int ac, char **av)
 	{
 		std::cerr << SUPA_RED << e.what() << '\n';
 	}
-	Server::printServer();	
+	Server::printServer();
+	std::string path = "/www";	
+	if (isValidDir(formatPath(path)))
+		std::cerr << "dir is valid\n";
+	else
+		std::cerr << "dir is not valid\n";
 	return (0);
 }

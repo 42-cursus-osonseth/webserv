@@ -11,8 +11,14 @@ template < typename T > T convert(const std::string& str) {
         return value;
 }
 
-bool						isValidFormat(const std::string &filename);
-bool						isValidFile(const std::string &filename);
+template <typename T>
+std::string toString(const T& t) {
+    std::stringstream ss;
+    ss << t;
+    return ss.str();
+}
+
+
 bool                                            isEmptyLine(const std::string &line);
 std::string					trim(const std::string& str);
 bool						isStringDigit(const std::string &line);

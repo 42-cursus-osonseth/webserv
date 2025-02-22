@@ -40,6 +40,7 @@ class Server
 		~Server();
 		static void	addServer(Server &server);
 		static void	printServer();
+		void	printLocation(const t_location &location);
 		void	removeServer(Server &server);
 		void	addPorts(const std::string &portStr);
 		void	addServerNames(const std::string &serverName);

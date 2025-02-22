@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/02/20 05:52:26 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/02/22 04:53:36 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include "library.hpp"
 #include "Server.hpp"
+#include "checkFiles.hpp"
 class Configuration
 {
 	private:
@@ -39,7 +40,7 @@ class Configuration
 		static void	parseBlock();
 		static bool	chooseDirectives(const std::string &line, Server &server);
 		static bool	chooseLocationDirectives(const std::string &line);
-		static void	parseLocation(const std::string &line, Server &server);
+		static void	parseLocation(const std::string &line);
 		static void	parseCgi(const std::string &line);
 		static void parsePorts(const std::string &line, Server &server);
 		static void parseServerName(const std::string &line, Server &server);

@@ -16,9 +16,26 @@ bool	isValidFormat(const std::string &filename) {
 
 bool	isValidFile(const std::string &filename)
 {
-	// if (filename[0] == '/')
-		// filename = filename.substr(1);
 	if (!isValidFormat(filename) || access(filename.c_str(), R_OK))
 		return false;
 	return true;
+}
+
+
+bool	isValidDir(const std::string &path)
+{
+	struct stat file_stat;
+	if (stat(path.c_str(), &file_stat))
+		return false;
+	return (file_stat.st_mode & S_IFDIR) != 0;
+}
+
+std::string formatPath(const std::string &path)
+{
+	std::string newPath = path;
+	if (newPath[0] == '/')
+		newPath = newPath.substr(1);
+	// if (newPath[newPath.size() - 1] != '/')
+		// newPath += '/';
+	return newPath;
 }
