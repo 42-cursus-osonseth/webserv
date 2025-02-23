@@ -24,7 +24,8 @@ void	Server::addPorts(const std::string &portStr)
 
 void	Server::addServerNames(const std::string &serverName)
 {
-	server_names.push_back(serverName);
+	if (std::find(server_names.begin(), server_names.end(), serverName) == server_names.end())
+		server_names.push_back(serverName);
 }
 
 void	Server::setMaxBodySize(size_t value)
@@ -62,8 +63,10 @@ void	Server::addServer(Server &server)
 
 void  	Server::printServer()
 {
+	Server host;
 	int i = 1;
-	Server host = Server::serversList.front();
+	// if (!Server::serversList.empty())
+		// Server host = Server::serversList.front();
 	for (std::list<Server>::const_iterator it = Server::serversList.begin(); it != Server::serversList.end();it++)
 	{
 		host = *it;

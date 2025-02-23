@@ -35,7 +35,5 @@ std::string formatPath(const std::string &path)
 	std::string newPath = path;
 	if (newPath[0] == '/')
 		newPath = newPath.substr(1);
-	// if (newPath[newPath.size() - 1] != '/')
-		// newPath += '/';
 	return newPath;
 }

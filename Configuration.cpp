@@ -194,9 +194,9 @@ void	Configuration::parseServerName(const std::string &line, Server &server)
 		throw EmptyServerNameException();
 	for (std::vector<std::string>::const_iterator it = serversName.begin(); it != serversName.end();it++)
 	{
-		if (findFirstOf(*it, '.') != std::string::npos)
-			if (!isValidDns(*it))
-				throw InvalidDnsException();
+		// if (findFirstOf(*it, '.') != std::string::npos)
+		// 	if (!isValidDns(*it))
+		// 		throw InvalidDnsException();
 		server.addServerNames(*it);
 	}
 }
@@ -267,7 +267,6 @@ void	Configuration::parseRootLocation(const std::string &line)
 void	Configuration::parseMethods(const std::string &line)
 {
 	std::vector<std::string> lineSplited = split(skipWord(line));
-	std::cerr << YELLOW << "method = " << lineSplited[0] << '\n';
 	while (!lineSplited.empty())
 	{
 		if (lineSplited[0] != "GET" && lineSplited[0] != "POST" && lineSplited[0] != "DELETE")
@@ -312,7 +311,7 @@ bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Serve
 	std::string lineSplitted = split(line)[0];
 	if (lineSplitted == "listen")
 		return (parsePorts(line, server), true);
-	else if (lineSplitted == "server_name")
+	else if (lineSplitted == "server_names")
 		return (parseServerName(line, server), true);
 	else if (lineSplitted == "host")
 		return (parseHostAddress(line, server), true);
