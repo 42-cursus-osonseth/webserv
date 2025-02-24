@@ -13,7 +13,7 @@ int main(int ac, char **av)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << SUPA_RED << e.what() << '\n';
+		std::cerr << SUPA_RED << e.what() << '\n' << RESET;
 	}
 	Server::printServer();
 	std::string path = "/www";	

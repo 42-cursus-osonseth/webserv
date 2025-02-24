@@ -92,13 +92,13 @@ bool	isValidDns(const std::string &str)
 	return true;
 }
 
-bool	isIpAddress(const std::string &line)
+bool	isIpAddress(const std::string &line, std::string &host)
 {	
 	size_t	sep = line.find(':');
 	if (!line[sep])
-		return false;
+		return true;
 	std::string ipStr = line.substr(0, sep);
-	std::string port = line.substr(sep + 1, line.size());
+	std::string port = line.substr(sep + 1, line.size()-ipStr.size()-2);
 	std::vector<std::string> octets;
 	std::istringstream iss(ipStr);
 	std::string tmp;
@@ -109,9 +109,12 @@ bool	isIpAddress(const std::string &line)
 		octets.push_back(tmp);
 	}
 	if (octets.size() != 4)
-		return (false);
+	return (false);
 	if (!isStringDigit(port) || (std::atoi(port.c_str()) < 0 || std::atoi(port.c_str()) > 65535))
-		return (false);	
+	return (false);
+	if (!host.empty())
+		throw std::runtime_error("Error: multiple host address");
+	host = ipStr;
 	return (true);
 }
 
@@ -175,15 +178,21 @@ void	Configuration::parseIndex(const std::string &line, Server &server)
 
 void	Configuration::parsePorts(const std::string &line, Server &server)
 {
+	std::string host;
 	std::vector<std::string> serverPorts = split(skipWord(line));
 	if (serverPorts.size() == 0)
 		throw EmptyPortsException();
 	for (std::vector<std::string>::const_iterator it = serverPorts.begin();it != serverPorts.end();it++)
 	{
-		if (!isStringDigit(*it) && *it != "default_server" && isIpAddress(*it))
+		if (!isIpAddress(*it, host))
 			throw InvalidPortsException();
 		server.addPorts(*it);
 	}
+	if (!host.empty() && !server.getHostAddress().empty())
+		throw std::runtime_error("Error: Multiple host address");
+		else if (!host.empty())
+		server.addHostAddress(host);
+	std::cout << "host = " << host << "\t"<< server.getHostAddress() << '\n';
 }
 
 
@@ -227,13 +236,13 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 {
 	size_t value = 1;
 	std::string arg = trim(skipWord(line));
-	for (size_t i = 0; arg.size()-2;i++)
+	for (size_t i = 0; i < arg.size()-1;i++)
 	{
 		if (!isdigit(arg[i]))
-			throw InvalidMaxBodySizeException();
+		throw InvalidMaxBodySizeException();
 		value *= 10 * (arg[i] - '0');
 	}
-	switch (toupper(arg[arg.size()-2]))
+	switch (toupper(arg[arg.size()-1]))
 	{
 		case 'K':
 			value /= 1024;
@@ -255,6 +264,8 @@ void	Configuration::parseHostAddress(const std::string &line, Server &server)
 	std::string hostAddress = trim(skipWord(line));
 	if (hostAddress.empty())
 		throw std::runtime_error("Error: Missing host address");
+	else if (!server.getHostAddress().empty())
+		throw std::runtime_error("Error: Multiple host address");
 	server.addHostAddress(hostAddress);
 }
 

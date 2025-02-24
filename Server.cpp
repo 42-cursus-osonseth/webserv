@@ -65,15 +65,14 @@ void  	Server::printServer()
 {
 	Server host;
 	int i = 1;
-	// if (!Server::serversList.empty())
-		// Server host = Server::serversList.front();
 	for (std::list<Server>::const_iterator it = Server::serversList.begin(); it != Server::serversList.end();it++)
 	{
+		i = 1;
 		host = *it;
-		std::cout << CYAN << std::setw(42) << std::setfill('*') << '\n';
+		std::cout << CYAN << std::setw(63) << std::setfill('*') << '\n';
 		if (host.server_names.size() > 0)
 		{
-			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Server Name:\t" << host.server_names[0] << std::setw(17-host.server_names[0].size()) << std::setfill(' ') << '*' << '\n';
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Server Name:\t" << host.server_names[0] << std::setw(17-host.server_names[0].size()) << std::setfill(' ') << '\n';
 		}
 		if (host.listenPorts.size() > 0)
 		{
@@ -82,32 +81,32 @@ void  	Server::printServer()
 			{
 				std::cout << *it << '\t';
 				if (it + 1 == host.listenPorts.end())
-					std::cout << std::setw(17-it->size()) << std::setfill(' ') << '*' << '\n';
+					std::cout  << '\n';
 			}
 		}
-		std::cout << '*' << std::setw(16) << std::setfill(' ') << "Host:\t" << host.hostAddress << std::setw(17-host.hostAddress.size()) << std::setfill(' ') << '*' << '\n';
+		std::cout << '*' << std::setw(16) << std::setfill(' ') << "Host:\t" << host.hostAddress << '\n';
 		if (host.errorPages.size() > 0)
 		{
 			for (std::map<std::vector<int>, std::string>::const_iterator it = host.errorPages.begin(); it != host.errorPages.end();it++)
 			{
 				std::cout << '*' << std::setw(16) << std::setfill(' ') << "Error Pages:\t"; 
 				printTabInline(it->first); 
-				std::cout << '-' << it->second << std::setw(17-it->second.size()) << std::setfill(' ') << '*' << '\n';
+				std::cout << '-' << it->second << '\n';
 			}
 		}
 		if (!host.index.empty())
 		{
-			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Index:\t" << host.index << std::setw(17-host.index.size()) << std::setfill(' ') << '*' << '\n';
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Index:\t" << host.index  << '\n';
 		}
 		if (!host.root.empty())
 		{
-			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Root:\t" << host.root << std::setw(17-host.root.size()) << std::setfill(' ') << '*' << '\n';
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Root:\t" << host.root << '\n';
 		}
 		if (host.clientMaxBodySize > 0)
 		{
-			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Max Body Size:\t" << host.clientMaxBodySize << std::setw(17-5) << std::setfill(' ') << '*' << '\n';
+			std::cout << '*' << std::setw(16) << std::setfill(' ') << "Max Body Size:\t" << host.clientMaxBodySize  << '\n';
 		}
-		std::cout << std::setw(42) << std::setfill('*') << '\n' << RESET;
+		std::cout << std::setw(63) << std::setfill('*') << '\n' << RESET;
 		for (std::list<t_location>::const_iterator it = host.locations.begin(); it != host.locations.end();it++)
 		{
 			std::cout << "\n\n";
@@ -142,6 +141,19 @@ void	Server::printLocation(const t_location &location)
 	std::cout << std::setw(42) << std::setfill('*') << '\n' << RESET;
 }
 
+
+std::string Server::getHostAddress()
+{
+	return hostAddress;
+}
+
+void	Server::checkRequiredElements()
+{
+	if (listenPorts.empty())
+		throw std::runtime_error("Error: Missing listen directive");
+	else if (hostAddress.empty())
+		throw std::runtime_error("Error: Missing host address");
+}
 
 // std::list<Server>	Server::findHost(Server	& server)
 // {
