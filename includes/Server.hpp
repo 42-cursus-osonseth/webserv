@@ -54,6 +54,16 @@ class Server
 		void	setLocation(const t_location &location);
 		void	addLocation(const t_location &location);
 		std::list<Server>	findHost(Server	& server);
+		//getters
+		const std::list<t_location>& getLocations() const;
+		const std::map<std::vector<int>, std::string>& getErrorPages() const;
+		const std::vector<std::string>& getServerNames() const;
+		const std::vector<std::string>& getListenPorts() const;
+		size_t getClientMaxBodySize() const;
+		const std::string& getIndex() const;
+		const std::string& getRoot() const;
+		const std::string& getHostAddress() const;
+		static const std::list<Server>& getServersList() const;
 };
 
 #endif

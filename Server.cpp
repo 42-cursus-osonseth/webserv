@@ -169,3 +169,49 @@ void	Server::checkRequiredElements()
 // {
 // 	serversList.remove(server);
 // }
+
+const std::string& Server::getHostAddress() const 
+{
+	return hostAddress;
+}
+
+const std::list<t_location>& Server::getLocations() const 
+{
+	return locations;
+}
+
+const std::map<std::vector<int>, std::string>& Server::getErrorPages() const 
+{
+        return errorPages;
+}
+
+const std::vector<std::string>& Server::getServerNames() const 
+{
+	return server_names;
+}
+
+const std::vector<std::string>& Server::getListenPorts() const
+{
+	return listenPorts;
+}
+
+size_t Server::getClientMaxBodySize() const 
+{
+        return clientMaxBodySize;
+}
+
+const std::string& Server::getIndex() const
+{
+	return index;
+}
+
+const std::string& Server::getRoot() const
+{
+	return root;
+}
+
+
+const std::list<Server>& Server::getServersList()
+{
+	return serversList;
+}
