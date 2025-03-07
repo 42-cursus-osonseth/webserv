@@ -1,6 +1,8 @@
-#include "../include/server.hpp"
+#include <server.hpp>
 #include <cerrno>
 #include <cstring>
+#include <errcodes.hpp>
+#include <mime.hpp>
 
 Server::Server()
 {
@@ -42,6 +44,7 @@ Server::Server()
 
 Server::Server(const Configuration &conf)
 {
+	(void)conf;
 	_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_fd < 0) {
 		perror("socket creation failed");
@@ -117,7 +120,7 @@ void	Server::start()
 					Request	req(_events[i].data.fd);
 					req.send(_events[i].data.fd);
 				} catch (std::exception &e) {
-					epoll_ctl(_epfd, EPOLL_CTL_DEL, _events[i].data.fd, nullptr); // Remove from epoll
+					epoll_ctl(_epfd, EPOLL_CTL_DEL, _events[i].data.fd, NULL); // Remove from epoll
 					close(_events[i].data.fd);
 				}
 			}

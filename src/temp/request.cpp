@@ -5,16 +5,6 @@
 #include <unistd.h>
 #include <sstream>
 
-static std::string	generate_time(void)
-{
-	time_t timestamp = time(NULL);
-	struct tm datetime = *localtime(&timestamp);
-	std::string	resp = asctime(&datetime);
-
-	resp.replace(resp.find("\n"), 1, "\r\n");
-	return (resp);
-}
-
 static std::pair<t_errcodes, std::string>	get_body(std::string filename)
 {
 	std::stringstream					ress;
@@ -84,13 +74,13 @@ Request::Request(int fd)
 	char						buffer[4096] = {0}; // Body size ici?
 	int							n = read(fd, buffer, sizeof(buffer));
 
-	std::cerr << "Receiving: " << buffer << std::endl << "------------" << std::endl;
+	// std::cerr << "Receiving: " << buffer << std::endl << "------------" << std::endl;
 	std::vector<std::string>	lines = Utils::split(buffer, "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	std::cout << "Generating request for: " << _path << std::endl;
-	if (_path == "/favicon.ico")
-		_path = "/favicon.png";
+	// if (_path == "/favicon.ico")
+	// 	_path = "/favicon.png";
 	int	i = 1;
 	if (lines[0].empty())
 		return ;
@@ -116,7 +106,7 @@ void	Request::generateResponse()
 	_responseHeader += "Content-Length: " + std::to_string(_responseBody.second.length())  + "\r\n";
 	_responseHeader += "Content-Type: " + file_type + "\r\n";
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
-}
+}	
 
 void	Request::send(int fd)
 {

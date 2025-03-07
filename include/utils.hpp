@@ -13,6 +13,8 @@ public:
 	static std::string				getExtension(const std::string &s);
 	static bool						pathIsDir(const std::string &path);
 	static bool						fileExists(const std::string &path);
+	static std::string				time_string(void);
+	static std::string				itos(int);
 };
 
 #endif

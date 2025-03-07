@@ -1,5 +1,7 @@
-#include "../include/utils.hpp"
+#include <utils.hpp>
 #include <sys/stat.h>
+#include <stdio.h>
+#include <sstream>
 
 std::vector<std::string>	Utils::split(const std::string &s, const std::string &sep)
 {
@@ -42,4 +44,22 @@ bool	Utils::fileExists(const std::string &path)
 	struct stat	s;
 
 	return (stat(path.c_str(), &s) == 0);
+}
+
+std::string	Utils::time_string(void)
+{
+	time_t timestamp = time(NULL);
+	struct tm datetime = *localtime(&timestamp);
+	std::string	resp = asctime(&datetime);
+
+	resp.replace(resp.find("\n"), 1, "\r\n");
+	return (resp);
+}
+
+std::string	Utils::itos(int n)
+{
+	std::stringstream	ss;
+
+	ss << n;
+	return ss.str();
 }
