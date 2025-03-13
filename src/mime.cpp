@@ -1,4 +1,5 @@
 #include <mime.hpp>
+#include <iostream>
 
 std::string	get_mime(const std::string &key)
 {
@@ -24,5 +25,10 @@ std::string	get_mime(const std::string &key)
 		strings["py"] = "text/x-python";
 		strings["php"] = "application/x-httpd-php";
 	}
-	return (strings.at(key));
+	try {
+		return (strings.at(key));
+	} catch (const std::exception &e) {
+		std::cout << "No mime type found for " << key << std::endl;
+		return "text/html";
+	}
 }
