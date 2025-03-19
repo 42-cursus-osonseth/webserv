@@ -3,9 +3,72 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<style>
+	body 
+	{
+		font-family: sans-serif;
+		background-color: #f8f8f8;
+		margin: 0;
+		padding: 20px;
+	}
+
+	.directory-listing 
+	{
+		padding: 20px;
+		max-width: 600px;
+		margin: 20px auto;
+	}
+
+	h1
+	{
+		font-size: 1.5em;
+		margin-bottom: 20px;
+		color: #333;
+	}
+
+	ul
+	{
+		list-style: none;
+		padding: 0;
+	}
+
+	li {
+		margin-bottom: 10px;
+	}
+
+	a 
+	{
+		text-decoration: none;
+		color: #007bff;
+		display: inline-block;
+		padding: 5px 10px;
+		border-radius: 3px;
+	}
+
+	a:hover
+	{
+		background-color: #f0f0f0;
+	}
+
+	i
+	{
+		margin-right: 5px;
+		color: #666;
+	}
+	</style>
 	<title>Index</title>
 </head>
 <body>
-	<h2 style="text-align: center;">this page is an index.</h2>
+	<div class="directory-listing"></div>
+		<h1>Index of /www/</h1>
+		<ul>
+			<li><a href="main_.html"><i class="far fa-file"></i>Main page</a></li>
+			<li><a href="errors/"><i class="fas fa-folder"></i>errors</a></li>
+			<li><a href="images/"><i class="fas fa-folder"></i>images</a></li>
+			<li><a href="Upload/"><i class="fas fa-folder"></i>Upload</a></li>
+		</ul>
+	</div> 
+	<!-- <h2 style="text-align: center;">this page is an index.</h2>
 </body>
 </html>
