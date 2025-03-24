@@ -4,6 +4,8 @@
 #include "library.hpp"
 #define DEFAULT_PORT 8080
 #define DEFAULT_ADDR "localhost"
+#include <sys/socket.h>
+#include <arpa/inet.h>
 typedef struct s_location
 {
 	std::string root;
@@ -34,16 +36,26 @@ class Server
 		std::string hostAddress;
 		std::list<t_location> locations;
 		static std::list<Server> serversList;
-		std::map<std::vector<int>, std::string> errorPages; 
+		std::map<std::vector<int>, std::string> errorPages;
+		int		sockfd;
+		struct sockaddr_in   addr;
 	public:
+		//constructors
 		Server();
 		~Server();
-		static void	addServer(Server &server);
+		Server(const Server &src);
+		Server &operator=(const Server &rhs);
+
+		void	initSocket();
+		void	closeSocket();
 		static void	printServer();
-		std::string	getHostAddress();
 		void	checkRequiredElements();
 		void	printLocation(const t_location &location);
 		void	removeServer(Server &server);
+		std::list<Server>	findHost(Server	& server);
+
+		//setters
+		static void	addServer(Server &server);
 		void	addPorts(const std::string &portStr);
 		void	addServerNames(const std::string &serverName);
 		void	addHostAddress(const std::string &hostAddress);
@@ -53,8 +65,10 @@ class Server
 		void	addErrorPage(const std::pair<std::vector<int>, std::string>);
 		void	setLocation(const t_location &location);
 		void	addLocation(const t_location &location);
-		std::list<Server>	findHost(Server	& server);
+
+
 		//getters
+		std::string	getHostAddress();
 		const std::list<t_location>& getLocations() const;
 		const std::map<std::vector<int>, std::string>& getErrorPages() const;
 		const std::vector<std::string>& getServerNames() const;

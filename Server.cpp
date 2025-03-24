@@ -1,8 +1,82 @@
 #include "includes/Server.hpp"
 std::list<Server> Server::serversList;
-Server::Server():clientMaxBodySize(0){}
+Server::Server(): clientMaxBodySize(0), sockfd(-1) 
+{
+	server_names.clear();
+	listenPorts.clear();
+	locations.clear();
+	errorPages.clear();
+	index.clear();
+	root.clear();
+	hostAddress.clear();
+	addr = {};
+}
+
+Server::Server(const Server &src)
+{
+	*this = src;
+}
+
+
+Server &Server::operator=(const Server &rhs)
+{
+	if (this == &rhs)
+		return *this;
+	server_names = rhs.server_names;
+	listenPorts = rhs.listenPorts;
+	clientMaxBodySize = rhs.clientMaxBodySize;
+	index = rhs.index;
+	root = rhs.root;
+	hostAddress = rhs.hostAddress;
+	locations = rhs.locations;
+	errorPages = rhs.errorPages;
+	sockfd = rhs.sockfd;
+	addr = rhs.addr;
+	return *this;
+}
+
 Server::~Server(){}
 
+
+void	Server::initSocket()
+{
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockfd == -1)
+		throw std::runtime_error("Error: socket creation failed");
+	int opt = 1;
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+	{
+		close(sockfd);
+		throw std::runtime_error("Error: setsockopt failed");
+	}
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(std::stoi(listenPorts[0]));
+	addr.sin_addr.s_addr = inet_addr(hostAddress.c_str());
+	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
+	{
+		close(sockfd);
+		throw std::runtime_error("Error: fcntl failed");
+	}
+	if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+	{
+		close(sockfd);
+		throw std::runtime_error("Error: bind failed");
+	}
+	if (listen(sockfd, 10) == -1)
+	{
+		close(sockfd);
+		throw std::runtime_error("Error: listen failed");
+	}
+}
+
+void	Server::closeSocket()
+{
+	if (sockfd != -1)
+	{
+		close(sockfd);
+		sockfd = -1;
+	}
+}
 template <typename T>
 void printTabInline(const std::vector<T>& vec) {
     if (vec.empty()) {
