@@ -77,7 +77,7 @@ class Server
 		const std::string& getIndex() const;
 		const std::string& getRoot() const;
 		const std::string& getHostAddress() const;
-		static const std::list<Server>& getServersList();
+		static std::list<Server>& getServersList();
 };
 
 #endif

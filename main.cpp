@@ -21,5 +21,16 @@ int main(int ac, char **av)
 		std::cerr << "dir is valid\n";
 	else
 		std::cerr << "dir is not valid\n";
+	std::list<Server>&slist = Server::getServersList();
+	for (std::list<Server>::iterator it = slist.begin(); it != slist.end(); it++)
+	{
+		it->initSocket();
+		std::cout << "Server: " << it->getHostAddress() << '\n';
+	}
+	for (std::list<Server>::iterator it = slist.begin(); it != slist.end(); it++)
+	{
+		it->closeSocket();
+		std::cout << "Server: " << it->getHostAddress() << '\n';
+	}
 	return (0);
 }

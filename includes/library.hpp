@@ -4,6 +4,7 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <cstring>
 #include <fstream>
 #include <sstream>
 #include <fcntl.h>

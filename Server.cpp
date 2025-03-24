@@ -9,7 +9,7 @@ Server::Server(): clientMaxBodySize(0), sockfd(-1)
 	index.clear();
 	root.clear();
 	hostAddress.clear();
-	addr = {};
+	std::memset(&addr, 0, sizeof(addr));
 }
 
 Server::Server(const Server &src)
@@ -50,7 +50,10 @@ void	Server::initSocket()
 		throw std::runtime_error("Error: setsockopt failed");
 	}
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(std::stoi(listenPorts[0]));
+	// if (!listenPorts.empty())
+		// addr.sin_port = htons(std::atoi(listenPorts[0].c_str()));
+	// else
+		addr.sin_port = htons(8080);
 	addr.sin_addr.s_addr = inet_addr(hostAddress.c_str());
 	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
 	{
@@ -216,33 +219,34 @@ void	Server::printLocation(const t_location &location)
 }
 
 
-std::string Server::getHostAddress()
-{
-	return hostAddress;
-}
 
 void	Server::checkRequiredElements()
 {
 	if (listenPorts.empty())
-		throw std::runtime_error("Error: Missing listen directive");
+	throw std::runtime_error("Error: Missing listen directive");
 	else if (hostAddress.empty())
-		throw std::runtime_error("Error: Missing host address");
+	throw std::runtime_error("Error: Missing host address");
 }
 
 // std::list<Server>	Server::findHost(Server	& server)
 // {
-// 	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)
-// 	{
-// 		if (*it == server)
-// 			return (it);
-// 	}
-// 	return (it);
+	// 	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)
+	// 	{
+		// 		if (*it == server)
+		// 			return (it);
+		// 	}
+		// 	return (it);
 // }
 
 // void	Server::removeServer(Server &server)
 // {
-// 	serversList.remove(server);
-// }
+	// 	serversList.remove(server);
+	// }
+
+std::string Server::getHostAddress()
+{
+	return hostAddress;
+}
 
 const std::string& Server::getHostAddress() const 
 {
@@ -285,7 +289,7 @@ const std::string& Server::getRoot() const
 }
 
 
-const std::list<Server>& Server::getServersList()
+std::list<Server>& Server::getServersList()
 {
 	return serversList;
 }
