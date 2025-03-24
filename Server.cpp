@@ -40,35 +40,36 @@ Server::~Server(){}
 
 void	Server::initSocket()
 {
+	this->number_server = toString(findNumberHost());
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1)
-		throw std::runtime_error("Error: socket creation failed");
+		throw std::runtime_error("Error: socket creation failed on server " + number_server);
 	int opt = 1;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
 	{
 		close(sockfd);
-		throw std::runtime_error("Error: setsockopt failed");
+		throw std::runtime_error("Error: setsockopt failed on server " + number_server);
 	}
 	addr.sin_family = AF_INET;
-	// if (!listenPorts.empty())
-		// addr.sin_port = htons(std::atoi(listenPorts[0].c_str()));
-	// else
+	if (!listenPorts.empty())
+		addr.sin_port = htons(std::atoi(listenPorts[0].c_str()));
+	else
 		addr.sin_port = htons(8080);
 	addr.sin_addr.s_addr = inet_addr(hostAddress.c_str());
 	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
 	{
 		close(sockfd);
-		throw std::runtime_error("Error: fcntl failed");
+		throw std::runtime_error("Error: set socket to non-blocking mode failed on server " + number_server);
 	}
 	if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
 	{
 		close(sockfd);
-		throw std::runtime_error("Error: bind failed");
+		throw std::runtime_error("Error: bind failed on server " + number_server);
 	}
 	if (listen(sockfd, 10) == -1)
 	{
 		close(sockfd);
-		throw std::runtime_error("Error: listen failed");
+		throw std::runtime_error("Error: listen failed on server " + number_server);
 	}
 }
 
@@ -230,14 +231,25 @@ void	Server::checkRequiredElements()
 
 // std::list<Server>	Server::findHost(Server	& server)
 // {
-	// 	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)
-	// 	{
-		// 		if (*it == server)
-		// 			return (it);
-		// 	}
-		// 	return (it);
+// 		for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)
+// 		{
+// 				if (*it == server)
+// 					return (it);
+// 			}
+// 			return (it);
 // }
 
+int Server::findNumberHost()
+{
+	int i = 0;
+	for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end();it++)
+	{
+		if (it->hostAddress == this->hostAddress && it->listenPorts == this->listenPorts)
+			return i;
+		i++;
+	}
+	return -1;
+}
 // void	Server::removeServer(Server &server)
 // {
 	// 	serversList.remove(server);

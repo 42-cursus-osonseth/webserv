@@ -38,6 +38,7 @@ class Server
 		static std::list<Server> serversList;
 		std::map<std::vector<int>, std::string> errorPages;
 		int		sockfd;
+		std::string		number_server;
 		struct sockaddr_in   addr;
 	public:
 		//constructors
@@ -53,6 +54,7 @@ class Server
 		void	printLocation(const t_location &location);
 		void	removeServer(Server &server);
 		std::list<Server>	findHost(Server	& server);
+		int findNumberHost();
 
 		//setters
 		static void	addServer(Server &server);

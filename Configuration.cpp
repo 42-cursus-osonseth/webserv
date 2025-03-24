@@ -410,6 +410,7 @@ void	Configuration::parseBlock()
 				{
 					std::cout << "block found line: "<< lineNbr++ << '\n';
 					blockFound = true;
+					host.checkRequiredElements();
 					Server::addServer(host);
 					lineNbr++;
 					return ;
