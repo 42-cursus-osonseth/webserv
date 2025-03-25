@@ -49,6 +49,7 @@ class Server
 		Server(const Server &src);
 		Server &operator=(const Server &rhs);
 
+		void	acceptConnection(int epfd, struct epoll_event events);
 		void	initSocket();
 		void	closeSocket();
 		static void	printServer();
@@ -72,6 +73,7 @@ class Server
 
 
 		//getters
+		const int &getSockfd() const;
 		std::string	getHostAddress();
 		const std::list<t_location>& getLocations() const;
 		const std::map<std::vector<int>, std::string>& getErrorPages() const;

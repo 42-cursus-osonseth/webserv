@@ -1,4 +1,5 @@
 #include "includes/Server.hpp"
+#include <sys/epoll.h>
 std::list<Server> Server::serversList;
 Server::Server(): clientMaxBodySize(0), sockfd(-1) 
 {
@@ -37,6 +38,18 @@ Server &Server::operator=(const Server &rhs)
 
 Server::~Server(){}
 
+void	Server::acceptConnection(int epfd, struct epoll_event ev)
+{
+	struct sockaddr_in addr;
+	socklen_t addrlen = sizeof(addr);
+	int client_fd = accept(sockfd, (struct sockaddr *)&addr, &addrlen);
+	if (client_fd == -1)
+		throw std::runtime_error("accept failed");
+	ev.events = EPOLLIN | EPOLLET;
+	ev.data.fd = client_fd;
+	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
+		throw std::runtime_error("epoll_ctl failed");
+}
 
 void	Server::initSocket()
 {
@@ -81,6 +94,7 @@ void	Server::closeSocket()
 		sockfd = -1;
 	}
 }
+
 template <typename T>
 void printTabInline(const std::vector<T>& vec) {
     if (vec.empty()) {
@@ -256,6 +270,11 @@ int Server::findNumberHost()
 // {
 	// 	serversList.remove(server);
 	// }
+
+const int& Server::getSockfd() const
+{
+	return sockfd;
+}
 
 std::string Server::getHostAddress()
 {

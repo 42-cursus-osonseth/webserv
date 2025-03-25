@@ -1,5 +1,4 @@
 #include "includes/Configuration.hpp"
-#include <functional>
 int Configuration::nbServer = 0; 
 std::ifstream Configuration::infile;
 bool Configuration::locationFlag = false;
@@ -113,7 +112,7 @@ bool	isIpAddress(const std::string &line, std::string &host)
 	if (!isStringDigit(port) || (std::atoi(port.c_str()) < 0 || std::atoi(port.c_str()) > 65535))
 	return (false);
 	if (!host.empty())
-		throw std::runtime_error("Error: multiple host address");
+		throw std::invalid_argument("Error: multiple host address");
 	host = ipStr;
 	return (true);
 }
@@ -265,7 +264,7 @@ void	Configuration::parseHostAddress(const std::string &line, Server &server)
 	if (hostAddress.empty())
 		throw std::runtime_error("Error: Missing host address");
 	else if (!server.getHostAddress().empty())
-		throw std::runtime_error("Error: Multiple host address");
+		throw std::invalid_argument("Error: Multiple host address");
 	server.addHostAddress(hostAddress);
 }
 
@@ -281,7 +280,7 @@ void	Configuration::parseMethods(const std::string &line)
 	while (!lineSplited.empty())
 	{
 		if (lineSplited[0] != "GET" && lineSplited[0] != "POST" && lineSplited[0] != "DELETE")
-			throw std::runtime_error("Error: Invalid method");
+			throw std::invalid_argument("Error: Invalid method");
 		currentLocation.methods.push_back(lineSplited[0]);
 		lineSplited.erase(lineSplited.begin());
 	}
@@ -290,7 +289,7 @@ void	Configuration::parseMethods(const std::string &line)
 void	Configuration::parseRedirection(const std::vector<std::string> &lineSplitted)
 {
 	if (lineSplitted.size() != 2)
-		throw std::runtime_error("Error: Invalid redirection");
+		throw std::invalid_argument("Error: Invalid redirection");
 	currentLocation.redir.first = convert<int>(lineSplitted[0]);
 	currentLocation.redir.second = lineSplitted[1];
 }
@@ -303,7 +302,7 @@ void	Configuration::parseDirListing(const std::string &line)
 	else if (status == "off")
 		currentLocation.dirListing = false;
 	else
-		throw std::runtime_error("Error: Invalid directive for autoindex");
+		throw std::invalid_argument("Error: Invalid directive for autoindex");
 }
 
 void	Configuration::parseUpload(const std::string &line)
@@ -314,17 +313,17 @@ void	Configuration::parseUpload(const std::string &line)
 	else if (status == "off")
 		currentLocation.upload = false;
 	else
-		throw std::runtime_error("Error: Invalid directive for upload");
+		throw std::invalid_argument("Error: Invalid directive for upload");
 }
 
 void	Configuration::parseUploadPath(const std::string &line)
 {
 	std::string path = trim(skipWord(line));
 	if (path.empty())
-		throw std::runtime_error("Error: Missing path for upload");
+		throw std::invalid_argument("Error: Missing path for upload");
 	else if (isValidFile(path))
-		throw std::runtime_error("Error: Invalid path for upload");
-	currentLocation.uploadPath = trim(skipWord(line));
+		throw std::invalid_argument("Error: Invalid path for upload");
+	currentLocation.uploadPath = currentLocation.uri + trim(skipWord(line));
 }
 
 void	Configuration::parseIndexLocation(const std::string &line)
@@ -383,7 +382,7 @@ bool	Configuration::chooseLocationDirectives(const std::string &lineWithSemicolo
 
 void	Configuration::parseLocation(const std::string &line)
 {
-	t_location	location;
+	t_location	location = { "", "", "",0, std::make_pair(0,""), std::list<std::string>(),0,""};
 	std::vector<std::string> lineSplited = split(skipWord(line));
 	if (lineSplited.empty())                        
 		throw	LocationArgsException("Error: missing uri for location");

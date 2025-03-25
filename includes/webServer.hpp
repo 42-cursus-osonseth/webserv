@@ -13,14 +13,15 @@ class webServer
 	private:
 		int epfd;
 		int nfds;
-		struct epoll_event ev, events[MAX_EVENTS];
+		struct epoll_event ev;
+		struct epoll_event events[MAX_EVENTS];
 		std::list<Server> serversList;
 	public:
 		webServer();
 		webServer(const webServer &src);
+		webServer (std::list<Server> serversList);
 		webServer &operator=(const webServer &rhs);
 		~webServer();
-		void handleSignals();
 		void initEpoll();
 		void setupServers();
 		void closeWebServer();
