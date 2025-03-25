@@ -6,7 +6,7 @@
 /*   By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 16:44:14 by mekherbo          #+#    #+#             */
-/*   Updated: 2025/02/22 04:53:36 by mekherbo         ###   ########.fr       */
+/*   Updated: 2025/03/25 03:08:53 by mekherbo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ class Configuration
 		static void	parseDirListing(const std::string &line);
 		static void	parseDirFile(const std::string &line);
 		static void parseIndexLocation(const std::string &line);
+		static void	parseUpload(const std::string &line);
+		static void	parseUploadPath(const std::string &line);
 		class	BraceNotClosedException : public std::exception
 		{
 			public:

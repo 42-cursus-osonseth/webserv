@@ -66,7 +66,7 @@ void	Server::initSocket()
 		close(sockfd);
 		throw std::runtime_error("Error: bind failed on server " + number_server);
 	}
-	if (listen(sockfd, 10) == -1)
+	if (listen(sockfd, SOMAXCONN) == -1)
 	{
 		close(sockfd);
 		throw std::runtime_error("Error: listen failed on server " + number_server);
@@ -216,6 +216,8 @@ void	Server::printLocation(const t_location &location)
 		std::cout << *it << '\t';
 	}
 	std::cout << '\n';
+	std::cout << "Uplaod:\t\t" << (location.upload ? "on" : "off") << '\n';
+	std::cout << "Upload Path:\t" << location.uploadPath << '\n';
 	std::cout << std::setw(42) << std::setfill('*') << '\n' << RESET;
 }
 

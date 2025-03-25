@@ -14,6 +14,8 @@ typedef struct s_location
 	bool		dirListing;
 	std::pair<int, std::string>			redir;
 	std::list<std::string> methods;
+	bool		upload;
+	std::string uploadPath;
 	bool operator==(const s_location &location) const
 	{
 		return (location.uri == uri);

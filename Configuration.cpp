@@ -5,7 +5,7 @@ std::ifstream Configuration::infile;
 bool Configuration::locationFlag = false;
 bool Configuration::cgiFlag = false;
 int	 Configuration::lineNbr = 0;
-t_location Configuration::currentLocation = { "", "", "",0, std::make_pair(0,""), std::list<std::string>()};
+t_location Configuration::currentLocation = { "", "", "",0, std::make_pair(0,""), std::list<std::string>(),0,""};
 std::vector<std::string> split(const std::string& str) {
   std::vector<std::string> tokens;
   std::istringstream iss(str);
@@ -190,7 +190,7 @@ void	Configuration::parsePorts(const std::string &line, Server &server)
 	}
 	if (!host.empty() && !server.getHostAddress().empty())
 		throw std::runtime_error("Error: Multiple host address");
-		else if (!host.empty())
+	else if (!host.empty())
 		server.addHostAddress(host);
 	std::cout << "host = " << host << "\t"<< server.getHostAddress() << '\n';
 }
@@ -306,6 +306,27 @@ void	Configuration::parseDirListing(const std::string &line)
 		throw std::runtime_error("Error: Invalid directive for autoindex");
 }
 
+void	Configuration::parseUpload(const std::string &line)
+{	
+	std::string status = trim(skipWord(line));
+	if (status == "on")
+		currentLocation.upload = true;
+	else if (status == "off")
+		currentLocation.upload = false;
+	else
+		throw std::runtime_error("Error: Invalid directive for upload");
+}
+
+void	Configuration::parseUploadPath(const std::string &line)
+{
+	std::string path = trim(skipWord(line));
+	if (path.empty())
+		throw std::runtime_error("Error: Missing path for upload");
+	else if (isValidFile(path))
+		throw std::runtime_error("Error: Invalid path for upload");
+	currentLocation.uploadPath = trim(skipWord(line));
+}
+
 void	Configuration::parseIndexLocation(const std::string &line)
 {
 	currentLocation.index = trim(skipWord(line));
@@ -353,6 +374,10 @@ bool	Configuration::chooseLocationDirectives(const std::string &lineWithSemicolo
 		return (parseDirListing(line),true);
 	else if (firstWord == "index")
 		return (parseIndexLocation(line),true);
+	else if (firstWord == "upload")
+		return (parseUpload(line),true);
+	else if (firstWord == "upload_path")
+		return (parseUploadPath(line),true);
 	return (false);
 }
 
