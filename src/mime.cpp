@@ -30,5 +30,5 @@ std::string	get_mime(const std::string &key)
 	} catch (const std::exception &e) {
 		std::cout << "No mime type found for " << key << std::endl;
 		return "text/html";
-	}
+	} 
 }

@@ -19,15 +19,11 @@ std::vector<std::string>	Utils::split(const std::string &s, const std::string &s
 
 std::string	Utils::getExtension(const std::string &s)
 {
-	std::string	ext = "";
-	std::string	prev = s;
 	size_t		len;
 
-	while ((len = prev.find(".")) != std::string::npos) {
-		ext = prev.substr(len + 1);
-		prev = ext;
-	}
-	return ext;
+	if ((len = s.find_last_of(".")) != std::string::npos)
+		return s.substr(len + 1);
+	return "";
 }
 
 bool	Utils::pathIsDir(const std::string &path)
