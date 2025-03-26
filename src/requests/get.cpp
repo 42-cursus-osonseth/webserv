@@ -53,10 +53,9 @@ void	Request::getReq()
 	_responseHeader += "Content-Length: " + Utils::itos(_responseBody.size()) + "\r\n";
 	_responseHeader += "Content-Type: " + get_mime(Utils::getExtension(_path)) + "\r\n";
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
-	
+
 	std::cout << "--------- REQUEST ---------" << std::endl;
 	std::cout << "Request for " << _path << std::endl;
 	std::cout << _responseHeader;
-	std::cout << _responseBody << std::endl;
 	std::cout << "------- REQUEST END -------" << std::endl;
 }

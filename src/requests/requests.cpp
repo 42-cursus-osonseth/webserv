@@ -40,21 +40,17 @@ Request::Request(int fd)
 
 void	Request::generateResponse()
 {
-	if (_method == "GET")
-		getReq();
-	else if (_method == "POST")
-		postReq();
-	else if (_method == "DELETE")
-		deleteReq();
-	else
-		notImplemented();
+	if (_method == "GET") getReq();
+	else if (_method == "POST") postReq();
+	else if (_method == "DELETE") deleteReq();
+	else notImplemented();
 }
 
 void	Request::send(int fd)
 {
-	// std::cerr << "Handling a request :)" << std::endl;
+	std::cerr << "Handling a request for: " << _path << std::endl;
 	generateResponse();
-	std::cout << _responseHeader << std::endl;
+	std::cout << "Header: " << _responseHeader << std::endl;
 	std::cout << _responseBody << std::endl;
 	if (::send(fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
 		perror("send");
@@ -65,5 +61,4 @@ void	Request::send(int fd)
 void	Request::getRessourcePath()
 {
 	_path = "./pages/" + _path; // TEMP utiliser path du config
-	
 }
