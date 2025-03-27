@@ -6,8 +6,8 @@ const char	*Request::NotFoundException::what(Request &r) const throw()
 	r._path = "./pages/404.html";
 	try {
 		r.getFileContent();
-	} catch (const std::exception &e) {
-		return e.what();
+	} catch (const Request::InternalServerErrorException &e) {
+		return e.what(r);
 	}
 	r.generateHeader();
 	return ("The ressource has been found but can't be accessed (403)");
@@ -19,8 +19,8 @@ const char	*Request::ForbiddenException::what(Request &r) const throw()
 	r._path = "./pages/403.html";
 	try {
 		r.getFileContent();
-	} catch (const std::exception &e) {
-		return e.what();
+	} catch (const Request::InternalServerErrorException &e) {
+		return e.what(r);
 	}
 	r.generateHeader();
 	return ("The ressource has been found but can't be accessed (403)");

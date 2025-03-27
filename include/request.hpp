@@ -65,6 +65,7 @@ public:
 		const char	*what(Request &r) const throw();
 	};
 	class InternalServerErrorException : public std::exception {
+	public:
 		const char	*what(Request &r) const throw();
 	};
 
