@@ -2,7 +2,6 @@
 #include <sys/stat.h> 
 #include <unistd.h>
 
-
 bool	isValidFormat(const std::string &filename) {
 	struct stat file_stat;
 	if (stat(filename.c_str(), &file_stat))

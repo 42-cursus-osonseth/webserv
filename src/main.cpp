@@ -12,14 +12,17 @@ int	main(int ac, char **av)
 	while (1) {
 		std::string	entry;
 
+		std::cout << "$> ";
 		std::cin >> entry;
 		if (entry == "stop")
 			break ;
 		else if (entry == "newrequest") {
+			std::cout << "Please enter a request name: ";
 			std::cin >> entry;
 			try {
 				int fd;
 
+				entry = "test_request/" + entry + ".http";
 				if ((fd = open(entry.c_str(), O_RDONLY)) < 0)
 					throw std::runtime_error("File could not be loaded");
 				Request	r(fd);

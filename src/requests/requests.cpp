@@ -13,18 +13,19 @@ void	Request::parseRequest()
 
 	while ((n = read(_fd, buffer, sizeof(buffer)))) {
 		if (n < 0)
-			throw Request::InternalServerErrorException();
+			throw Request::ErrcodeException(INTERNAL_SERVER_ERROR);
 		fullRequest += buffer;
 	}
 	size_t	sep = fullRequest.find("\r\n\r\n");
-	_body = fullRequest.substr(sep + 3);
+	if (sep != std::string::npos)
+		_body = fullRequest.substr(sep + 3);
 	fullRequest = fullRequest.substr(0, sep);
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	int	i = 1;
 	if (_method.empty() || _path.empty() || _version.empty()) // Checks sur le format
-		throw Request::InvalidRequestException();
+		throw Request::ErrcodeException(BAD_REQUEST);
 	while (!lines[i].empty()) {
 		size_t	sep_pos = lines[i].find(":");
 		if (sep_pos != std::string::npos) {
@@ -34,8 +35,6 @@ void	Request::parseRequest()
 		}
 		i++;
 	}
-	// Need to get the request body
-	// slice en 2 selon l'apparence du 1er \r\n\r\n
 }
 
 void	Request::generateResponse()
@@ -44,12 +43,12 @@ void	Request::generateResponse()
 	_matchingServer = &Server::getServersList().front();
 	if (!_matchingServer) {
 		std::cout << "No matching server" << std::endl;
-		throw Request::InternalServerErrorException(); // [TBR]
+		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR); // [TBR]
 	}
 		 if (_method == "GET")		getReq();
 	else if (_method == "POST")		postReq();
 	else if (_method == "DELETE")	deleteReq();
-	else throw Request::NotImplementedException();
+	else throw Request::ErrcodeException(NOT_IMPLEMENTED);
 }
 
 Request::Request(int fd) : _fd(fd)
@@ -57,8 +56,8 @@ Request::Request(int fd) : _fd(fd)
 	try {
 		parseRequest();
 		generateResponse();
-	} catch (IHtmlErrorException &e) {
-		std::cerr << e.what(*this) << std::endl;
+	} catch (const Request::ErrcodeException &e) {
+		std::cerr << "Encountered exception while treating request: " << e.what(*this) << std::endl;
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
@@ -70,10 +69,10 @@ void	Request::send()
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
 		std::cerr << "WIP" << std::endl;
-		// if (::send(fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
-		// 	perror("send");
-		// if (::send(fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)
-		// 	perror("send");	
+		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
+			perror("send");
+		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)
+			perror("send");	
 	}
 }
 
@@ -84,6 +83,8 @@ void	Request::getRessourcePath()
 
 	if (mark != std::string::npos)
 		fullPath = fullPath.substr(0, mark);
+	else if (access(fullPath.c_str(), F_OK))
+		throw Request::ErrcodeException(NOT_FOUND);
 	else if (Utils::pathIsDir(fullPath))
 		fullPath += "/index.html"; // Selon config ["index"]
 	_path = fullPath;
@@ -102,6 +103,5 @@ void	Request::generateHeader()
 void	Request::dump(void)
 {
 	std::cout << "-- Dumping request for " << _path << " at " << _data["Host"] << " --" << std::endl;
-	std::cout << _responseHeader << std::endl;
-	std::cout << _responseBody << std::endl;
+	std::cout << _responseHeader << _responseBody << std::endl;
 }

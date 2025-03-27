@@ -1,46 +1,23 @@
 #include <request.hpp>
 
-const char	*Request::NotFoundException::what(Request &r) const throw()
+void	Request::placeHolderErrorGen(t_errcodes err)
 {
-	r._errcode = NOT_FOUND;
-	r._path = "./pages/404.html";
+	_errcode = err;
+	_responseBody = std::string("<!DOCTYPE html><html><h1>") + Utils::itos(err) + "</h1><p>" + get_errcode_string(err) + "</p></html>";
+	generateHeader();
+}
+
+Request::ErrcodeException::ErrcodeException(t_errcodes errcode) : _errcode(errcode) {}
+
+const char	*Request::ErrcodeException::what(Request &r) const throw()
+{
+	r._errcode = _errcode;
+	r._path = "./pages/" + Utils::itos(_errcode) + ".html";
 	try {
 		r.getFileContent();
-	} catch (const Request::InternalServerErrorException &e) {
-		return e.what(r);
+	} catch (const Request::ErrcodeException &e) {
+		r.placeHolderErrorGen(_errcode);
 	}
 	r.generateHeader();
-	return ("The ressource has been found but can't be accessed (403)");
-}
-
-const char	*Request::ForbiddenException::what(Request &r) const throw()
-{
-	r._errcode = FORBIDDEN;
-	r._path = "./pages/403.html";
-	try {
-		r.getFileContent();
-	} catch (const Request::InternalServerErrorException &e) {
-		return e.what(r);
-	}
-	r.generateHeader();
-	return ("The ressource has been found but can't be accessed (403)");
-}
-
-const char	*Request::NotImplementedException::what(Request &r) const throw()
-{
-	r.notImplementedPlaceholder();
-	// generateHeader();
-	return ("This functionnality has not been implemented (501)");
-}
-
-const char	*Request::InvalidRequestException::what(Request &r) const throw()
-{
-	r.generateHeader();
-	return ("The request isn't valid (400)");
-}
-
-const char	*Request::InternalServerErrorException::what(Request &r) const throw()
-{
-	r.generateHeader();
-	return ("Internal server error (500)");
+	return ((get_errcode_string(_errcode) + " (" + Utils::itos(_errcode) + ")").c_str());
 }

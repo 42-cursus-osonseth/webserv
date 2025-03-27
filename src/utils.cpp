@@ -59,3 +59,22 @@ std::string	Utils::itos(int n)
 	ss << n;
 	return ss.str();
 }
+
+std::string	Utils::cleanupPath(std::string path)
+{
+	std::string result;
+	bool lastWasSlash = false;
+
+	for (int i = 0; path[i]; i++) {
+		char	ch = path[i];
+		if (ch == '/') {
+			if (!lastWasSlash)
+				result += ch;
+			lastWasSlash = true;
+		} else {
+			result += ch;
+			lastWasSlash = false;
+		}
+	}
+	return result;
+}
