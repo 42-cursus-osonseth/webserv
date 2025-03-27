@@ -3,49 +3,70 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arlarzil <arlarzil@student.42.fr>          +#+  +:+       +#+         #
+#    By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/12/06 20:28:41 by arlarzil          #+#    #+#              #
-#    Updated: 2024/07/17 14:58:23 by arlarzil         ###   ########.fr        #
+#    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
+#    Updated: 2025/01/26 19:28:13 by mekherbo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC		=	src/main.cpp				\
-			src/sampleConfig.cpp		\
-			src/server.cpp				\
-			src/utils.cpp				\
-			src/errcodes.cpp			\
-			src/mime.cpp				\
-			src/requests/requests.cpp	\
-			src/requests/get.cpp		\
-			src/requests/post.cpp		\
-			src/requests/delete.cpp		\
+NAME = webserv
 
-OBJ		=	$(SRC:.cpp=.o)
+SRC = main.cpp			\
+	checkFiles.cpp		\
+	Server.cpp			\
+	Configuration.cpp	\
+	src/requests/requests.cpp		\
+	src/requests/get.cpp			\
+	src/requests/post.cpp			\
+	src/requests/delete.cpp			\
+	src/requests/placeholders.cpp	\
+	src/requests/exceptions.cpp		\
+	src/errcodes.cpp				\
+	src/mime.cpp					\
+	src/utils.cpp					\
 
-NAME	=	webserv.out
+DEF_COLOR = \033[0;39m
+GRAY = \033[0;90m
+RED = \033[0;91m
+GREEN = \033[0;92m
+YELLOW = \033[0;93m
+BLUE = \033[0;94m
+MAGENTA = \033[0;95m
+CYAN = \033[0;96m
+WHITE = \033[0;97m
+PURPLE= \033[38;2;255;105;180m
+RESET= \033[0m
 
-CC		= c++
+OBJ = $(SRC:.cpp=.o)
+DEPENDENCIES := $(OBJ:.o=.d)
 
-CFLAGS 	= -Wall -Wextra -Werror -std=c++98 -pedantic -Iinclude
+CC = c++
 
-all: $(NAME)
+CPPFLAGS = -g3 -Wall -Wextra -Werror -std=c++98 -MMD -MP -Iinclude
+
+RM = rm -f
+
+all : $(NAME)
 
 .cpp.o:
-	$(CC) $(CFLAGS) -c $< -o ${<:.cpp=.o}
+	$(CC) $(CPPFLAGS) -c $< -o $(<:.cpp=.o)
+	@echo "$(YELLOW)Compiling: $< $(DEF_COLOR)"
 
-$(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(CFLAGS)
+$(NAME) : $(LIBFT) $(OBJ)
+	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
 
-clean:
-	rm -f $(OBJ)
+-include $(DEPENDENCIES)
 
-fclean: clean
-	rm -f $(NAME) $(BONUS_NAME)
+clean :
+	$(RM) $(OBJ) $(DEPENDENCIES)
+	@echo "$(BLUE)object files cleaned!$(DEF_COLOR)"
 
-re: fclean all
+fclean : clean
+	$(RM) $(NAME)
+	@echo "$(CYAN)executable has been cleaned!$(DEF_COLOR)"
 
-auteur:
-	echo $(USER) > auteur
+re : fclean all
+	@echo "$(GREEN)Cleaned and rebuilt everything$(DEF_COLOR)"
 
-.PHONY: fclean all re clean
+.PHONY : all clean fclean re

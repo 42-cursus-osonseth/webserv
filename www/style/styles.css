@@ -1,0 +1,85 @@
+body
+{
+	background-color: #1c262d;
+	color:white;
+	margin: 0;
+	height:100vh;
+}
+
+h1
+{
+	text-align: center;
+}
+
+.mainH1
+{
+	font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+	font-size: 100px;
+	line-height: 1.3;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: white;
+	text-shadow: 
+		0 1px 0 #c7c7c7,
+		0 2px 0 #c7c7c7,
+		0 3px 0 #c7c7c7,
+		0 4px 0 #c7c7c7,
+		0 5px 0 #c7c7c7,
+		0 6px 0 #c7c7c7,
+		0 7px 0 #c7c7c7;
+}
+
+img
+{
+	width: 600px;
+}
+
+.penguin
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 200px;
+	margin-bottom: 50px;
+}
+
+.penguin img
+{
+	width: 600px;
+	max-width: 100%;
+	height: auto;
+}
+
+.button
+{
+	display: flex;
+	justify-content: center;
+}
+
+.button li
+{
+	list-style-type: none;
+	border: 2px solid white;
+	border-radius: 5px;
+	width: 200px;
+}
+.button li a
+{
+	padding: 10px 20px;
+	display: block;
+	color:white;
+	text-decoration: none;
+}
+
+.button li a:hover
+{
+	 background-color: #460a61;
+}
+
+#copyright
+{
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	text-align: center;
+}

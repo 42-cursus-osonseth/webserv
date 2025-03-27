@@ -2,5 +2,5 @@
 
 void	Request::deleteReq()
 {
-	notImplemented();
+	throw NotImplementedException();
 }

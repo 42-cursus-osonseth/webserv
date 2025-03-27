@@ -2,5 +2,5 @@
 
 void	Request::postReq()
 {
-	notImplemented();
+	throw NotImplementedException();
 }

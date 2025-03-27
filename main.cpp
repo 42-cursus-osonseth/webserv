@@ -1,44 +1,34 @@
 #include "includes/Configuration.hpp"
+#include <request.hpp>
+#include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	if (ac > 2)
-	{
-		std::cerr << SUPA_RED << "Error: too more args\n";
-		return 1;
-	}
-	try
-	{
-			Configuration::parseFile(ac == 1 ? "conf/Default.conf" : av[1]);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << SUPA_RED << e.what() << '\n' << RESET;
-	}
-	Server::printServer();
-	std::string path = "/www";	
-	if (isValidDir(formatPath(path)))
-		std::cerr << "dir is valid\n";
-	else
-		std::cerr << "dir is not valid\n";
-	std::list<Server>&slist = Server::getServersList();
-	try
-	{
-		for (std::list<Server>::iterator it = slist.begin(); it != slist.end(); it++)
-		{
-			it->initSocket();
-			std::cout << "Server: " << it->getHostAddress() << '\n';
+	Configuration::parseFile(ac != 2 ? "conf/Default.conf" : av[1]);
+
+	while (1) {
+		std::string	entry;
+
+		std::cin >> entry;
+		if (entry == "stop")
+			break ;
+		else if (entry == "newrequest") {
+			std::cin >> entry;
+			try {
+				int fd;
+
+				if ((fd = open(entry.c_str(), O_RDONLY)) < 0)
+					throw std::runtime_error("File could not be loaded");
+				Request	r(fd);
+				r.dump();
+			} catch (const std::exception &e) {
+				std::cout << e.what() << std::endl;
+			}
 		}
-		for (std::list<Server>::iterator it = slist.begin(); it != slist.end(); it++)
-		{
-			it->closeSocket();
-			std::cout << "we close socker Server: " << it->getHostAddress() << '\n';
-		}
+		else
+			std::cout << "Invalid command" << std::endl;
 	}
-	catch(const std::exception& e)
-	{
-		std::cerr << RED << e.what() << '\n';
-	}
-	
-	return (0);
 }
