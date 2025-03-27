@@ -1,5 +1,4 @@
-#include "webServer.hpp"
-#include <sys/epoll.h>
+#include "includes/webServer.hpp"
 #include <signal.h>
 int g_loop = 1;
 webServer::webServer(): epfd(-1), nfds(0), ev(), events(){}
@@ -42,7 +41,7 @@ void webServer::initEpoll()
 	if (epfd == -1)
 		throw std::runtime_error("epoll_create failed");
 	memset(&ev, 0, sizeof(ev));
-    memset(&events, 0, sizeof(events));
+    memset(events, 0, sizeof(struct epoll_event) * MAX_EVENTS);
 }
 
 
@@ -53,13 +52,20 @@ void webServer::setupServers()
 		it->initSocket();
 		ev.events = EPOLLIN;
 		ev.data.fd = it->getSockfd();
-		if (epoll_ctl(epfd, EPOLL_CTL_ADD, it->getSockfd(), &ev) == -1)
+		if (epoll_ctl(epfd, EPOLL_CTL_ADD, ev.data.fd, &ev) == -1)
 			throw std::runtime_error("epoll_ctl failed");
+		std::cout << GREEN << "Server fd added: " << ev.data.fd << RESET << '\n';
+		server_fds.push_back(ev.data.fd);
 	}
 }
 
 void webServer::closeWebServer()
 {
+	for (std::vector<int>::iterator it = server_fds.begin(); it != server_fds.end(); it++)
+	{
+		if (epoll_ctl(epfd, EPOLL_CTL_DEL, *it, NULL) == -1)
+		throw std::runtime_error("epoll_ctl_del failed for server_fds");
+	}
 	for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
 	{
 		it->closeSocket();
@@ -85,13 +91,14 @@ void	webServer::acceptConnection(Server const &server)
 		close(client_fd);
 		throw std::runtime_error("Error: set client socket to non-blocking mode failed");
 	}
-	ev.events = EPOLLIN | EPOLLET;
+	ev.events = EPOLLIN;
 	ev.data.fd = client_fd;
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
 	{
 		close(client_fd);
 		throw std::runtime_error("epoll_ctl failed");
 	}
+	std::cout << YELLOW << "Client connected on fd: " << client_fd << RESET << '\n';
 	client_fds.push_back(client_fd);
 }
 
@@ -106,15 +113,20 @@ void webServer::start()
 	{
 		initEpoll();
 		setupServers();
-		while (true)
+		while (g_loop)
 		{
-			nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
+			nfds = epoll_wait(epfd, events, MAX_EVENTS, 100);
+			std::cerr << GREEN << "WebServer wait an event\n" << RESET;
 			if (nfds == -1)
 			{
 				if (errno == EINTR)
 					continue;
-				else
-					throw std::runtime_error("epoll_wait failed");
+				throw std::runtime_error("epoll_wait failed");
+			}
+			std::cerr << MAGENTA << "nfds: " << nfds << RESET <<'\n';
+			if (nfds > 0)
+			{
+				std::cerr << CYAN << "event triggered\n" << RESET;
 			}
 			for (int i = 0; i < nfds; ++i)
 			{
@@ -128,15 +140,18 @@ void webServer::start()
 						}
 					}
 				}
-					 
+				else
+				{
+					//Client socket event: read data.
+				}
 			}
-			closeWebServer();
 		}
+		closeWebServer();
 	}
 	catch(const std::exception& e)
 	{
 		closeWebServer();
-		std::cerr << e.what() << '\n';
+		std::cerr << RED << e.what() << '\n';
 	}
 	
 }

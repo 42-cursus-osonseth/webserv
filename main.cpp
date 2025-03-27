@@ -1,5 +1,5 @@
 #include "includes/Configuration.hpp"
-
+#include "includes/webServer.hpp"
 int main(int ac, char **av)
 {
 	if (ac > 2)
@@ -17,28 +17,18 @@ int main(int ac, char **av)
 	}
 	Server::printServer();
 	std::string path = "/www";	
-	if (isValidDir(formatPath(path)))
-		std::cerr << "dir is valid\n";
-	else
-		std::cerr << "dir is not valid\n";
-	std::list<Server>&slist = Server::getServersList();
+	// if (isValidDir(formatPath(path)))
+	// 	std::cerr << "dir is valid\n";
+	// else
+	// 	std::cerr << "dir is not valid\n";
+	webServer nginx(Server::getServersList());
 	try
 	{
-		for (std::list<Server>::iterator it = slist.begin(); it != slist.end(); it++)
-		{
-			it->initSocket();
-			std::cout << "Server: " << it->getHostAddress() << '\n';
-		}
-		for (std::list<Server>::iterator it = slist.begin(); it != slist.end(); it++)
-		{
-			it->closeSocket();
-			std::cout << "we close socker Server: " << it->getHostAddress() << '\n';
-		}
+		nginx.start();
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << RED << e.what() << '\n';
+		std::cerr << RED <<  e.what() << '\n';
 	}
-	
 	return (0);
 }

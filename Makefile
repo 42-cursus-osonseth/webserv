@@ -6,7 +6,7 @@
 #    By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
-#    Updated: 2025/01/26 19:28:13 by mekherbo         ###   ########.fr        #
+#    Updated: 2025/03/27 20:08:59 by mekherbo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME = webserv
 SRC = main.cpp \
 	checkFiles.cpp \
 	Server.cpp \
+	webServer.cpp \
 	Configuration.cpp
 
 DEF_COLOR = \033[0;39m

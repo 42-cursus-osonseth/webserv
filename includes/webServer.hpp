@@ -6,7 +6,7 @@
 #define MAX_EVENTS 1024
 #endif
 
-
+#include <sys/epoll.h>
 #include "Server.hpp"
 class webServer
 {
@@ -17,6 +17,7 @@ class webServer
 		struct epoll_event events[MAX_EVENTS];
 		std::list<Server> serversList;
 		std::vector<int> client_fds;
+		std::vector<int> server_fds;
 	public:
 		webServer();
 		webServer(const webServer &src);
