@@ -64,7 +64,35 @@ void webServer::closeWebServer()
 	{
 		it->closeSocket();
 	}
+	for(std::vector<int>::iterator it = client_fds.begin(); it != client_fds.end(); it++)
+	{
+		if (epoll_ctl(epfd, EPOLL_CTL_DEL, *it, NULL) == -1)
+			throw std::runtime_error("epoll_ctl_del failed for client_fds");
+		close(*it);
+	}
 	close(epfd);
+}
+
+void	webServer::acceptConnection(Server const &server)
+{
+	struct sockaddr_in addr;
+	socklen_t addrlen = sizeof(addr);
+	int client_fd = accept(server.getSockfd(), (struct sockaddr *)&addr, &addrlen);
+	if (client_fd == -1)
+		throw std::runtime_error("accept failed");
+	if (fcntl(client_fd, F_SETFL, O_NONBLOCK) == -1)
+	{
+		close(client_fd);
+		throw std::runtime_error("Error: set client socket to non-blocking mode failed");
+	}
+	ev.events = EPOLLIN | EPOLLET;
+	ev.data.fd = client_fd;
+	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
+	{
+		close(client_fd);
+		throw std::runtime_error("epoll_ctl failed");
+	}
+	client_fds.push_back(client_fd);
 }
 
 void webServer::start()
@@ -96,7 +124,7 @@ void webServer::start()
 					{
 						if (events[i].data.fd == it->getSockfd())
 						{
-							it->acceptConnection(epfd, ev);
+							acceptConnection(*it);
 						}
 					}
 				}

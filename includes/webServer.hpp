@@ -16,6 +16,7 @@ class webServer
 		struct epoll_event ev;
 		struct epoll_event events[MAX_EVENTS];
 		std::list<Server> serversList;
+		std::vector<int> client_fds;
 	public:
 		webServer();
 		webServer(const webServer &src);
@@ -25,6 +26,7 @@ class webServer
 		void initEpoll();
 		void setupServers();
 		void closeWebServer();
+		void acceptConnection(Server const &server);
 		void start();
 
 };
