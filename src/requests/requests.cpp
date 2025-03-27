@@ -58,8 +58,10 @@ Request::Request(int fd) : _fd(fd)
 	try {
 		parseRequest();
 		generateResponse();
+	} catch (IHtmlErrorException &e) {
+		std::cerr << e.what(*this) << std::endl;
 	} catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
+		std::cerr << e.what() << std::endl;
 	}
 }
 

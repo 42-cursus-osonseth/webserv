@@ -52,19 +52,28 @@ public:
 	void	send();
 	void	dump();
 
-	class NotFoundException : public std::exception {
+	class IHtmlErrorException : public std::exception {
+	public:
+		virtual const char	*what(Request &r) const throw() = 0;
+	};
+
+	class NotFoundException : public IHtmlErrorException {
+	public:
 		const char	*what(Request &r) const throw();
 	};
-	class ForbiddenException : public std::exception {
+	class ForbiddenException : public IHtmlErrorException {
+	public:
 		const char	*what(Request &r) const throw();
 	};
-	class NotImplementedException : public std::exception {
+	class NotImplementedException : public IHtmlErrorException {
+	public:
 		const char	*what(Request &r) const throw();
 	};
-	class InvalidRequestException : public std::exception {
+	class InvalidRequestException : public IHtmlErrorException {
+	public:
 		const char	*what(Request &r) const throw();
 	};
-	class InternalServerErrorException : public std::exception {
+	class InternalServerErrorException : public IHtmlErrorException {
 	public:
 		const char	*what(Request &r) const throw();
 	};
