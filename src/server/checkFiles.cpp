@@ -1,4 +1,4 @@
-#include "includes/Configuration.hpp"
+#include <Configuration.hpp>
 #include <sys/stat.h> 
 #include <unistd.h>
 

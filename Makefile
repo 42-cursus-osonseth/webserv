@@ -12,10 +12,10 @@
 
 NAME = webserv
 
-SRC = main.cpp			\
-	checkFiles.cpp		\
-	Server.cpp			\
-	Configuration.cpp	\
+SRC = src/main.cpp					\
+	src/server/checkFiles.cpp		\
+	src/server/Server.cpp			\
+	src/server/Configuration.cpp	\
 	src/requests/requests.cpp		\
 	src/requests/get.cpp			\
 	src/requests/post.cpp			\
@@ -43,7 +43,7 @@ DEPENDENCIES := $(OBJ:.o=.d)
 
 CC = c++
 
-CPPFLAGS = -g3 -Wall -Wextra -Werror -std=c++98 -MMD -MP -Iinclude
+CPPFLAGS = -g3 -Wall -Wextra -Werror -std=c++98 -MMD -MP -Iinclude -Iincludes
 
 RM = rm -f
 

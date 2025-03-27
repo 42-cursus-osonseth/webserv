@@ -1,4 +1,4 @@
-#include "includes/Configuration.hpp"
+#include <Configuration.hpp>
 int Configuration::nbServer = 0; 
 std::ifstream Configuration::infile;
 bool Configuration::locationFlag = false;

@@ -7,14 +7,23 @@
 
 void	Request::parseRequest()
 {
-	char	buffer[4096] = {0};
-	read(_fd, buffer, sizeof(buffer)); // A single read might not be enough
+	char		buffer[4096] = {0};
+	std::string	fullRequest;
+	ssize_t		n;
 
-	std::vector<std::string>	lines = Utils::split(buffer, "\r\n");
+	while ((n = read(_fd, buffer, sizeof(buffer)))) {
+		if (n < 0)
+			throw Request::InternalServerErrorException();
+		fullRequest += buffer;
+	}
+	size_t	sep = fullRequest.find("\r\n\r\n");
+	_body = fullRequest.substr(sep + 3);
+	fullRequest = fullRequest.substr(0, sep);
+	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	int	i = 1;
-	if (_method.empty() || _path.empty() || _version.empty())
+	if (_method.empty() || _path.empty() || _version.empty()) // Checks sur le format
 		throw Request::InvalidRequestException();
 	while (!lines[i].empty()) {
 		size_t	sep_pos = lines[i].find(":");
@@ -26,30 +35,20 @@ void	Request::parseRequest()
 		i++;
 	}
 	// Need to get the request body
-}
-
-void	Request::findMatchingServer(void)
-{
-	std::list<Server>	servers = Server::getServersList();
-
-	for (std::list<Server>::iterator it = servers.begin(); it != servers.end(); it++) {
-			if (1) { // Check is server is the corresponding one
-				_matchingServer = &(*it);
-				break ;
-			}
-	}
+	// slice en 2 selon l'apparence du 1er \r\n\r\n
 }
 
 void	Request::generateResponse()
 {
-	findMatchingServer();
+	// _matchingServer = Server::findMatchingServer();
+	_matchingServer = &Server::getServersList().front();
 	if (!_matchingServer) {
 		std::cout << "No matching server" << std::endl;
-		throw Request::InternalServerErrorException();
+		throw Request::InternalServerErrorException(); // [TBR]
 	}
-	if (_method == "GET") getReq();
-	else if (_method == "POST") postReq();
-	else if (_method == "DELETE") deleteReq();
+		 if (_method == "GET")		getReq();
+	else if (_method == "POST")		postReq();
+	else if (_method == "DELETE")	deleteReq();
 	else throw Request::NotImplementedException();
 }
 

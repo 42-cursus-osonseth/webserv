@@ -26,7 +26,6 @@ typedef struct s_cgi
 {
 
 }	t_cgi;
-
 class Server
 {
 	private:
