@@ -11,13 +11,12 @@ typedef struct s_location
 	std::string root;
 	std::string uri;
 	std::string index;
-	bool		dirListing;
+	bool		dirListing; // Autoindex right ?
 	std::pair<int, std::string>			redir;
 	std::list<std::string> methods;
 	bool		upload;
 	std::string uploadPath;
-	bool operator==(const s_location &location) const
-	{
+	bool operator==(const s_location &location) const {
 		return (location.uri == uri);
 	}
 }	t_location;
@@ -70,6 +69,7 @@ class Server
 		void	setLocation(const t_location &location);
 		void	addLocation(const t_location &location);
 
+		Server *getInstance(const std::string &host, int port);
 
 		//getters
 		const int &getSockfd() const;

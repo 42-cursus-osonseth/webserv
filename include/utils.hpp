@@ -15,6 +15,7 @@ public:
 	static bool						fileExists(const std::string &path);
 	static std::string				time_string(void);
 	static std::string				itos(int);
+	static std::string				cleanupPath(std::string);
 };
 
 #endif

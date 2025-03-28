@@ -271,7 +271,7 @@ void	Configuration::parseHostAddress(const std::string &line, Server &server)
 void	Configuration::parseRootLocation(const std::string &line)
 {
 	currentLocation.root = trim(skipWord(line));
-	currentLocation.uri = currentLocation.root + currentLocation.uri;
+	// currentLocation.uri = currentLocation.root + currentLocation.uri;
 }
 
 void	Configuration::parseMethods(const std::string &line)

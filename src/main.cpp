@@ -9,6 +9,7 @@ int	main(int ac, char **av)
 {
 	Configuration::parseFile(ac != 2 ? "conf/Default.conf" : av[1]);
 
+	Server::printServer();
 	while (1) {
 		std::string	entry;
 
@@ -16,7 +17,7 @@ int	main(int ac, char **av)
 		std::cin >> entry;
 		if (entry == "stop")
 			break ;
-		else if (entry == "newrequest") {
+		else if (entry == "req") {
 			std::cout << "Please enter a request name: ";
 			std::cin >> entry;
 			try {

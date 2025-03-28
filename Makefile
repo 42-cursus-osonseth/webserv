@@ -12,19 +12,19 @@
 
 NAME = webserv
 
-SRC = src/main.cpp					\
-	src/server/checkFiles.cpp		\
-	src/server/Server.cpp			\
-	src/server/Configuration.cpp	\
-	src/requests/requests.cpp		\
-	src/requests/get.cpp			\
-	src/requests/post.cpp			\
-	src/requests/delete.cpp			\
-	src/requests/placeholders.cpp	\
-	src/requests/exceptions.cpp		\
-	src/errcodes.cpp				\
-	src/mime.cpp					\
-	src/utils.cpp					\
+SRC = src/main.cpp						\
+	src/server/checkFiles.cpp			\
+	src/server/Server.cpp				\
+	src/server/Configuration.cpp		\
+	src/requests/requests.cpp			\
+	src/requests/get.cpp				\
+	src/requests/post.cpp				\
+	src/requests/delete.cpp				\
+	src/requests/exceptions.cpp			\
+	src/requests/getRessourcePath.cpp	\
+	src/errcodes.cpp					\
+	src/mime.cpp						\
+	src/utils.cpp						\
 
 DEF_COLOR = \033[0;39m
 GRAY = \033[0;90m

@@ -18,6 +18,7 @@ private:
 	std::string							_version;
 	std::map<std::string, std::string>	_data;
 	std::string							_body;
+	std::string							_mime;
 
 	t_errcodes							_errcode;
 
@@ -27,6 +28,8 @@ private:
 	Server								*_matchingServer;
 
 	// Basic functions for the constructor
+	std::string	getRequest();
+	void		isolateBody(std::string &);
 	void	parseRequest();
 	void	generateResponse();
 	void	generateHeader();
@@ -42,7 +45,11 @@ private:
 
 	// Placeholder errcodes
 	void	notImplementedPlaceholder();
+	void	internalServerErrorPlaceholder();
+	void	placeHolderErrorGen(t_errcodes);
 
+	// Looking up stuff for the response
+	const t_location	*findMatchingLocation();
 	void	findMatchingServer();
 	void	getRessourcePath();
 public:
@@ -52,32 +59,27 @@ public:
 	void	send();
 	void	dump();
 
-	class IHtmlErrorException : public std::exception {
+	class ErrcodeException : public std::exception {
+	private:
+		t_errcodes	_errcode;
+		std::string	_errstring;
+		Request		&_r;
+		ErrcodeException();
+		void	fix() const;
 	public:
-		virtual const char	*what(Request &r) const throw() = 0;
+		ErrcodeException(t_errcodes, Request&);
+		~ErrcodeException() throw() {}
+		const char	*what() const throw();
 	};
-
-	class NotFoundException : public IHtmlErrorException {
+	class AutoIndexHandle : public std::exception {
+	private:
+		Request	&r;
+		AutoIndexHandle();
 	public:
-		const char	*what(Request &r) const throw();
+		AutoIndexHandle(Request &);
+		~AutoIndexHandle() throw() {};
+		const char	*what() const throw();
 	};
-	class ForbiddenException : public IHtmlErrorException {
-	public:
-		const char	*what(Request &r) const throw();
-	};
-	class NotImplementedException : public IHtmlErrorException {
-	public:
-		const char	*what(Request &r) const throw();
-	};
-	class InvalidRequestException : public IHtmlErrorException {
-	public:
-		const char	*what(Request &r) const throw();
-	};
-	class InternalServerErrorException : public IHtmlErrorException {
-	public:
-		const char	*what(Request &r) const throw();
-	};
-
 };
 
 #endif
