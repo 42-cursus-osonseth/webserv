@@ -37,6 +37,7 @@ class Server
 		std::string	root;
 		std::string hostAddress;
 		std::list<t_location> locations;
+		static Server *getInstance(const std::string &host, int port);
 		static std::list<Server> serversList;
 		std::map<std::vector<int>, std::string> errorPages;
 		int		sockfd;

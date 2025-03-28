@@ -271,6 +271,17 @@ int Server::findNumberHost()
 	// 	serversList.remove(server);
 	// }
 
+
+Server *Server::getInstance(const std::string &host, int port)
+{
+	for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
+	{
+		if (it->hostAddress == host && std::find(it->listenPorts.begin(), it->listenPorts.end(), toString(port)) != it->listenPorts.end())
+			return &(*it);
+	}
+	return NULL;
+}
+
 const int& Server::getSockfd() const
 {
 	return sockfd;
