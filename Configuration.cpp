@@ -225,10 +225,8 @@ void	Configuration::parseErrorPage(const std::string &line, Server &server)
 		args.back() = args.back().substr(1);
 	if (!isValidFile(args.back()))
 			throw InvalidPageErrorException();
-	std::vector<int>v;
 	for (std::vector<std::string>::iterator it = args.begin(); it != args.end()-1;it++)
-		v.push_back(convert<int>(*it));
-	server.addErrorPage(std::make_pair(v, args.back()));
+		server.addErrorPage(std::make_pair(convert<int>(*it), args.back()));
 }
 
 void	Configuration::parseMaxClients(const std::string &line, Server &server)

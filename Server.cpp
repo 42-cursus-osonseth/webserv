@@ -135,7 +135,7 @@ void	Server::setIndex(const std::string &index)
 	this->index = index;
 }
 
-void	Server::addErrorPage(const std::pair<std::vector<int>, std::string> errorInfo)
+void	Server::addErrorPage(const std::pair<int, std::string> errorInfo)
 {
 	errorPages.insert(errorInfo);
 }
@@ -179,11 +179,10 @@ void  	Server::printServer()
 		std::cout << '*' << std::setw(16) << std::setfill(' ') << "Host:\t" << host.hostAddress << '\n';
 		if (host.errorPages.size() > 0)
 		{
-			for (std::map<std::vector<int>, std::string>::const_iterator it = host.errorPages.begin(); it != host.errorPages.end();it++)
+			for (std::map<int, std::string>::const_iterator it = host.errorPages.begin(); it != host.errorPages.end();it++)
 			{
 				std::cout << '*' << std::setw(16) << std::setfill(' ') << "Error Pages:\t"; 
-				printTabInline(it->first); 
-				std::cout << '-' << it->second << '\n';
+				std::cout << it->first << '-' << it->second << '\n';
 			}
 		}
 		if (!host.index.empty())
@@ -272,14 +271,26 @@ int Server::findNumberHost()
 	// }
 
 
-Server *Server::getInstance(const std::string &host, int port)
+std::string Server::get_errcode_string(t_errcodes e)
 {
-	for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
-	{
-		if (it->hostAddress == host && std::find(it->listenPorts.begin(), it->listenPorts.end(), toString(port)) != it->listenPorts.end())
-			return &(*it);
-	}
-	return NULL;
+	return errorPages[e];
+	// for (std::map<int,std::string>::const_iterator it = errorPages.begin(); it != errorPages.end(); ++it)
+	// {
+		
+	// }
+}
+
+Server* Server::getInstance(const std::string& host, int port)
+{
+	(void)port;
+    for (std::list<Server>::const_iterator it = serversList.begin(); it != serversList.end(); ++it) {
+		
+        if (it->hostAddress == host && std::find(it->listenPorts.begin(), it->listenPorts.end(), toString(port)) != it->listenPorts.end())
+		{
+            return const_cast<Server*>(&(*it));
+        }
+    }
+    return NULL;
 }
 
 const int& Server::getSockfd() const
@@ -302,7 +313,7 @@ const std::list<t_location>& Server::getLocations() const
 	return locations;
 }
 
-const std::map<std::vector<int>, std::string>& Server::getErrorPages() const 
+const std::map<int, std::string>& Server::getErrorPages() const 
 {
         return errorPages;
 }

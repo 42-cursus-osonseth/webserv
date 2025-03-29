@@ -1,5 +1,6 @@
 #include "includes/Configuration.hpp"
 #include "includes/webServer.hpp"
+#include "includes/errcodes.hpp"
 int main(int ac, char **av)
 {
 	if (ac > 2)
@@ -16,11 +17,8 @@ int main(int ac, char **av)
 		std::cerr << SUPA_RED << e.what() << '\n' << RESET;
 	}
 	Server::printServer();
-	std::string path = "/www";	
-	// if (isValidDir(formatPath(path)))
-	// 	std::cerr << "dir is valid\n";
-	// else
-	// 	std::cerr << "dir is not valid\n";
+	Server* s = Server::getInstance("127.0.0.1", 8080); 
+	std::cout << "error code 404\t" << s->get_errcode_string(NOT_FOUND) << '\n';
 	webServer nginx(Server::getServersList());
 	try
 	{

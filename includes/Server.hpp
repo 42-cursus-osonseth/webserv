@@ -2,6 +2,7 @@
 #define SERVER_HPP
 
 #include "library.hpp"
+#include "errcodes.hpp"
 #define DEFAULT_PORT 8080
 #define DEFAULT_ADDR "localhost"
 #include <sys/socket.h>
@@ -37,19 +38,18 @@ class Server
 		std::string	root;
 		std::string hostAddress;
 		std::list<t_location> locations;
-		static Server *getInstance(const std::string &host, int port);
 		static std::list<Server> serversList;
-		std::map<std::vector<int>, std::string> errorPages;
+		std::map<int, std::string> errorPages;
 		int		sockfd;
 		std::string		number_server;
 		struct sockaddr_in   addr;
-	public:
+		public:
 		//constructors
 		Server();
 		~Server();
 		Server(const Server &src);
 		Server &operator=(const Server &rhs);
-
+		
 		void	acceptConnection(int epfd, struct epoll_event events);
 		void	initSocket();
 		void	closeSocket();
@@ -59,7 +59,7 @@ class Server
 		void	removeServer(Server &server);
 		std::list<Server>	findHost(Server	& server);
 		int findNumberHost();
-
+		
 		//setters
 		static void	addServer(Server &server);
 		void	addPorts(const std::string &portStr);
@@ -68,16 +68,18 @@ class Server
 		void	setMaxBodySize(size_t value);
 		void	setRoot(const std::string &root);
 		void	setIndex(const std::string &index);
-		void	addErrorPage(const std::pair<std::vector<int>, std::string>);
+		void	addErrorPage(const std::pair<int, std::string>);
 		void	setLocation(const t_location &location);
 		void	addLocation(const t_location &location);
-
-
+		
+		
 		//getters
+		std::string	get_errcode_string(t_errcodes e);
+		static Server* getInstance(const std::string& host, int port);
 		const int &getSockfd() const;
 		std::string	getHostAddress();
 		const std::list<t_location>& getLocations() const;
-		const std::map<std::vector<int>, std::string>& getErrorPages() const;
+		const std::map<int, std::string>& getErrorPages() const;
 		const std::vector<std::string>& getServerNames() const;
 		const std::vector<std::string>& getListenPorts() const;
 		size_t getClientMaxBodySize() const;
