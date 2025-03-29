@@ -30,6 +30,9 @@ void	Request::getRessourcePath()
 
 	if (std::find(loc->methods.begin(), loc->methods.end(), _method) == loc->methods.end())
 		throw Request::ErrcodeException(METHOD_NOT_ALLOWED, *this);
+	if (loc->redir.first != 0)
+		throw Request::Redirection(*this, loc->redir);
+	std::cout << "FullPath: " << fullPath << std::endl;
 	if (access(fullPath.c_str(), F_OK))
 		throw Request::ErrcodeException(NOT_FOUND, *this);
 	else if (Utils::pathIsDir(fullPath)) {
@@ -43,4 +46,5 @@ void	Request::getRessourcePath()
 		}
 	}
 	_path = Utils::cleanupPath(fullPath);
+	std::cout << "Path: " << _path << std::endl;
 }

@@ -119,3 +119,16 @@ const char	*Request::AutoIndexHandle::what() const throw()
 	r.generateHeader();
 	return ("Autoindex has been called");
 }
+
+Request::Redirection::Redirection(Request &r, std::pair<int, std::string> info) : _r(r), _redir(info) {}
+
+const char	*Request::Redirection::what() const throw()
+{
+	_r._responseBody = "";
+	_r._responseHeader = "HTTP/1.1 " + Utils::itos(_redir.first) + " " + get_errcode_string((t_errcodes)_redir.first) + "\r\n";
+	_r._responseHeader += "Location: " + _redir.second + "\r\n";
+	_r._responseHeader += "Content-Length: 0\r\n";
+	_r._responseHeader += "Connection: keep-alive\r\n";
+	_r._responseHeader += "Server: " + _r._matchingServer->getServerNames()[0] + "\r\n\r\n";
+	return ("Some redirection has been used");
+}

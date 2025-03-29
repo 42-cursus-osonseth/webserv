@@ -80,6 +80,16 @@ public:
 		~AutoIndexHandle() throw() {};
 		const char	*what() const throw();
 	};
+	class Redirection : public std::exception {
+		private:
+			Request	&_r;
+			std::pair<int, std::string>	_redir;
+			Redirection();
+		public:
+			Redirection(Request &r, std::pair<int, std::string>);
+			~Redirection() throw() {}
+			const char	*what() const throw();
+	};
 };
 
 #endif
