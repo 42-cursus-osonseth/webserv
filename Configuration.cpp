@@ -183,14 +183,20 @@ void	Configuration::parsePorts(const std::string &line, Server &server)
 		throw EmptyPortsException();
 	for (std::vector<std::string>::const_iterator it = serverPorts.begin();it != serverPorts.end();it++)
 	{
+		host.clear();
 		if (!isIpAddress(*it, host))
 			throw InvalidPortsException();
-		server.addPorts(*it);
+		if (!host.empty() && !server.getHostAddress().empty())
+			throw std::runtime_error("Error: Multiple host address");
+		else if (!host.empty())
+		{	
+			server.addHostAddress(host);
+			std::string port = *it;
+			server.addPorts(port.substr(host.size()+1));
+		}
+		else
+			server.addPorts(*it);
 	}
-	if (!host.empty() && !server.getHostAddress().empty())
-		throw std::runtime_error("Error: Multiple host address");
-	else if (!host.empty())
-		server.addHostAddress(host);
 	std::cout << "host = " << host << "\t"<< server.getHostAddress() << '\n';
 }
 
