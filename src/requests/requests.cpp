@@ -59,11 +59,31 @@ void	Request::parseRequest()
 	}
 }
 
+std::string	Request::getHost()
+{
+	size_t	pos = _data["Host"].find(":");
+
+	if (pos == std::string::npos) {
+		return _data["Host"];
+	}
+	return _data["Host"].substr(0, pos);
+}
+
+int	Request::getPort()
+{
+	size_t	pos = _data["Host"].find(":");
+	int		res;
+
+	if (pos == std::string::npos)
+		return 80;
+	std::istringstream(_data["Host"].substr(pos + 1)) >> res;
+	return res;
+}
+
 void	Request::generateResponse()
 {
-	std::cerr << "Host: " << _data["Host"] << std::endl;
-	// _matchingServer = Server::findMatchingServer();
-	_matchingServer = &Server::getServersList().front();
+	std::cerr << "Looking up: " << getHost() << "@" << Utils::itos(getPort()) << std::endl;
+	_matchingServer = Server::getServersList().front().getInstance(getHost(), getPort());
 	if (!_matchingServer) {
 		std::cout << "No matching server" << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this); // [TBR]
@@ -100,7 +120,10 @@ void	Request::send()
 void	Request::generateHeader()
 {
 	_responseHeader = _version + ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
-	_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n"; // Config file dependent _matchingServer.getServerNames()
+	if (_matchingServer)
+		_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n"; // Config file dependent _matchingServer.getServerNames()
+	else
+		_responseHeader += "Server: Error server\r\n";
 	_responseHeader += Utils::time_string();
 	_responseHeader += "Content-Length: " + Utils::itos(_responseBody.size()) + "\r\n";
 	_responseHeader += "Content-Type: " + _mime + "\r\n";

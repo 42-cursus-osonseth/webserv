@@ -30,9 +30,11 @@ private:
 	// Basic functions for the constructor
 	std::string	getRequest();
 	void		isolateBody(std::string &);
-	void	parseRequest();
-	void	generateResponse();
-	void	generateHeader();
+	void		parseRequest();
+	void		generateResponse();
+	void		generateHeader();
+	std::string	getHost();
+	int			getPort();
 
 	// generateResponse main subfunctions
 	void	getReq();
