@@ -1,5 +1,5 @@
-#ifndef	UTILS_HPP
-#define UTILS_HPP
+#ifndef	UTILS2_HPP
+#define UTILS2_HPP
 
 template < typename T > T convert(const std::string& str) {
         std::istringstream iss(str);
