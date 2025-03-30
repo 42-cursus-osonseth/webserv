@@ -7,11 +7,14 @@
 
 void	Request::isolateBody(std::string &fullRequest)
 {
+	std::cerr << "Isolating body on: " << fullRequest << std::endl;
+
 	size_t	sep = fullRequest.find("\r\n\r\n");
 	if (sep != std::string::npos) {
 		_body = fullRequest.substr(sep + 3);
 		fullRequest = fullRequest.substr(0, sep);
 	}
+	std::cerr << "Body isolation managed" << std::endl;
 }
 
 std::string	Request::getRequest()
@@ -20,11 +23,19 @@ std::string	Request::getRequest()
 	ssize_t		n;
 	std::string	fullRequest;
 
-	while ((n = read(_fd, buffer, sizeof(buffer)))) {
-		if (n < 0)
-			throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
-		fullRequest += buffer;
+	if ((n = read(_fd, buffer, sizeof(buffer))) < 0) {
+		fullRequest = std::string(buffer);
+	} else {
+		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
+		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
+	// while ((n = recv(_fd, buffer, sizeof(buffer), 0))) {
+	// 	if (n < 0)
+	// 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
+	// 	fullRequest += buffer;
+	// 	std::cerr << buffer;
+	// }
+	std::cerr << "getRequest: " << fullRequest << std::endl;;
 	return fullRequest;
 }
 
@@ -33,16 +44,20 @@ void	Request::parseRequest()
 	std::string	fullRequest = getRequest();
 
 	isolateBody(fullRequest);
-	// {
-	// 	std::cerr << "Body: " << _body << std::endl;
-	// 	std::cerr << "Header: " << fullRequest << std::endl;
-	// }
+	{
+		std::cerr << "Body: " << _body << std::endl;
+		std::cerr << "Header: " << fullRequest << std::endl;
+	}
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	long unsigned int	i = 1;
-	if (_method.empty() || _path.empty() || _version.empty()) // Checks sur le format
+	if (_method.empty() || _path.empty() || _version.empty()) { // Checks sur le format
+		_method = "GET";
+		_path = "/";
+		_version = "HTTP/1.1";
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
+	}
 	while (i < lines.size() && !lines[i].empty()) {
 		size_t	sep_pos = lines[i].find(":");
 		if (sep_pos != std::string::npos) {
@@ -55,6 +70,7 @@ void	Request::parseRequest()
 	try {
 		_data.at("Host");
 	} catch (const std::out_of_range &e) {
+		std::cerr << "No host found in the header file" << std::endl;
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	}
 }
@@ -96,7 +112,9 @@ void	Request::generateResponse()
 
 Request::Request(int fd) : _fd(fd)
 {
+	std::cerr << "Generating a new Request" << std::endl;
 	try {
+		_matchingServer = NULL;
 		parseRequest();
 		generateResponse();
 	} catch (const std::exception &e) {
@@ -120,6 +138,8 @@ void	Request::send()
 void	Request::generateHeader()
 {
 	_responseHeader = _version + ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
+	std::cout << _version;
+	std::cout << ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
 	if (_matchingServer)
 		_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n"; // Config file dependent _matchingServer.getServerNames()
 	else
