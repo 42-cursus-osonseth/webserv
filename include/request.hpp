@@ -7,7 +7,7 @@
 # include <sys/socket.h>
 # include <sys/types.h>
 # include "utils.hpp"
-# include "../includes/Server.hpp"
+# include "Server.hpp"
 
 class Request
 {

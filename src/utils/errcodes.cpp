@@ -1,4 +1,4 @@
-#include "../include/errcodes.hpp"
+#include <errcodes.hpp>
 
 std::string	get_errcode_string(t_errcodes e)
 {

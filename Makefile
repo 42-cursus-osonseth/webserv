@@ -6,17 +6,26 @@
 #    By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
-#    Updated: 2025/03/27 20:08:59 by mekherbo         ###   ########.fr        #
+#    Updated: 2025/03/30 01:54:53 by mekherbo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = webserv
 
-SRC = main.cpp \
-	checkFiles.cpp \
-	Server.cpp \
-	webServer.cpp \
-	Configuration.cpp
+SRC = src/main.cpp \
+	src/utils/checkFiles.cpp \
+	src/Server/Server.cpp \
+	src/webServer.cpp \
+	src/Server/Configuration.cpp \
+	src/utils/errcodes.cpp \
+	src/utils/mime.cpp \
+	src/utils/utils.cpp \
+	src/requests/delete.cpp \
+	src/requests/get.cpp \
+	src/requests/exceptions.cpp \
+	src/requests/post.cpp \
+	src/requests/getRessourcePath.cpp \
+	src/requests/requests.cpp \
 
 DEF_COLOR = \033[0;39m
 GRAY = \033[0;90m
@@ -42,7 +51,7 @@ RM = rm -f
 all : $(NAME)
 
 .cpp.o:
-	$(CC) $(CPPFLAGS) -c $< -o $(<:.cpp=.o)
+	$(CC) $(CPPFLAGS) -I include -c $< -o $(<:.cpp=.o)
 	@echo "$(YELLOW)Compiling: $< $(DEF_COLOR)"
 
 $(NAME) : $(LIBFT) $(OBJ)
