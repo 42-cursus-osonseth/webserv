@@ -1,0 +1,137 @@
+#include <request.hpp>
+#include <utils.hpp>
+#include <ctime>
+#include <fstream>
+#include <unistd.h>
+#include <sstream>
+
+void	Request::isolateBody(std::string &fullRequest)
+{
+	size_t	sep = fullRequest.find("\r\n\r\n");
+	if (sep != std::string::npos) {
+		_body = fullRequest.substr(sep + 3);
+		fullRequest = fullRequest.substr(0, sep);
+	}
+}
+
+std::string	Request::getRequest()
+{
+	char		buffer[4096] = {0};
+	ssize_t		n;
+	std::string	fullRequest;
+
+	while ((n = read(_fd, buffer, sizeof(buffer)))) {
+		if (n < 0)
+			throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
+		fullRequest += buffer;
+	}
+	return fullRequest;
+}
+
+void	Request::parseRequest()
+{
+	std::string	fullRequest = getRequest();
+
+	isolateBody(fullRequest);
+	// {
+	// 	std::cerr << "Body: " << _body << std::endl;
+	// 	std::cerr << "Header: " << fullRequest << std::endl;
+	// }
+	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
+	std::istringstream	request_line(lines[0]);
+	request_line >> _method >> _path >> _version;
+	long unsigned int	i = 1;
+	if (_method.empty() || _path.empty() || _version.empty()) // Checks sur le format
+		throw Request::ErrcodeException(BAD_REQUEST, *this);
+	while (i < lines.size() && !lines[i].empty()) {
+		size_t	sep_pos = lines[i].find(":");
+		if (sep_pos != std::string::npos) {
+			std::string	field_name = lines[i].substr(0, sep_pos);
+			std::string	field_value = lines[i].substr(sep_pos + 2);
+			_data[field_name] = field_value;
+		}
+		i++;
+	}
+	try {
+		_data.at("Host");
+	} catch (const std::out_of_range &e) {
+		throw Request::ErrcodeException(BAD_REQUEST, *this);
+	}
+}
+
+std::string	Request::getHost()
+{
+	size_t	pos = _data["Host"].find(":");
+
+	if (pos == std::string::npos) {
+		return _data["Host"];
+	}
+	return _data["Host"].substr(0, pos);
+}
+
+int	Request::getPort()
+{
+	size_t	pos = _data["Host"].find(":");
+	int		res;
+
+	if (pos == std::string::npos)
+		return 80;
+	std::istringstream(_data["Host"].substr(pos + 1)) >> res;
+	return res;
+}
+
+void	Request::generateResponse()
+{
+	std::cerr << "Looking up: " << getHost() << "@" << Utils::itos(getPort()) << std::endl;
+	_matchingServer = Server::getServersList().front().getInstance(getHost(), getPort());
+	if (!_matchingServer) {
+		std::cout << "No matching server" << std::endl;
+		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this); // [TBR]
+	}
+		 if (_method == "GET")		getReq();
+	else if (_method == "POST")		postReq();
+	else if (_method == "DELETE")	deleteReq();
+	else throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
+}
+
+Request::Request(int fd) : _fd(fd)
+{
+	try {
+		parseRequest();
+		generateResponse();
+	} catch (const std::exception &e) {
+		std::cerr << "Encountered exception while treating request: " << e.what() << std::endl;
+	}
+}
+
+void	Request::send()
+{
+	if (!_errcode) {
+		std::cerr << "Can't respond to this request" << std::endl;
+	} else {
+		std::cerr << "WIP" << std::endl;
+		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
+			perror("send");
+		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)
+			perror("send");	
+	}
+}
+
+void	Request::generateHeader()
+{
+	_responseHeader = _version + ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
+	if (_matchingServer)
+		_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n"; // Config file dependent _matchingServer.getServerNames()
+	else
+		_responseHeader += "Server: Error server\r\n";
+	_responseHeader += Utils::time_string();
+	_responseHeader += "Content-Length: " + Utils::itos(_responseBody.size()) + "\r\n";
+	_responseHeader += "Content-Type: " + _mime + "\r\n";
+	_responseHeader += "Cache-Control: no-store\r\n\r\n";
+}
+
+void	Request::dump(void)
+{
+	std::cout << "-- Dumping request for " << _path << " at " << _data["Host"] << " --" << std::endl;
+	std::cout << _responseHeader << _responseBody << std::endl;
+}
