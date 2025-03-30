@@ -30,6 +30,26 @@ std::string errorString()
 	return strerror(err);
 }
 
+bool	webServer::isServer(int fd)
+{
+	for (std::vector<int>::iterator it = server_fds.begin(); it != server_fds.end(); it++)
+	{
+		if (*it == fd)
+			return true;
+	}
+	return false;
+}
+
+bool	webServer::isClient(int fd)
+{
+	for (std::vector<int>::iterator it = client_fds.begin(); it != client_fds.end(); it++)
+	{
+		if (*it == fd)
+			return true;
+	}
+	return false;
+}
+
 void	handle_signal(int signal)
 {
 	if (signal == SIGQUIT || signal == SIGINT || signal == SIGTERM || signal == SIGHUP || signal == SIGTSTP)
@@ -117,7 +137,7 @@ void webServer::start()
 		while (g_loop)
 		{
 			nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
-			std::cerr << GREEN << "WebServer wait an event\n" << RESET;
+			// std::cerr << GREEN << "WebServer wait an event\n" << RESET;
 			if (nfds == -1)
 			{
 				if (errno == EINTR)
@@ -131,17 +151,7 @@ void webServer::start()
 			}
 			for (int i = 0; i < nfds; ++i)
 			{
-				if (events[i].events & EPOLLIN)
-				{
-					for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
-					{
-						if (events[i].data.fd == it->getSockfd())
-						{
-							acceptConnection(*it);
-						}
-					}
-				}
-				else
+				if (isClient(events[i].data.fd) & EPOLLIN)
 				{
 					try
 					{
@@ -156,6 +166,16 @@ void webServer::start()
 						std::cerr << e.what() << '\n';
 					}
 					//Client socket event: read data.
+				}
+				else if (events[i].events & EPOLLIN)
+				{
+					for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
+					{
+						if (events[i].data.fd == it->getSockfd())
+						{
+							acceptConnection(*it);
+						}
+					}
 				}
 			}
 		}

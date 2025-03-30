@@ -24,6 +24,8 @@ class webServer
 		webServer (std::list<Server> serversList);
 		webServer &operator=(const webServer &rhs);
 		~webServer();
+		bool isServer(int fd);
+		bool isClient(int fd);
 		void initEpoll();
 		void setupServers();
 		void closeWebServer();
