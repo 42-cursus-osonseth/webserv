@@ -151,7 +151,7 @@ void webServer::start()
 			}
 			for (int i = 0; i < nfds; ++i)
 			{
-				if (isClient(events[i].data.fd) & EPOLLIN)
+				if (!isServer(events[i].data.fd) && events[i].events & EPOLLIN)
 				{
 					try
 					{

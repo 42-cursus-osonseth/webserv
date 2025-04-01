@@ -508,8 +508,9 @@ void	Configuration::parseFile(const std::string &filename)
 		throw std::runtime_error("Error: Failed to open file: " + filename + '\n');
 	if (infile.good())
 	{
-		while (infile.good())
+		while (infile.good() && !infile.eof())
 		{
+			std::cout << "t\n";
 			try
 			{
 					if (!handleToken(readNextWord(infile))){
@@ -520,6 +521,7 @@ void	Configuration::parseFile(const std::string &filename)
 			catch(const std::exception& e)
 			{
 				std::cerr << SUPA_RED <<  e.what() << "\t line ["<< lineNbr <<"]\n\n" << RESET;
+				infile.close();
 				return ;
 			}
 		}
