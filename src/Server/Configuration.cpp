@@ -197,7 +197,6 @@ void	Configuration::parsePorts(const std::string &line, Server &server)
 		else
 			server.addPorts(*it);
 	}
-	std::cout << "host = " << host << "\t"<< server.getHostAddress() << '\n';
 }
 
 
@@ -364,7 +363,6 @@ bool	Configuration::chooseDirectives(const std::string &lineWithSemicolon, Serve
 bool	Configuration::chooseLocationDirectives(const std::string &lineWithSemicolon)
 {
 	std::string line = lineWithSemicolon.substr(0, lineWithSemicolon.size()-1);
-	std::cout << "uri location: "<< currentLocation.uri << "\tline = " << line << '\n';
 	std::vector<std::string> lineSplited = split(skipWord(line));
 	std::string firstWord = getFirstWord(line);
 	if (firstWord == "root")
@@ -510,7 +508,6 @@ void	Configuration::parseFile(const std::string &filename)
 	{
 		while (infile.good() && !infile.eof())
 		{
-			std::cout << "t\n";
 			try
 			{
 					if (!handleToken(readNextWord(infile))){
