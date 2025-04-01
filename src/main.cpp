@@ -15,6 +15,7 @@ int main(int ac, char **av)
 	catch(const std::exception& e)
 	{
 		std::cerr << SUPA_RED << e.what() << '\n' << RESET;
+		return 1;
 	}
 	Server::printServer();
 	Server* s = Server::getInstance("127.0.0.1", 8080); 
