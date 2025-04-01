@@ -10,8 +10,16 @@ const t_location	*Request::findMatchingLocation()
 			return &(*it);
 		}
 	}
-	std::cerr << "No match" << std::endl;
+	// std::cerr << "No match" << std::endl;
 	return (0);
+}
+
+std::string	Request::replaceRoot(const std::string &location, const std::string &root)
+{
+	std::string	res = _path;
+
+	res.replace(0, location.size(), root + "/");
+	return res;
 }
 
 void	Request::getRessourcePath()
@@ -22,8 +30,7 @@ void	Request::getRessourcePath()
 
 	if (!loc || loc->root.empty())
 		throw Request::ErrcodeException(NOT_FOUND, *this);
-	fullPath = loc->root + "/" + _path;
-	std::cerr << fullPath << std::endl;
+	fullPath = replaceRoot(loc->uri, loc->root);
 	mark = fullPath.find("?");
 	if (mark != std::string::npos)
 		fullPath = fullPath.substr(0, mark);
@@ -32,7 +39,6 @@ void	Request::getRessourcePath()
 		throw Request::ErrcodeException(METHOD_NOT_ALLOWED, *this);
 	if (loc->redir.first != 0)
 		throw Request::Redirection(*this, loc->redir);
-	std::cout << "FullPath: " << fullPath << std::endl;
 	if (access(fullPath.c_str(), F_OK))
 		throw Request::ErrcodeException(NOT_FOUND, *this);
 	else if (Utils::pathIsDir(fullPath)) {

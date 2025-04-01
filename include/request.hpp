@@ -35,6 +35,7 @@ private:
 	void		generateHeader();
 	std::string	getHost();
 	int			getPort();
+	std::string	replaceRoot(const std::string &, const std::string &);
 
 	// generateResponse main subfunctions
 	void	getReq();
@@ -81,6 +82,10 @@ public:
 		AutoIndexHandle(Request &);
 		~AutoIndexHandle() throw() {};
 		const char	*what() const throw();
+	};
+
+	class Disconnected : public std::exception {
+		const char	*what() const throw() { return "Disconnected"; }
 	};
 	class Redirection : public std::exception {
 		private:

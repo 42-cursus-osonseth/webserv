@@ -7,14 +7,14 @@
 
 void	Request::isolateBody(std::string &fullRequest)
 {
-	std::cerr << "Isolating body on: " << fullRequest << std::endl;
+	// std::cerr << "Isolating body on: " << fullRequest << std::endl;
 
 	size_t	sep = fullRequest.find("\r\n\r\n");
 	if (sep != std::string::npos) {
 		_body = fullRequest.substr(sep + 3);
 		fullRequest = fullRequest.substr(0, sep);
 	}
-	std::cerr << "Body isolation managed" << std::endl;
+	// std::cerr << "Body isolation managed" << std::endl;
 }
 
 std::string	Request::getRequest()
@@ -23,9 +23,12 @@ std::string	Request::getRequest()
 	ssize_t		n;
 	std::string	fullRequest;
 
-	if ((n = read(_fd, buffer, sizeof(buffer))) < 0) {
+	n = recv(_fd, buffer, sizeof(buffer), 0);
+	if (n == 0)
+		throw Request::Disconnected();
+	else if (n > 0)
 		fullRequest = std::string(buffer);
-	} else {
+	else {
 		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
@@ -35,7 +38,6 @@ std::string	Request::getRequest()
 	// 	fullRequest += buffer;
 	// 	std::cerr << buffer;
 	// }
-	std::cerr << "getRequest: " << fullRequest << std::endl;;
 	return fullRequest;
 }
 
@@ -44,10 +46,10 @@ void	Request::parseRequest()
 	std::string	fullRequest = getRequest();
 
 	isolateBody(fullRequest);
-	{
-		std::cerr << "Body: " << _body << std::endl;
-		std::cerr << "Header: " << fullRequest << std::endl;
-	}
+	// {
+	// 	std::cerr << "Body: " << _body << std::endl;
+	// 	std::cerr << "Header: " << fullRequest << std::endl;
+	// }
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
@@ -117,6 +119,8 @@ Request::Request(int fd) : _fd(fd)
 		_matchingServer = NULL;
 		parseRequest();
 		generateResponse();
+	} catch (const Disconnected &e) {
+		throw e;
 	} catch (const std::exception &e) {
 		std::cerr << "Encountered exception while treating request: " << e.what() << std::endl;
 	}
@@ -127,7 +131,6 @@ void	Request::send()
 	if (!_errcode) {
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
-		std::cerr << "WIP" << std::endl;
 		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
 			perror("send");
 		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)
