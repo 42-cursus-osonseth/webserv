@@ -1,0 +1,78 @@
+.home {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.home header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.home h1 {
+    margin: 0;
+}
+
+.home .content {
+    padding: 20px;
+    text-align: center;
+}
+
+.home .content a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.home .content a:hover {
+    background-color: #0056b3;
+}
+
+.home footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.disconnect {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ff0000, #0000ff);
+    color: white;
+    flex-direction: column; /* Aligne les éléments en colonne */
+}
+
+.disconnect h1 {
+    font-size: 2em;
+    margin-bottom: 20px; /* Espacement entre le titre et le lien */
+}
+
+.disconnect a {
+    font-size: 1.2em; /* Taille du texte du lien */
+    color: white; /* Couleur du lien */
+    background-color: #007BFF; /* Fond du lien */
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px; /* Espacement du lien par rapport au texte */
+}
+
+.disconnect a:hover {
+    background-color: #0056b3; /* Couleur au survol */
+}
+
