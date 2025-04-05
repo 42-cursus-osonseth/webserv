@@ -128,9 +128,17 @@ Request::Request(int fd) : _fd(fd)
 
 void	Request::send()
 {
+	std::cout << "MIME = " << _mime << std::endl;
+	std::cout << "PATH = " << _path << std::endl;
 	if (!_errcode) {
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
+		if (_mime == "text/x-python")
+			{
+				cgiManager c(_path, _fd);
+				c.execute();
+				return;
+			}
 		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
 			perror("send");
 		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)

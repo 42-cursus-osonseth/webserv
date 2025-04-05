@@ -8,7 +8,7 @@ cgiManager::~cgiManager()
 {
 }
 
-cgiManager::cgiManager(std::string path, int fd) : _path("./pages" + path), _response(""), _fd(fd), _pid(-1), _bytesRead(0)
+cgiManager::cgiManager(std::string path, int fd) : _path(path), _response(""), _fd(fd), _pid(-1), _bytesRead(0)
 {
     _pipefd[0] = -1;
     _pipefd[1] = -1;
