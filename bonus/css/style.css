@@ -1,13 +1,13 @@
 .home {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
 
 .home header {
-    background-color: #333;
-    color: white;
+    background-color: #000000;
+    color: #ffffff;
     text-align: center;
     padding: 20px;
 }
@@ -16,28 +16,59 @@
     margin: 0;
 }
 
-.home .content {
-    padding: 20px;
-    text-align: center;
+.home .content-container {
+    top: 100px;
+    left: 170px;
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+    width: 80%;
+    box-sizing: border-box;
 }
 
-.home .content a {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007BFF;
+.home .content-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 60px;
     color: white;
     text-decoration: none;
     border-radius: 5px;
+    font-size: 2.5em;
+    position: relative;
+    flex: 1;
+    margin: 10px;
+    max-width: 200px;
 }
+
+.home .block-1 {
+    background-color: #6fa5c4; /* Couleur du bloc 1 */
+}
+
+.home .block-2 {
+    background-color: #686125; /* Couleur du bloc 2 */
+}
+
+.home .block-3 {
+    background-color: #853681; /* Couleur du bloc 3 */
+}
+
+.home .block-4 {
+    background-color: #49a56c; /* Couleur du bloc 4 */
+}
+
+.home .content-block:hover {
+    background-color: #0056b3; /* Changement de couleur au survol */
+}
+
 
 .home .content a:hover {
     background-color: #0056b3;
 }
 
 .home footer {
-    background-color: #333;
-    color: white;
+    background-color: #000000;
+    color: #ffffff;
     text-align: center;
     padding: 10px;
     position: fixed;
