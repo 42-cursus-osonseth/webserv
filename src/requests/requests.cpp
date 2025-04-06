@@ -53,11 +53,12 @@ void	Request::parseRequest()
 {
 	std::string	fullRequest = getRequest();
 
-
+	std::cout << std::string(30,'-') << std::endl;
+	std::cout << fullRequest << std::endl;
+	std::cout << std::string(30,'-') << std::endl;
 
 	isolateBody(fullRequest);
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
-
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
@@ -68,10 +69,6 @@ void	Request::parseRequest()
 		_version = "HTTP/1.1";
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	}
-	std::cout << std::string(20,'-') <<  std::endl << std::endl;
-	std::cerr << "_path : " << _path << std::endl;
-	std::cout << std::string(20,'-') <<  std::endl << std::endl;
-
 	while (i < lines.size() && !lines[i].empty()) {
 		size_t	sep_pos = lines[i].find(":");
 		if (sep_pos != std::string::npos) {

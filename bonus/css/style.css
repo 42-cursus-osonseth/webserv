@@ -12,10 +12,6 @@
     padding: 20px;
 }
 
-/* .home h1 {
-    margin: 0;
-} */
-
 .home .content-container {
     top: 100px;
     left: 170px;
@@ -115,7 +111,8 @@
 }
 
 .cookies header {
-    background-color: #000000;
+    /* background-color: #000000; */
+    transition: background-color 0.3s ease; 
     color: #ffffff;
     text-align: center;
     padding: 20px;
