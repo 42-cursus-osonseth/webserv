@@ -1,20 +1,3 @@
-// let timeout;
-
-// function resetTimeout() {
-//     clearTimeout(timeout);
-//     timeout = setTimeout(() => {
-//         window.location.href = "/disconnect.html"; 
-//     }, 60000); // 60 secondes
-// }
-
-// // Écoute les interactions utilisateur
-// document.addEventListener("mousemove", resetTimeout);
-// document.addEventListener("keydown", resetTimeout); // Remplace onkeypress
-// document.addEventListener("click", resetTimeout);
-
-// // Initialise le timeout au chargement
-// resetTimeout();
-
 let timeout;
 
 function resetTimeout() {

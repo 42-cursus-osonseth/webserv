@@ -32,6 +32,11 @@ void	Request::getBody()
 void	Request::getReq()
 {
 	getRessourcePath();
+	if(_path == "./bonus/process")
+	{
+		generateSetCookieHeader();
+		return;
+	}
 	getBody();
 	_mime = get_mime(Utils::getExtension(_path));
 	generateHeader();

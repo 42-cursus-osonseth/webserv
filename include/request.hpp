@@ -20,6 +20,7 @@ private:
 	std::map<std::string, std::string> _data;
 	std::string _body;
 	std::string _mime;
+	std::string _query;
 
 	t_errcodes _errcode;
 
@@ -34,9 +35,11 @@ private:
 	void parseRequest();
 	void generateResponse();
 	void generateHeader();
+	void generateSetCookieHeader();
 	std::string getHost();
 	int getPort();
 	std::string replaceRoot(const std::string &, const std::string &);
+	void getQuerry();
 
 	// generateResponse main subfunctions
 	void getReq();

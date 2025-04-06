@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test GET</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="cookies">
+    <header>
+        <h1>Bienvenue sur WebServ</h1>
+    </header>
+
+    <div class="choix-container">
+        <h2>Veuillez choisir la couleur de fond du site</h2>
+
+        <form action="/process" method="GET">
+            <select name="select" class="select">
+                <option value="Vert">Vert</option>
+                <option value="Bleu">Bleu</option>
+                <option value="Violet">Violet</option>
+            </select>
+            <button type="submit" class="valider-btn">Valider</button>
+        </form>
+    </div>
+</body>
+
+</html>

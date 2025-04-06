@@ -24,24 +24,19 @@ std::string	Request::replaceRoot(const std::string &location, const std::string 
 
 void	Request::getRessourcePath()
 {
-	size_t	mark;
 	const t_location	*loc = findMatchingLocation();
 	std::string	fullPath;
 
 	if (!loc || loc->root.empty())
 		throw Request::ErrcodeException(NOT_FOUND, *this);
 	fullPath = replaceRoot(loc->uri, loc->root);
-	mark = fullPath.find("?");
-	if (mark != std::string::npos)
-		fullPath = fullPath.substr(0, mark);
-
 	if (std::find(loc->methods.begin(), loc->methods.end(), _method) == loc->methods.end())
 		throw Request::ErrcodeException(METHOD_NOT_ALLOWED, *this);
 	if (loc->redir.first != 0)
 		throw Request::Redirection(*this, loc->redir);
 	if (access(fullPath.c_str(), F_OK))
 		throw Request::ErrcodeException(NOT_FOUND, *this);
-	else if (Utils::pathIsDir(fullPath)) {
+	else if (Utils::pathIsDir(fullPath) && fullPath != "./bonus/process") {
 		if (!loc->index.empty())
 			fullPath += loc->index;
 		else if (!loc->dirListing)
@@ -51,6 +46,7 @@ void	Request::getRessourcePath()
 			throw Request::AutoIndexHandle(*this);
 		}
 	}
+
 	_path = Utils::cleanupPath(fullPath);
-	std::cout << "Path: " << _path << std::endl;
+
 }

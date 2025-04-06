@@ -5,6 +5,14 @@
 #include <unistd.h>
 #include <sstream>
 
+
+void Request::getQuerry ()
+{
+	size_t	sep_pos = _path.find('?');
+	_query = _path.substr(sep_pos + 1);
+	_path = _path.substr(0, sep_pos);
+	 
+}
 void	Request::isolateBody(std::string &fullRequest)
 {
 	// std::cerr << "Isolating body on: " << fullRequest << std::endl;
@@ -45,14 +53,14 @@ void	Request::parseRequest()
 {
 	std::string	fullRequest = getRequest();
 
+
+
 	isolateBody(fullRequest);
-	// {
-	// 	std::cerr << "Body: " << _body << std::endl;
-	// 	std::cerr << "Header: " << fullRequest << std::endl;
-	// }
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
+
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
+	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
 	long unsigned int	i = 1;
 	if (_method.empty() || _path.empty() || _version.empty()) { // Checks sur le format
 		_method = "GET";
@@ -60,6 +68,10 @@ void	Request::parseRequest()
 		_version = "HTTP/1.1";
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	}
+	std::cout << std::string(20,'-') <<  std::endl << std::endl;
+	std::cerr << "_path : " << _path << std::endl;
+	std::cout << std::string(20,'-') <<  std::endl << std::endl;
+
 	while (i < lines.size() && !lines[i].empty()) {
 		size_t	sep_pos = lines[i].find(":");
 		if (sep_pos != std::string::npos) {
@@ -128,8 +140,9 @@ Request::Request(int fd) : _fd(fd)
 
 void	Request::send()
 {
-	std::cout << "MIME = " << _mime << std::endl;
-	std::cout << "PATH = " << _path << std::endl;
+	// std::cout << "MIME = " << _mime << std::endl;
+	// std::cout << "PATH = " << _path << std::endl;
+	
 	if (!_errcode) {
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
@@ -159,6 +172,20 @@ void	Request::generateHeader()
 	_responseHeader += "Content-Length: " + Utils::itos(_responseBody.size()) + "\r\n";
 	_responseHeader += "Content-Type: " + _mime + "\r\n";
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
+}
+void	Request::generateSetCookieHeader()
+{
+	size_t	sep_pos = _query.find('=');
+	std::string color = _query.substr(sep_pos + 1);
+	_responseHeader = _version + ' ' + Utils::itos(FOUND) + ' ' + get_errcode_string(FOUND) + "\r\n";
+	if (_matchingServer)
+		_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n";
+	else
+		_responseHeader += "Server: Error server\r\n";
+	_responseHeader += Utils::time_string();
+    _responseHeader += "Location: /cookies.html\r\n";
+    _responseHeader += "Set-Cookie: couleur=" + color + "; Path=/\r\n";
+    _responseHeader += "Content-Length: 0\r\n\r\n";
 }
 
 void	Request::dump(void)
