@@ -50,6 +50,10 @@ class Server
 		Server(const Server &src);
 		Server &operator=(const Server &rhs);
 		
+		//sort locations
+		void	sortLocations();
+
+	
 		void	acceptConnection(int epfd, struct epoll_event events);
 		void	initSocket();
 		void	closeSocket();

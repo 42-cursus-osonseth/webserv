@@ -18,8 +18,6 @@ int main(int ac, char **av)
 		return 1;
 	}
 	Server::printServer();
-	Server* s = Server::getInstance("127.0.0.1", 8080); 
-	std::cout << "error code 404\t" << s->get_errcode_string(NOT_FOUND) << '\n';
 	webServer nginx(Server::getServersList());
 	try
 	{
@@ -27,7 +25,7 @@ int main(int ac, char **av)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << RED <<  e.what() << '\n';
+		std::cerr << RED <<  e.what() << '\n' << RESET;
 	}
 	return (0);
 }

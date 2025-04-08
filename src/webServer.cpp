@@ -85,7 +85,7 @@ void webServer::closeWebServer()
 	for (std::vector<int>::iterator it = server_fds.begin(); it != server_fds.end(); it++)
 	{
 		if (epoll_ctl(epfd, EPOLL_CTL_DEL, *it, NULL) == -1)
-		throw std::runtime_error("epoll_ctl_del failed for server_fds");
+			throw std::runtime_error("epoll_ctl_del failed for server_fds "  + errorString() + " on fd" + toString(*it));
 	}
 	for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
 	{
@@ -144,11 +144,6 @@ void webServer::start()
 					continue;
 				throw std::runtime_error("epoll_wait failed");
 			}
-			// std::cerr << MAGENTA << "nfds: " << nfds << RESET <<'\n';
-			if (nfds > 0)
-			{
-				// std::cerr << CYAN << "event triggered\n" << RESET;
-			}
 			for (int i = 0; i < nfds; ++i)
 			{
 				if (!isServer(events[i].data.fd) && events[i].events & EPOLLIN)
@@ -162,6 +157,8 @@ void webServer::start()
 					catch(const std::exception& e)
 					{
 						epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
+						if (isClient(events[i].data.fd))
+							client_fds.erase(std::remove(client_fds.begin(), client_fds.end(), events[i].data.fd), client_fds.end());
 						close(events[i].data.fd);
 						std::cerr << e.what() << '\n';
 					}
@@ -184,7 +181,7 @@ void webServer::start()
 	catch(const std::exception& e)
 	{
 		closeWebServer();
-		std::cerr << RED << e.what() << '\n';
+		std::cerr << RED << e.what() << '\n' << RESET;
 	}
 	
 }

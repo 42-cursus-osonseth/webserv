@@ -6,7 +6,7 @@
 #    By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
-#    Updated: 2025/03/30 01:54:53 by mekherbo         ###   ########.fr        #
+#    Updated: 2025/04/08 07:33:48 by mekherbo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRC = src/main.cpp \
 	src/requests/post.cpp \
 	src/requests/getRessourcePath.cpp \
 	src/requests/requests.cpp \
+	src/Server/sortLocations.cpp
 
 DEF_COLOR = \033[0;39m
 GRAY = \033[0;90m

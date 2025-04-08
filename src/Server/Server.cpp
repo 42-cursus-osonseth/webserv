@@ -150,6 +150,7 @@ void	Server::addLocation(const t_location &location)
 
 void	Server::addServer(Server &server)
 {
+	server.sortLocations();
 	Server::serversList.push_back(server);
 }
 
