@@ -21,32 +21,39 @@ std::string	Request::replaceRoot(const std::string &location, const std::string 
 	res.replace(0, location.size(), root + "/");
 	return res;
 }
+bool Request::isProcessPath(const std::string &root, const std::string &fullPath)
+{
+	std::string str = fullPath.substr(root.size(), _processDir.size());
+	std::cout << "fullPath = " << fullPath <<std::endl;
+	std::cout << "str = " << str <<std::endl;
+	std::cout << "processDir = " << _processDir <<std::endl;
+	return (str == _processDir);
+}
 
 void	Request::getRessourcePath()
 {
 	const t_location	*loc = findMatchingLocation();
-	std::string	fullPath;
-
+	_root = loc->root;
 	if (!loc || loc->root.empty())
 		throw Request::ErrcodeException(NOT_FOUND, *this);
-	fullPath = replaceRoot(loc->uri, loc->root);
+	_fullPath = replaceRoot(loc->uri, loc->root);
 	if (std::find(loc->methods.begin(), loc->methods.end(), _method) == loc->methods.end())
 		throw Request::ErrcodeException(METHOD_NOT_ALLOWED, *this);
 	if (loc->redir.first != 0)
 		throw Request::Redirection(*this, loc->redir);
-	if (access(fullPath.c_str(), F_OK))
+	if (access(_fullPath.c_str(), F_OK))
 		throw Request::ErrcodeException(NOT_FOUND, *this);
-	else if (Utils::pathIsDir(fullPath) && fullPath != "./bonus/process") {
+	else if (Utils::pathIsDir(_fullPath) && !isProcessPath(loc->root, _fullPath)) {
 		if (!loc->index.empty())
-			fullPath += loc->index;
+			_fullPath += loc->index;
 		else if (!loc->dirListing)
 			throw Request::ErrcodeException(FORBIDDEN, *this);
 		else {
-			_path = Utils::cleanupPath(fullPath);
+			_path = Utils::cleanupPath(_fullPath);
 			throw Request::AutoIndexHandle(*this);
 		}
 	}
-
-	_path = Utils::cleanupPath(fullPath);
+	std::cout << "FULL PATH 123= " << _fullPath << std::endl;
+	_path = Utils::cleanupPath(_fullPath);
 
 }

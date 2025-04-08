@@ -3,7 +3,7 @@ window.onload = function() {
     var colorMap = {
         "Vert": "green",
         "Bleu": "blue",
-        "Violet": "purple"
+        "Violet": "#8A2BE2"
     };
 
     var header = document.querySelector("header");

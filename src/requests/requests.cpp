@@ -121,7 +121,7 @@ void	Request::generateResponse()
 	else throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
 }
 
-Request::Request(int fd) : _fd(fd)
+Request::Request(int fd) : _fd(fd), _processDir("/process")
 {
 	std::cerr << "Generating a new Request" << std::endl;
 	try {
@@ -180,8 +180,8 @@ void	Request::generateSetCookieHeader()
 	else
 		_responseHeader += "Server: Error server\r\n";
 	_responseHeader += Utils::time_string();
-    _responseHeader += "Location: /cookies.html\r\n";
-    _responseHeader += "Set-Cookie: couleur=" + color + "; Path=/\r\n";
+    _responseHeader += "Location: /colors.html\r\n";
+    _responseHeader += "Set-Cookie: couleur=" + color + "; Path=/; Max-Age=31536000\r\n";
     _responseHeader += "Content-Length: 0\r\n\r\n";
 }
 

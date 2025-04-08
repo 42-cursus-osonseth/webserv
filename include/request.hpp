@@ -21,6 +21,9 @@ private:
 	std::string _body;
 	std::string _mime;
 	std::string _query;
+	std::string _processDir;
+	std::string _root;
+	std::string	_fullPath;
 
 	t_errcodes _errcode;
 
@@ -40,6 +43,7 @@ private:
 	int getPort();
 	std::string replaceRoot(const std::string &, const std::string &);
 	void getQuerry();
+	bool isProcessPath(const std::string &root, const std::string &fullPath);
 
 	// generateResponse main subfunctions
 	void getReq();

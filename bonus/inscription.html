@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="inscription">
+    <header>
+        <h1>Bienvenue sur WebServ</h1>
+    </header>
+
+    <nav class="nav-bar">
+        <a href="/">Accueil</a>
+    </nav>
+    
+    <div class="choix-container">
+        <h2>Inscription utilisateur</h2>
+
+        <form action="/process" method="POST">
+            <input type="text" name="pseudo" placeholder="Votre pseudo" required class="select" />
+            <input type="password" name="password" placeholder="Mot de passe" required class="select" />
+            <button type="submit" class="valider-btn">S'inscrire</button>
+        </form>
+    </div>
+
+    <script src="/color.js"></script>
+    <script src="/menu.js"></script>
+</body>
+
+</html>

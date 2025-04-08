@@ -32,7 +32,8 @@ void	Request::getBody()
 void	Request::getReq()
 {
 	getRessourcePath();
-	if(_path == "./bonus/process")
+	std::cout << "FULL PATH = " << _fullPath << std::endl;
+	if(isProcessPath(_root, _fullPath))
 	{
 		generateSetCookieHeader();
 		return;
