@@ -24,8 +24,8 @@ cgiManager::cgiManager(std::string path, int fd) : _path(path), _response(""), _
 
 void cgiManager::execute()
 {
-    std::cout << " path dans class cgi = " << _path << std::endl;
-    std::cout << " path dans args[0] = " << _args[0] << std::endl;
+    // std::cout << " path dans class cgi = " << _path << std::endl;
+    // std::cout << " path dans args[0] = " << _args[0] << std::endl;
     if (pipe(_pipefd) == -1)
         throw std::runtime_error("pipe failed");
     if ((_pid = fork()) == -1)
@@ -49,7 +49,7 @@ void cgiManager::execute()
         while ((_bytesRead = read(_pipefd[0], _buffer, sizeof(_buffer) - 1)) > 0)
             _response.append(_buffer, _bytesRead);
         close(_pipefd[0]);
-        std::cout << "response = " << _response << std::endl;
+        // std::cout << "response = " << _response << std::endl;
         send(_fd, _response.c_str(), _response.size(), 0);
     }
 }

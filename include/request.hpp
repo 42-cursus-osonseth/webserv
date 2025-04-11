@@ -114,6 +114,10 @@ public:
 		~Redirection() throw() {}
 		const char *what() const throw();
 	};
+	class CGIcalled : public std::exception
+	{
+		const char	*what() const throw() { return "CGI has been called"; }
+	};
 };
 
 #endif

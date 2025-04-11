@@ -32,13 +32,14 @@ void	Request::getBody()
 void	Request::getReq()
 {
 	getRessourcePath();
-	std::cout << "FULL PATH = " << _fullPath << std::endl;
+	_mime = get_mime(Utils::getExtension(_path));
+	if (_mime == "text/x-python")
+		throw Request::CGIcalled();
 	if(isProcessPath(_root, _fullPath))
 	{
 		generateSetCookieHeader();
 		return;
 	}
 	getBody();
-	_mime = get_mime(Utils::getExtension(_path));
 	generateHeader();
 }

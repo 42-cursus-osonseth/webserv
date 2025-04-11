@@ -128,6 +128,8 @@ Request::Request(int fd) : _fd(fd), _processDir("/process")
 		_matchingServer = NULL;
 		parseRequest();
 		generateResponse();
+	} catch (const CGIcalled &e) {
+		std::cerr << "CGI has been called, aborting standard protocol" << std::endl;
 	} catch (const Disconnected &e) {
 		throw e;
 	} catch (const std::exception &e) {
@@ -144,11 +146,11 @@ void	Request::send()
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
 		if (_mime == "text/x-python")
-			{
-				cgiManager c(_path, _fd);
-				c.execute();
-				return;
-			}
+		{
+			cgiManager c(_path, _fd);
+			c.execute();
+			return;
+		}
 		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
 			perror("send");
 		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)
