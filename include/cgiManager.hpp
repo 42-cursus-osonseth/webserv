@@ -15,6 +15,7 @@ class cgiManager
 private:
     std::string _path;
     std::string _response;
+    std::string _contentLength;
     int _fd;
     int _pid;
     int _bytesRead;
@@ -23,9 +24,10 @@ private:
     int _pipefd[2];
     char _buffer[1024];
 
+    void initPostEnv(int length);
+
 public:
     cgiManager();
-    cgiManager(std::string path, int fd);
     cgiManager(Request &req);
     ~cgiManager();
     void execute();

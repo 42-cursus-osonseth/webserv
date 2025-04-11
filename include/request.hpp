@@ -74,6 +74,7 @@ public:
 	void dump();
 	const std::string &getterBody() const;
 	const std::string &getPath() const;
+	const std::string &getMethod() const;
 	int getFd() const;
 	class ErrcodeException : public std::exception
 	{

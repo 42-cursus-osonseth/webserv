@@ -13,6 +13,10 @@ const std::string &Request::getPath() const
 {
 	return _path;
 }
+const std::string &Request::getMethod() const
+{
+	return _method;
+}
 int Request::getFd() const
 {
 	return _fd;
