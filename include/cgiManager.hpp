@@ -8,6 +8,8 @@
 #include <exception>
 #include <stdexcept>
 
+class Request;
+
 class cgiManager
 {
 private:
@@ -24,6 +26,7 @@ private:
 public:
     cgiManager();
     cgiManager(std::string path, int fd);
+    cgiManager(Request &req);
     ~cgiManager();
     void execute();
 };

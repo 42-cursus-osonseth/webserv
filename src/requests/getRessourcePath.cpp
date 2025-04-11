@@ -24,9 +24,6 @@ std::string	Request::replaceRoot(const std::string &location, const std::string 
 bool Request::isProcessPath(const std::string &root, const std::string &fullPath)
 {
 	std::string str = fullPath.substr(root.size(), _processDir.size());
-	std::cout << "fullPath = " << fullPath <<std::endl;
-	std::cout << "str = " << str <<std::endl;
-	std::cout << "processDir = " << _processDir <<std::endl;
 	return (str == _processDir);
 }
 
@@ -53,7 +50,6 @@ void	Request::getRessourcePath()
 			throw Request::AutoIndexHandle(*this);
 		}
 	}
-	std::cout << "FULL PATH 123= " << _fullPath << std::endl;
 	_path = Utils::cleanupPath(_fullPath);
 
 }

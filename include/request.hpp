@@ -64,6 +64,7 @@ private:
 	void findMatchingServer();
 	void getRessourcePath();
 
+
 public:
 	Request(int fd);
 	~Request() { std::cerr << "Closing Request" << std::endl
@@ -71,7 +72,9 @@ public:
 
 	void send();
 	void dump();
-
+	const std::string &getterBody() const;
+	const std::string &getPath() const;
+	int getFd() const;
 	class ErrcodeException : public std::exception
 	{
 	private:
@@ -116,6 +119,7 @@ public:
 	};
 	class CGIcalled : public std::exception
 	{
+		public:
 		const char	*what() const throw() { return "CGI has been called"; }
 	};
 };

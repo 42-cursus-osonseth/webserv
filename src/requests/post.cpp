@@ -3,7 +3,10 @@
 void	Request::postReq()
 {
 	getRessourcePath();
-	// if(_path == "./bonus/process")
+	_mime = get_mime(Utils::getExtension(_path));
+	getBody();
+	if(_mime == "application/x-httpd-php")
+		throw Request::CGIcalled();
 }
 // void	Request::getFileContent()
 // {

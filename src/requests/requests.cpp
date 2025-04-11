@@ -5,7 +5,18 @@
 #include <unistd.h>
 #include <sstream>
 
-
+const std::string &Request::getterBody() const
+{
+	return _body;
+}
+const std::string &Request::getPath() const
+{
+	return _path;
+}
+int Request::getFd() const
+{
+	return _fd;
+}
 void Request::getQuerry ()
 {
 	size_t	sep_pos = _path.find('?');
@@ -129,7 +140,7 @@ Request::Request(int fd) : _fd(fd), _processDir("/process")
 		parseRequest();
 		generateResponse();
 	} catch (const CGIcalled &e) {
-		std::cerr << "CGI has been called, aborting standard protocol" << std::endl;
+		std::cerr << e.what() << std::endl;
 	} catch (const Disconnected &e) {
 		throw e;
 	} catch (const std::exception &e) {
@@ -145,9 +156,9 @@ void	Request::send()
 	if (!_errcode) {
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
-		if (_mime == "text/x-python")
+		if (_mime == "text/x-python" || _mime == "application/x-httpd-php")
 		{
-			cgiManager c(_path, _fd);
+			cgiManager c(*this);
 			c.execute();
 			return;
 		}

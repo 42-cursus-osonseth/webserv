@@ -1,4 +1,5 @@
 #include "cgiManager.hpp"
+#include "request.hpp"
  #include <stdio.h>
 cgiManager::cgiManager()
 {
@@ -8,11 +9,27 @@ cgiManager::~cgiManager()
 {
 }
 
-cgiManager::cgiManager(std::string path, int fd) : _path(path), _response(""), _fd(fd), _pid(-1), _bytesRead(0)
+// cgiManager::cgiManager(std::string path, int fd) : _path(path), _response(""), _fd(fd), _pid(-1), _bytesRead(0)
+// {
+//     _pipefd[0] = -1;
+//     _pipefd[1] = -1;
+//     _args[0] = const_cast<char *>(_path.c_str());
+//     _args[1] = NULL;
+//     _env[0] = (char *)"REQUEST_METHOD=GET";
+//     _env[1] = (char *)"QUERY_STRING=test=123";
+//     _env[2] = (char *)"CONTENT_TYPE=text/html";
+//     _env[3] = (char *)"CONTENT_LENGTH=0";
+//     _env[4] = NULL;
+//     memset(_buffer, 0, sizeof(_buffer));
+// }
+cgiManager::cgiManager (Request &req) : _fd(req.getFd())
 {
+    std::cout << "BODY = " << req.getterBody() << std::endl;
+    std::cout << "PATH = " << req.getPath() << std::endl;
     _pipefd[0] = -1;
     _pipefd[1] = -1;
-    _args[0] = const_cast<char *>(_path.c_str());
+    _args[0] = const_cast<char *>(req.getPath().c_str());
+    std::cout << "PATH CONST = " << _args[0] << std::endl;
     _args[1] = NULL;
     _env[0] = (char *)"REQUEST_METHOD=GET";
     _env[1] = (char *)"QUERY_STRING=test=123";
@@ -35,7 +52,7 @@ void cgiManager::execute()
         dup2(_pipefd[1], STDOUT_FILENO);
         close(_pipefd[0]);
         close(_pipefd[1]);
-        if (execve(_path.c_str(), _args, _env) == -1)
+        if (execve(_args[0], _args, _env) == -1)
         {
             perror("");
             throw std::runtime_error("execve failed failed");
@@ -49,7 +66,7 @@ void cgiManager::execute()
         while ((_bytesRead = read(_pipefd[0], _buffer, sizeof(_buffer) - 1)) > 0)
             _response.append(_buffer, _bytesRead);
         close(_pipefd[0]);
-        // std::cout << "response = " << _response << std::endl;
+        std::cout << "response = " << _response << std::endl;
         send(_fd, _response.c_str(), _response.size(), 0);
     }
 }
