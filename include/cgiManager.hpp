@@ -25,7 +25,8 @@ private:
     int _bytesRead;
     char * _args[2];
     char * _env[5];
-    int _pipefd[2];
+    int _sv_in[2];
+    int _sv_out[2];
     char _buffer[1024];
 
     void initPostEnv(int length);

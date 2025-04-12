@@ -34,7 +34,7 @@ void	Request::isolateBody(std::string &fullRequest)
 
 	size_t	sep = fullRequest.find("\r\n\r\n");
 	if (sep != std::string::npos) {
-		_body = fullRequest.substr(sep + 3);
+		_body = fullRequest.substr(sep + 4);
 		fullRequest = fullRequest.substr(0, sep);
 	}
 	// std::cerr << "Body isolation managed" << std::endl;

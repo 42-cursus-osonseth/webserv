@@ -16,5 +16,5 @@ window.onload = function() {
     } 
     else if (header) 
         header.style.backgroundColor = "black";
-        
+   
 };
