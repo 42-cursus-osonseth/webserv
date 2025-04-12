@@ -170,3 +170,12 @@
     text-decoration: underline;
 }
 
+#welcome-message {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+}
+
+
