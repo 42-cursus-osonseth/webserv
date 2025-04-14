@@ -8,6 +8,8 @@
 
 #include <sys/epoll.h>
 #include "Server.hpp"
+#include "client.hpp"
+
 class webServer
 {
 	private:
@@ -18,6 +20,7 @@ class webServer
 		std::list<Server> serversList;
 		std::vector<int> client_fds;
 		std::vector<int> server_fds;
+		std::map<int, client> clients;
 	public:
 		webServer();
 		webServer(const webServer &src);

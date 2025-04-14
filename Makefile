@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mekherbo <mekherbo@student.42.fr>          +#+  +:+       +#+         #
+#    By: max <max@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
-#    Updated: 2025/04/08 07:33:48 by mekherbo         ###   ########.fr        #
+#    Updated: 2025/04/15 00:00:50 by max              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME = webserv
 SRC = src/main.cpp \
 	src/utils/checkFiles.cpp \
 	src/Server/Server.cpp \
+	src/Server/client.cpp \
 	src/webServer.cpp \
 	src/Server/Configuration.cpp \
 	src/utils/errcodes.cpp \
@@ -26,7 +27,8 @@ SRC = src/main.cpp \
 	src/requests/post.cpp \
 	src/requests/getRessourcePath.cpp \
 	src/requests/requests.cpp \
-	src/Server/sortLocations.cpp
+	src/Server/sortLocations.cpp 
+
 
 DEF_COLOR = \033[0;39m
 GRAY = \033[0;90m

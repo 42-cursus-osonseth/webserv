@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Upload</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="inscription">
+    <header>
+        <h1>Bienvenue sur WebServ</h1>
+    </header>
+
+    <nav class="nav-bar">
+        <a href="/">Accueil</a>
+    </nav>
+    <div id="welcome-message"></div>
+    <div class="choix-container">
+        <h2>Upload de fichier</h2>
+
+        <form action="/process/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="fichier" required class="select" />
+            <button type="submit" class="valider-btn">Envoyer</button>
+        </form>
+    </div>
+
+    <script src="/color.js"></script>
+    <script src="/menu.js"></script>
+    <script src="/welcome.js"></script>
+</body>
+
+</html>

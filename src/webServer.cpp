@@ -112,7 +112,7 @@ void	webServer::acceptConnection(Server const &server)
 		close(client_fd);
 		throw std::runtime_error("Error: set client socket to non-blocking mode failed");
 	}
-	ev.events = EPOLLIN | EPOLLOUT;
+	ev.events = EPOLLIN | EPOLLOUT || EPOLLET;
 	ev.data.fd = client_fd;
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
 	{
@@ -121,6 +121,7 @@ void	webServer::acceptConnection(Server const &server)
 	}
 	std::cout << YELLOW << "Client connected on fd: " << client_fd << RESET << '\n';
 	client_fds.push_back(client_fd);
+	clients[client_fd] = client(client_fd);
 }
 
 void webServer::start()
@@ -150,7 +151,7 @@ void webServer::start()
 				{
 					try
 					{
-						std::cerr << YELLOW << "Client socket event: read data\n" << RESET;
+						std::cerr << YELLOW << "Client socket event: read data : "<< events[i].data.fd << RESET << std::endl;
 						Request req(events[i].data.fd);
 						req.send();
 					}	

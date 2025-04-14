@@ -1,0 +1,187 @@
+.home {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.home header {
+    background-color: #000000;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}
+
+.home .content-container {
+    top: 100px;
+    left: 170px;
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+    width: 80%;
+    box-sizing: border-box;
+}
+
+.home .content-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 60px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 2.5em;
+    position: relative;
+    flex: 1;
+    margin: 10px;
+    max-width: 200px;
+}
+
+.home .block-1 {
+    background-color: #000000; /* Couleur du bloc 1 */
+}
+
+.home .block-2 {
+    background-color: #000000; /* Couleur du bloc 2 */
+}
+
+.home .block-3 {
+    background-color: #000000; /* Couleur du bloc 3 */
+}
+
+.home .block-4 {
+    background-color: #000000; /* Couleur du bloc 4 */
+}
+
+.home .content-block:hover {
+    background-color: #0056b3; /* Changement de couleur au survol */
+}
+
+
+.home .content a:hover {
+    background-color: #0056b3;
+}
+
+.home footer {
+    background-color: #000000;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.disconnect {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ff0000, #0000ff);
+    color: white;
+    flex-direction: column; /* Aligne les éléments en colonne */
+}
+
+.disconnect h1 {
+    font-size: 2em;
+    margin-bottom: 20px; /* Espacement entre le titre et le lien */
+}
+
+.disconnect a {
+    font-size: 1.2em; /* Taille du texte du lien */
+    color: white; /* Couleur du lien */
+    background-color: #007BFF; /* Fond du lien */
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px; /* Espacement du lien par rapport au texte */
+}
+
+.disconnect a:hover {
+    background-color: #0056b3; /* Couleur au survol */
+}
+
+.cookies {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.cookies header {
+    /* background-color: #000000; */
+    transition: background-color 0.3s ease; 
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}
+.inscription {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.inscription header {
+    /* background-color: #000000; */
+    transition: background-color 0.3s ease; 
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}
+
+.choix-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.select {
+    margin-top: 15px;
+    font-size: 1em;
+    padding: 10px;
+}
+
+.valider-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.nav-bar {
+    background-color: #000;
+    padding: 10px;
+    text-align: center;
+}
+
+.nav-bar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 15px;
+}
+
+.nav-bar a:hover {
+    text-decoration: underline;
+}
+
+#welcome-message {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="file"].select {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px;
+    font-size: 16px;
+}
+

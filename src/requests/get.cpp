@@ -32,7 +32,14 @@ void	Request::getBody()
 void	Request::getReq()
 {
 	getRessourcePath();
-	getBody();
 	_mime = get_mime(Utils::getExtension(_path));
+	if (_mime == "text/x-python")
+		throw Request::CGIcalled();
+	if(isProcessPath())
+	{
+		generateSetCookieHeader();
+		return;
+	}
+	getBody();
 	generateHeader();
 }
