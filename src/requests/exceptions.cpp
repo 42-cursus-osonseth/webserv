@@ -133,4 +133,3 @@ const char	*Request::Redirection::what() const throw()
 	_r._responseHeader += "Server: " + _r._matchingServer->getServerNames()[0] + "\r\n\r\n";
 	return ("Some redirection has been used");
 }
-

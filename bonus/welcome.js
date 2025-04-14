@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     insertWelcomeMessage(header);
                 }
-            }, 10);
+            }, 30);
         }
     }
 
