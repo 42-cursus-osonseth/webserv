@@ -35,7 +35,7 @@ void	Request::getReq()
 	_mime = get_mime(Utils::getExtension(_path));
 	if (_mime == "text/x-python")
 		throw Request::CGIcalled();
-	if(isProcessPath(_root, _fullPath))
+	if(isProcessPath())
 	{
 		generateSetCookieHeader();
 		return;

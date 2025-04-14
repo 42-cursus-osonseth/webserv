@@ -21,10 +21,15 @@ std::string	Request::replaceRoot(const std::string &location, const std::string 
 	res.replace(0, location.size(), root + "/");
 	return res;
 }
-bool Request::isProcessPath(const std::string &root, const std::string &fullPath)
+bool Request::isProcessPath()
 {
-	std::string str = fullPath.substr(root.size(), _processDir.size());
+	std::string str = _fullPath.substr(_root.size(), _processDir.size());
 	return (str == _processDir);
+}
+bool Request::isUploadPath()
+{
+	std::string str = _fullPath.substr(_root.size() + _processDir.size());
+	return str == "/upload";
 }
 
 void	Request::getRessourcePath()
@@ -40,7 +45,7 @@ void	Request::getRessourcePath()
 		throw Request::Redirection(*this, loc->redir);
 	if (access(_fullPath.c_str(), F_OK))
 		throw Request::ErrcodeException(NOT_FOUND, *this);
-	else if (Utils::pathIsDir(_fullPath) && !isProcessPath(loc->root, _fullPath)) {
+	else if (Utils::pathIsDir(_fullPath) && !isProcessPath()) {
 		if (!loc->index.empty())
 			_fullPath += loc->index;
 		else if (!loc->dirListing)

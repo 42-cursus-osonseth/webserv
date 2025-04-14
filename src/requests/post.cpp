@@ -1,12 +1,23 @@
 #include <request.hpp>
 
-void	Request::postReq()
+void Request::readRequest()
+{
+	std::cout << "ON RENTRE DANS LA FUNC" << std::endl;
+}
+
+void Request::postReq()
 {
 	getRessourcePath();
 	_mime = get_mime(Utils::getExtension(_path));
+	if (isUploadPath())
+	{
+		readRequest();
+		return;
+	}
 	getBody();
-	if(_mime == "application/x-httpd-php")
+	if (_mime == "application/x-httpd-php")
 		throw Request::CGIcalled();
+
 }
 // void	Request::getFileContent()
 // {

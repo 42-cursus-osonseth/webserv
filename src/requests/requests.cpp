@@ -42,19 +42,25 @@ void	Request::isolateBody(std::string &fullRequest)
 
 std::string	Request::getRequest()
 {
-	char		buffer[4096] = {0};
+	char		buffer[50000] = {0};
 	ssize_t		n;
 	std::string	fullRequest;
 
+	// la socket enleve EPOLLET 
+	// content lenght tu regarde cb t'as lu t si c'est == content lenght
+	// si tout lu tu remets la soket en EPOLLET
 	n = recv(_fd, buffer, sizeof(buffer), 0);
+	std::cout << "N = " << n << std::endl;
 	if (n == 0)
 		throw Request::Disconnected();
 	else if (n > 0)
 		fullRequest = std::string(buffer);
+		// fullRequest.append(buffer,n);
 	else {
 		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
+
 	// while ((n = recv(_fd, buffer, sizeof(buffer), 0))) {
 	// 	if (n < 0)
 	// 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
@@ -67,12 +73,14 @@ std::string	Request::getRequest()
 void	Request::parseRequest()
 {
 	std::string	fullRequest = getRequest();
-
+	isolateBody(fullRequest);
+	
 	std::cout << std::string(30,'-') << std::endl;
 	std::cout << fullRequest << std::endl;
 	std::cout << std::string(30,'-') << std::endl;
-
-	isolateBody(fullRequest);
+	std::cout << std::string(30,'-') << std::endl;
+	std::cout << _body << std::endl;
+	std::cout << std::string(30,'-') << std::endl;
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;

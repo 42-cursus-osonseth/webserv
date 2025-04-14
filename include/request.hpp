@@ -43,7 +43,9 @@ private:
 	int getPort();
 	std::string replaceRoot(const std::string &, const std::string &);
 	void getQuerry();
-	bool isProcessPath(const std::string &root, const std::string &fullPath);
+	bool isProcessPath();
+	bool isUploadPath();
+	void readRequest();
 
 	// generateResponse main subfunctions
 	void getReq();

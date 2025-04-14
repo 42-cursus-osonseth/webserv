@@ -112,7 +112,7 @@ void	webServer::acceptConnection(Server const &server)
 		close(client_fd);
 		throw std::runtime_error("Error: set client socket to non-blocking mode failed");
 	}
-	ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+	ev.events = EPOLLIN | EPOLLOUT || EPOLLET;
 	ev.data.fd = client_fd;
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
 	{
