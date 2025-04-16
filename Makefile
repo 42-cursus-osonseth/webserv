@@ -27,6 +27,7 @@ SRC = src/main.cpp \
 	src/requests/post.cpp \
 	src/requests/getRessourcePath.cpp \
 	src/requests/requests.cpp \
+	src/requests/cgiManager.cpp \
 	src/Server/sortLocations.cpp 
 
 

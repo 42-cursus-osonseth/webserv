@@ -93,6 +93,10 @@ void cgiManager::execute()
             while ((_bytesRead = read(_sv_in[1], _buffer, sizeof(_buffer) - 1)) > 0)
                 _response.append(_buffer, _bytesRead);
             close(_sv_in[1]);
+            std::cout << " ----- REPONSE --------" << std::endl;
+            std::cout << std::string(30,'-') << std::endl;
+            std::cout << _response << std::endl;
+            std::cout << std::string(30,'-') << std::endl;
             send(_fd, _response.c_str(), _response.size(), 0);
         }
     }
