@@ -30,6 +30,8 @@ private:
     char _buffer[1024];
 
     void initPostEnv(int length);
+    void executePostRequest();
+    void executeGetRequest();
 
 public:
     cgiManager();
