@@ -17,7 +17,8 @@ private:
     int _fd;
     std::string _body;
     std::string _method;
-    
+    std::string _query;
+
     std::string _path;
     std::string _response;
     std::string _contentLength;
@@ -30,6 +31,7 @@ private:
     char _buffer[1024];
 
     void initPostEnv(int length);
+    void initGetenv();
     void executePostRequest();
     void executeGetRequest();
 

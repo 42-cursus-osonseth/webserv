@@ -38,7 +38,6 @@ private:
 	void parseRequest();
 	void generateResponse();
 	void generateHeader();
-	void generateSetCookieHeader();
 	std::string getHost();
 	int getPort();
 	std::string replaceRoot(const std::string &, const std::string &);
@@ -75,6 +74,7 @@ public:
 	void send();
 	void dump();
 	const std::string &getterBody() const;
+	const std::string &getterQuery() const;
 	const std::string &getPath() const;
 	const std::string &getMethod() const;
 	int getFd() const;

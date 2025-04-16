@@ -9,6 +9,10 @@ const std::string &Request::getterBody() const
 {
 	return _body;
 }
+const std::string &Request::getterQuery() const
+{
+	return _query;
+}
 const std::string &Request::getPath() const
 {
 	return _path;
@@ -46,11 +50,8 @@ std::string	Request::getRequest()
 	ssize_t		n;
 	std::string	fullRequest;
 
-	// la socket enleve EPOLLET 
-	// content lenght tu regarde cb t'as lu t si c'est == content lenght
-	// si tout lu tu remets la soket en EPOLLET
 	n = recv(_fd, buffer, sizeof(buffer), 0);
-	std::cout << "N = " << n << std::endl;
+	// std::cout << "N = " << n << std::endl;
 	if (n == 0)
 		throw Request::Disconnected();
 	else if (n > 0)
@@ -75,12 +76,12 @@ void	Request::parseRequest()
 	std::string	fullRequest = getRequest();
 	isolateBody(fullRequest);
 	
-	std::cout << std::string(30,'-') << std::endl;
-	std::cout << fullRequest << std::endl;
-	std::cout << std::string(30,'-') << std::endl;
-	std::cout << std::string(30,'-') << std::endl;
-	std::cout << _body << std::endl;
-	std::cout << std::string(30,'-') << std::endl;
+	// std::cout << std::string(30,'-') << std::endl;
+	// std::cout << fullRequest << std::endl;
+	// std::cout << std::string(30,'-') << std::endl;
+	// std::cout << std::string(30,'-') << std::endl;
+	// std::cout << _body << std::endl;
+	// std::cout << std::string(30,'-') << std::endl;
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
@@ -194,20 +195,6 @@ void	Request::generateHeader()
 	_responseHeader += "Content-Length: " + Utils::itos(_responseBody.size()) + "\r\n";
 	_responseHeader += "Content-Type: " + _mime + "\r\n";
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
-}
-void	Request::generateSetCookieHeader()
-{
-	size_t	sep_pos = _query.find('=');
-	std::string color = _query.substr(sep_pos + 1);
-	_responseHeader = _version + ' ' + Utils::itos(FOUND) + ' ' + get_errcode_string(FOUND) + "\r\n";
-	if (_matchingServer)
-		_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n";
-	else
-		_responseHeader += "Server: Error server\r\n";
-	_responseHeader += Utils::time_string();
-    _responseHeader += "Location: /colors.html\r\n";
-    _responseHeader += "Set-Cookie: couleur=" + color + "; Path=/; Max-Age=31536000\r\n";
-    _responseHeader += "Content-Length: 0\r\n\r\n";
 }
 
 void	Request::dump(void)
