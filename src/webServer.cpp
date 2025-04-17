@@ -152,7 +152,7 @@ void webServer::start()
 					try
 					{
 						std::cerr << YELLOW << "Client socket event: read data : "<< events[i].data.fd << RESET << std::endl;
-						Request req(events[i].data.fd);
+						Request req(events[i].data.fd, clients);
 						req.send();
 					}	
 					catch(const std::exception& e)

@@ -2,36 +2,41 @@
 
 client::client()
 {
-}
 
+}
+client::client(int fd) : _id(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true)
+{
+
+}
 client::~client()
 {
-}
 
-client::client(int fd) : _id(fd)
-{
-    _last_request = std::time(NULL);
 }
-void client::update_time()
-{
-  std::time(&_last_request);
-}
-int client::get_id() const
+int client::getId() const
 {
     return _id;
 }
-std::string client::get_cookies() const
-{
-    return _cookies;
-}
-std::time_t client::get_last_request_time() const
-{
-    return _last_request;
-}
 
-void client::print_client() const
+ssize_t client::getContentLenght() const
 {
-    std::cout << "ID : " << _id << std::endl;
-    std::cout << "Last request : " << _last_request << std::endl;
-    std::cout << "Cookies : " << _cookies << std::endl;
+    return _contentLength;
+}
+ssize_t client::getBytesRead() const
+{
+    return _bytesRead;
+}
+bool client::getBodyFullyRead() const
+{
+    return _bodyFullyRead;
+}
+const std::string &client::getBody() const
+{
+    return _body;
+}
+void client::printClient() const
+{
+    std::cout << "ID = " << _id << std::endl;
+    std::cout << "CONTENT LENGTH = " << _contentLength << std::endl;
+    std::cout << "BYTES READ = " << _bytesRead << std::endl;
+    std::cout << "BOOL FULL READ = " << _bodyFullyRead << std::endl;
 }

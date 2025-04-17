@@ -145,7 +145,7 @@ void	Request::generateResponse()
 	else throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
 }
 
-Request::Request(int fd) : _fd(fd), _processDir("/process")
+Request::Request(int fd, std::map<int, client> clients) : _fd(fd), _processDir("/process"), _clients(clients)
 {
 	std::cerr << "Generating a new Request" << std::endl;
 	try {

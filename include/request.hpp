@@ -9,6 +9,7 @@
 #include "utils.hpp"
 #include "Server.hpp"
 #include "cgiManager.hpp"
+#include "client.hpp"
 
 class Request
 {
@@ -24,6 +25,7 @@ private:
 	std::string _processDir;
 	std::string _root;
 	std::string	_fullPath;
+	std::map<int, client> &_clients;
 
 	t_errcodes _errcode;
 
@@ -67,7 +69,7 @@ private:
 
 
 public:
-	Request(int fd);
+	Request(int fd, std::map<int, client> client);
 	~Request() { std::cerr << "Closing Request" << std::endl
 						   << std::endl; };
 
