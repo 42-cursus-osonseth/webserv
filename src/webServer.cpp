@@ -112,7 +112,8 @@ void	webServer::acceptConnection(Server const &server)
 		close(client_fd);
 		throw std::runtime_error("Error: set client socket to non-blocking mode failed");
 	}
-	ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+	memset(&ev, 0, sizeof(ev));
+	ev.events = EPOLLIN;
 	ev.data.fd = client_fd;
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
 	{
@@ -123,7 +124,20 @@ void	webServer::acceptConnection(Server const &server)
 	client_fds.push_back(client_fd);
 	clients[client_fd] = client(client_fd);
 }
-
+void webServer::setSocketMode(int client_fd, int mode)
+{
+	memset(&ev, 0, sizeof(ev));
+	if(mode == LEVEL_TRIGGERED)
+		ev.events = EPOLLIN;
+	else
+		ev.events = EPOLLIN | EPOLLET;
+	ev.data.fd = client_fd;
+	if (epoll_ctl(epfd, EPOLL_CTL_MOD, client_fd, &ev) == -1)
+	{
+		close(client_fd);
+		throw std::runtime_error("epoll_ctl failed");
+	}
+}
 void webServer::start()
 {
 	signal(SIGQUIT, handle_signal); // ctrl backslash
@@ -138,7 +152,7 @@ void webServer::start()
 		while (g_loop)
 		{
 			nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
-			// std::cerr << GREEN << "WebServer wait an event\n" << RESET;
+			std::cerr << GREEN << "WebServer wait an event\n" << RESET;
 			if (nfds == -1)
 			{
 				if (errno == EINTR)
@@ -154,6 +168,8 @@ void webServer::start()
 						std::cerr << YELLOW << "Client socket event: read data : "<< events[i].data.fd << RESET << std::endl;
 						Request req(events[i].data.fd, clients);
 						req.send();
+						clients[events[i].data.fd].getBodyFullyRead() ? setSocketMode(events[i].data.fd, EDGE_TRIGGERED) : setSocketMode(events[i].data.fd, LEVEL_TRIGGERED);
+					
 					}	
 					catch(const std::exception& e)
 					{

@@ -10,6 +10,9 @@
 #include "Server.hpp"
 #include "client.hpp"
 
+#define EDGE_TRIGGERED 0
+#define LEVEL_TRIGGERED 1
+
 class webServer
 {
 	private:
@@ -34,6 +37,7 @@ class webServer
 		void closeWebServer();
 		void acceptConnection(Server const &server);
 		void start();
+		void setSocketMode(int client_fd, int mode);
 
 };
 
