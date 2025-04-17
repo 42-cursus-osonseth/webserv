@@ -150,8 +150,15 @@ Request::Request(int fd, std::map<int, client> clients) : _fd(fd), _processDir("
 	std::cerr << "Generating a new Request" << std::endl;
 	try {
 		_matchingServer = NULL;
+		if(_clients[_fd].getBodyFullyRead()){
 		parseRequest();
 		generateResponse();
+		_clients[_fd].printClient();
+		}
+		else
+		{
+			std::cout << " PROUT" << std::endl;
+		}
 	} catch (const CGIcalled &e) {
 		std::cerr << e.what() << std::endl;
 	} catch (const Disconnected &e) {
