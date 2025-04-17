@@ -24,6 +24,7 @@ std::string	get_mime(const std::string &key)
 		strings["js"] = "application/javascript";
 		strings["py"] = "text/x-python";
 		strings["php"] = "application/x-httpd-php";
+		strings["svg"] = "image/svg+xml";
 	}
 	try {
 		return (strings.at(key));
