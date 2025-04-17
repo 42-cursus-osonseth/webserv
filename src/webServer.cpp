@@ -168,7 +168,7 @@ void webServer::start()
 					try
 					{
 						std::cerr << YELLOW << "Client socket event: read data : "<< events[i].data.fd << RESET << std::endl;
-						Request req(events[i].data.fd, clients);
+						Request req(events[i].data.fd, clients[events[i].data.fd]);
 						req.send();
 						clients[events[i].data.fd].getBodyFullyRead() ? setSocketMode(events[i].data.fd, EDGE_TRIGGERED) : setSocketMode(events[i].data.fd, LEVEL_TRIGGERED);
 					

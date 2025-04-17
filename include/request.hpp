@@ -25,7 +25,7 @@ private:
 	std::string _processDir;
 	std::string _root;
 	std::string	_fullPath;
-	std::map<int, client> &_clients;
+	client &_clientRef;
 
 	t_errcodes _errcode;
 
@@ -69,7 +69,7 @@ private:
 
 
 public:
-	Request(int fd, std::map<int, client> client);
+	Request(int fd, client client);
 	~Request() { std::cerr << "Closing Request" << std::endl
 						   << std::endl; };
 

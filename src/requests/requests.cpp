@@ -145,15 +145,15 @@ void	Request::generateResponse()
 	else throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
 }
 
-Request::Request(int fd, std::map<int, client> clients) : _fd(fd), _processDir("/process"), _clients(clients)
+Request::Request(int fd, client client) : _fd(fd), _processDir("/process"), _clientRef(client)
 {
 	std::cerr << "Generating a new Request" << std::endl;
 	try {
 		_matchingServer = NULL;
-		if(_clients[_fd].getBodyFullyRead()){
+		if(_clientRef.getBodyFullyRead()){
 		parseRequest();
 		generateResponse();
-		_clients[_fd].printClient();
+		_clientRef.printClient();
 		}
 		else
 		{
