@@ -61,6 +61,8 @@ void webServer::initEpoll()
 	epfd = epoll_create(1);
 	if (epfd == -1)
 		throw std::runtime_error("epoll_create failed");
+	if (fcntl(epfd, F_SETFD, FD_CLOEXEC) == -1)
+		throw std::runtime_error("set epfd to FD_CLOEXEC failed");
 	memset(&ev, 0, sizeof(ev));
     memset(events, 0, sizeof(struct epoll_event) * MAX_EVENTS);
 }
@@ -107,10 +109,10 @@ void	webServer::acceptConnection(Server const &server)
 	int client_fd = accept(server.getSockfd(), (struct sockaddr *)&addr, &addrlen);
 	if (client_fd == -1)
 		throw std::runtime_error("accept failed");
-	if (fcntl(client_fd, F_SETFL, O_NONBLOCK) == -1)
+	if (fcntl(client_fd, F_SETFL, O_NONBLOCK) == -1 || fcntl(client_fd, F_SETFD, FD_CLOEXEC) == -1)
 	{
 		close(client_fd);
-		throw std::runtime_error("Error: set client socket to non-blocking mode failed");
+		throw std::runtime_error("Error: set client socket to O_NONBLOCK or FD_CLOEXEC failed");
 	}
 	memset(&ev, 0, sizeof(ev));
 	ev.events = EPOLLIN;
