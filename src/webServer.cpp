@@ -77,7 +77,7 @@ void webServer::setupServers()
 		ev.data.fd = it->getSockfd();
 		if (epoll_ctl(epfd, EPOLL_CTL_ADD, ev.data.fd, &ev) == -1)
 			throw std::runtime_error("epoll_ctl failed");
-		std::cout << GREEN << "Server fd added: " << ev.data.fd << RESET << '\n';
+		std::cout << GREEN << "Server fd added: " << ev.data.fd << RESET << std::endl;
 		server_fds.push_back(ev.data.fd);
 	}
 }
@@ -104,6 +104,7 @@ void webServer::closeWebServer()
 
 void	webServer::acceptConnection(Server const &server)
 {
+	std::cout << "on entre dans le accept connexion WEBserveur" <<std::endl;
 	struct sockaddr_in addr;
 	socklen_t addrlen = sizeof(addr);
 	int client_fd = accept(server.getSockfd(), (struct sockaddr *)&addr, &addrlen);
@@ -115,14 +116,14 @@ void	webServer::acceptConnection(Server const &server)
 		throw std::runtime_error("Error: set client socket to O_NONBLOCK or FD_CLOEXEC failed");
 	}
 	memset(&ev, 0, sizeof(ev));
-	ev.events = EPOLLIN;
+	ev.events = EPOLLIN | EPOLLET;
 	ev.data.fd = client_fd;
 	if (epoll_ctl(epfd, EPOLL_CTL_ADD, client_fd, &ev) == -1)
 	{
 		close(client_fd);
 		throw std::runtime_error("epoll_ctl failed");
 	}
-	std::cout << YELLOW << "Client connected on fd: " << client_fd << RESET << '\n';
+	std::cout << YELLOW << "Client connected on fd: " << client_fd << RESET << std::endl;
 	client_fds.push_back(client_fd);
 	clients[client_fd] = client(client_fd);
 }
@@ -170,16 +171,18 @@ void webServer::start()
 						std::cerr << YELLOW << "Client socket event: read data : "<< events[i].data.fd << RESET << std::endl;
 						Request req(events[i].data.fd, clients[events[i].data.fd]);
 						req.send();
-						clients[events[i].data.fd].getBodyFullyRead() ? setSocketMode(events[i].data.fd, EDGE_TRIGGERED) : setSocketMode(events[i].data.fd, LEVEL_TRIGGERED);
+						// clients[events[i].data.fd].getBodyFullyRead() ? setSocketMode(events[i].data.fd, EDGE_TRIGGERED) : setSocketMode(events[i].data.fd, LEVEL_TRIGGERED);
 					
 					}	
 					catch(const std::exception& e)
 					{
+						std::cout << "client efface" << std::endl;
+						clients.erase(events[i].data.fd);
 						epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 						if (isClient(events[i].data.fd))
 							client_fds.erase(std::remove(client_fds.begin(), client_fds.end(), events[i].data.fd), client_fds.end());
 						close(events[i].data.fd);
-						std::cerr << e.what() << '\n';
+						std::cerr << e.what() << std::endl;
 					}
 					//Client socket event: read data.
 				}
@@ -200,7 +203,7 @@ void webServer::start()
 	catch(const std::exception& e)
 	{
 		closeWebServer();
-		std::cerr << RED << e.what() << '\n' << RESET;
+		std::cerr << RED << e.what() << RESET << std::endl;
 	}
 	
 }

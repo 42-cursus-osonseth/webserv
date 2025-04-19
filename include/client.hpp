@@ -23,6 +23,8 @@ public:
     ssize_t getContentLenght() const;
     ssize_t getBytesRead() const;
     bool getBodyFullyRead() const;
+    void setBytesRead(ssize_t n);
+    void setContentLength(ssize_t n);
 
     void printClient() const;
    

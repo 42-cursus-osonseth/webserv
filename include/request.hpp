@@ -46,7 +46,6 @@ private:
 	void getQuerry();
 	bool isProcessPath();
 	bool isUploadPath();
-	void readRequest();
 
 	// generateResponse main subfunctions
 	void getReq();

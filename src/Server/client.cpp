@@ -33,6 +33,14 @@ const std::string &client::getBody() const
 {
     return _body;
 }
+void client::setBytesRead(ssize_t n)
+{
+    _bytesRead = n;
+}
+void client::setContentLength(ssize_t n)
+{
+    _contentLength = n;
+}
 void client::printClient() const
 {
     std::cout << "ID = " << _id << std::endl;

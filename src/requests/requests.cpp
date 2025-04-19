@@ -51,23 +51,16 @@ std::string	Request::getRequest()
 	std::string	fullRequest;
 
 	n = recv(_fd, buffer, sizeof(buffer), 0);
-	// std::cout << "N = " << n << std::endl;
+	std::cout << "N = " << n << std::endl;
+	
 	if (n == 0)
 		throw Request::Disconnected();
 	else if (n > 0)
-		fullRequest = std::string(buffer);
-		// fullRequest.append(buffer,n);
+		fullRequest.append(buffer,n);
 	else {
 		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
-
-	// while ((n = recv(_fd, buffer, sizeof(buffer), 0))) {
-	// 	if (n < 0)
-	// 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
-	// 	fullRequest += buffer;
-	// 	std::cerr << buffer;
-	// }
 	return fullRequest;
 }
 
@@ -75,16 +68,13 @@ void	Request::parseRequest()
 {
 	std::string	fullRequest = getRequest();
 	isolateBody(fullRequest);
-	
-	// std::cout << std::string(30,'-') << std::endl;
-	// std::cout << fullRequest << std::endl;
-	// std::cout << std::string(30,'-') << std::endl;
-	// std::cout << std::string(30,'-') << std::endl;
-	// std::cout << _body << std::endl;
-	// std::cout << std::string(30,'-') << std::endl;
+
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
+	std::cout << std::string(30,'-') << std::endl;
+	std::cout << _method << " " << _path << " " << _version << std::endl;
+	std::cout << std::string(30,'-') << std::endl;
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
 	long unsigned int	i = 1;
 	if (_method.empty() || _path.empty() || _version.empty()) { // Checks sur le format
@@ -153,11 +143,11 @@ Request::Request(int fd, client client) : _fd(fd), _processDir("/process"), _cli
 		if(_clientRef.getBodyFullyRead()){
 		parseRequest();
 		generateResponse();
-		_clientRef.printClient();
+		
 		}
 		else
 		{
-			std::cout << " PROUT" << std::endl;
+			_body = getRequest();
 		}
 	} catch (const CGIcalled &e) {
 		std::cerr << e.what() << std::endl;
@@ -201,6 +191,7 @@ void	Request::generateHeader()
 	_responseHeader += Utils::time_string();
 	_responseHeader += "Content-Length: " + Utils::itos(_responseBody.size()) + "\r\n";
 	_responseHeader += "Content-Type: " + _mime + "\r\n";
+	_responseHeader += "Connection: keep-alive\r\n";
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
 }
 
