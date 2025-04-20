@@ -25,6 +25,7 @@ public:
     bool getBodyFullyRead() const;
     void setBytesRead(ssize_t n);
     void setContentLength(ssize_t n);
+    void setBobyFullyRead(bool b);
 
     void printClient() const;
    

@@ -72,9 +72,11 @@ void	Request::parseRequest()
 	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream	request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
+	//-----------------------------------------------------------------------
 	std::cout << std::string(30,'-') << std::endl;
 	std::cout << _method << " " << _path << " " << _version << std::endl;
 	std::cout << std::string(30,'-') << std::endl;
+	//-----------------------------------------------------------------------
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
 	long unsigned int	i = 1;
 	if (_method.empty() || _path.empty() || _version.empty()) { // Checks sur le format
@@ -135,7 +137,7 @@ void	Request::generateResponse()
 	else throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
 }
 
-Request::Request(int fd, client client) : _fd(fd), _processDir("/process"), _clientRef(client)
+Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _clientRef(client)
 {
 	std::cerr << "Generating a new Request" << std::endl;
 	try {
@@ -147,7 +149,8 @@ Request::Request(int fd, client client) : _fd(fd), _processDir("/process"), _cli
 		}
 		else
 		{
-			_body = getRequest();
+			readRemainingBody();
+			throw Request::CGIcalled();
 		}
 	} catch (const CGIcalled &e) {
 		std::cerr << e.what() << std::endl;

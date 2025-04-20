@@ -156,6 +156,8 @@ void webServer::start()
 		{
 			nfds = epoll_wait(epfd, events, MAX_EVENTS, -1);
 			std::cerr << GREEN << "WebServer wait an event\n" << RESET;
+			// for (std::map<int, client>::iterator it = clients.begin(); it != clients.end(); ++it)
+			// 	it->second.printClient();
 			if (nfds == -1)
 			{
 				if (errno == EINTR)
@@ -164,6 +166,7 @@ void webServer::start()
 			}
 			for (int i = 0; i < nfds; ++i)
 			{
+				std::cout << " EVENT FD = " << events[i].data.fd << std::endl;
 				if (!isServer(events[i].data.fd) && events[i].events & EPOLLIN)
 				{
 					try
@@ -171,12 +174,12 @@ void webServer::start()
 						std::cerr << YELLOW << "Client socket event: read data : "<< events[i].data.fd << RESET << std::endl;
 						Request req(events[i].data.fd, clients[events[i].data.fd]);
 						req.send();
-						// clients[events[i].data.fd].getBodyFullyRead() ? setSocketMode(events[i].data.fd, EDGE_TRIGGERED) : setSocketMode(events[i].data.fd, LEVEL_TRIGGERED);
+						clients[events[i].data.fd].getBodyFullyRead() ? setSocketMode(events[i].data.fd, EDGE_TRIGGERED) : setSocketMode(events[i].data.fd, LEVEL_TRIGGERED);
 					
 					}	
 					catch(const std::exception& e)
 					{
-						std::cout << "client efface" << std::endl;
+						std::cout << "client efface fd = " << events[i].data.fd << std::endl;
 						clients.erase(events[i].data.fd);
 						epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 						if (isClient(events[i].data.fd))
@@ -189,7 +192,7 @@ void webServer::start()
 				else if (events[i].events & EPOLLIN)
 				{
 					for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
-					{
+					{	
 						if (events[i].data.fd == it->getSockfd())
 						{
 							acceptConnection(*it);

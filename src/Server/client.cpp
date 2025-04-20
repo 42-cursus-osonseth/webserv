@@ -41,6 +41,10 @@ void client::setContentLength(ssize_t n)
 {
     _contentLength = n;
 }
+void client::setBobyFullyRead(bool b)
+{
+    _bodyFullyRead = b;
+}
 void client::printClient() const
 {
     std::cout << "ID = " << _id << std::endl;

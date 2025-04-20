@@ -52,6 +52,10 @@ private:
 	void postReq();
 	void deleteReq();
 
+	// POST 
+
+	void readRemainingBody();
+
 	// GET related
 	void getFileContent();
 	void getBody();
@@ -66,9 +70,9 @@ private:
 	void findMatchingServer();
 	void getRessourcePath();
 
-
+	void debugPrintBodyReadable(int nbLines);
 public:
-	Request(int fd, client client);
+	Request(int fd, client &client);
 	~Request() { std::cerr << "Closing Request" << std::endl
 						   << std::endl; };
 
