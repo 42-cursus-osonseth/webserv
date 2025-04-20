@@ -1,4 +1,15 @@
 #include <request.hpp>
+// std::string Request::getDate() {
+
+// 	std::time_t now = std::time(NULL);
+// 	std::stringstream ss;
+
+
+// 	std::string time_str = std::ctime(now);
+// 	time_str.pop_back(); 
+// 	ss << time_str; 
+//     return ss.str();
+// }
 
 void Request::readRemainingBody()
 {
@@ -23,10 +34,23 @@ void Request::postReq()
 	std::istringstream iss(_data["Content-Length"]);
 	ssize_t len;
 	iss >> len;
-	 _clientRef.setContentLength(len);
+	_clientRef.setContentLength(len);
+	struct timeval tp;
+	gettimeofday(&tp, NULL);
+	long int ms = tp.tv_sec * 1000000 + tp.tv_usec; //get current timestamp in milliseconds
+	std::ostringstream oss;
+	oss << ms;
+	std::string filename = "Webserv_" + oss.str();
+	_clientRef.setFilename(filename);
+	_clientRef.setContentType(_data["Content-Type"]);
+
+	// std::string filename = "file" + getDate();
+	// std::cout << std::string(30, '-') << std::endl;
+	// std::cout << "filename = " << filename << std::endl;
+	// std::cout << std::string(30, '-') << std::endl;
 	//--------------------------------------------------------------------------
-	// for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
-	// 	std::cout << it->first << ": " << it->second << std::endl;
+	for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
+		std::cout << it->first << ": " << it->second << std::endl;
 	// std::cout << std::string(30, '-') << std::endl;
 	// std::size_t pos = _data["Content-Type"].find("boundary=");
 	// std::string boundary = _data["Content-Type"].substr(pos + 9);
@@ -50,8 +74,6 @@ void Request::postReq()
 	else
 		std::cerr << "ERROR lecture superieur au content length" << std::endl;
 
-
-	getBody();
 	if (_mime == "application/x-httpd-php")
 		throw Request::CGIcalled();
 }

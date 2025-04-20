@@ -76,6 +76,8 @@ void	Request::parseRequest()
 	std::cout << std::string(30,'-') << std::endl;
 	std::cout << _method << " " << _path << " " << _version << std::endl;
 	std::cout << std::string(30,'-') << std::endl;
+	for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
+		std::cout << it->first << " " << it->second << std::endl;
 	//-----------------------------------------------------------------------
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
 	long unsigned int	i = 1;

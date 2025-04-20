@@ -6,6 +6,8 @@
 #include <mime.hpp>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <ctime>
+#include <sys/time.h>
 #include "utils.hpp"
 #include "Server.hpp"
 #include "cgiManager.hpp"
@@ -55,6 +57,7 @@ private:
 	// POST 
 
 	void readRemainingBody();
+	std::string getDate();
 
 	// GET related
 	void getFileContent();
