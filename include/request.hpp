@@ -57,7 +57,7 @@ private:
 	// POST 
 
 	void readRemainingBody();
-	std::string getDate();
+	void generateUniqueFilename();
 
 	// GET related
 	void getFileContent();

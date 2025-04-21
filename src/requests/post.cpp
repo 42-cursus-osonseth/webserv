@@ -1,15 +1,14 @@
 #include <request.hpp>
-// std::string Request::getDate() {
-
-// 	std::time_t now = std::time(NULL);
-// 	std::stringstream ss;
-
-
-// 	std::string time_str = std::ctime(now);
-// 	time_str.pop_back(); 
-// 	ss << time_str; 
-//     return ss.str();
-// }
+void Request::generateUniqueFilename()
+{
+	struct timeval tp;
+	gettimeofday(&tp, NULL);
+	long int ms = tp.tv_sec * 1000000 + tp.tv_usec; // get current timestamp in milliseconds
+	std::ostringstream oss;
+	oss << ms;
+	std::string filename = "Webserv_" + oss.str();
+	_clientRef.setFilename(filename);
+}
 
 void Request::readRemainingBody()
 {
@@ -17,7 +16,7 @@ void Request::readRemainingBody()
 	_clientRef.setBytesRead(_body.size() + _clientRef.getBytesRead());
 	_clientRef.printClient();
 	debugPrintBodyReadable(10);
-	if(_clientRef.getBytesRead() < _clientRef.getContentLenght())
+	if (_clientRef.getBytesRead() < _clientRef.getContentLenght())
 		_clientRef.setBobyFullyRead(false);
 	else if (_clientRef.getBytesRead() == _clientRef.getContentLenght())
 		_clientRef.setBobyFullyRead(true);
@@ -30,20 +29,14 @@ void Request::postReq()
 
 	getRessourcePath();
 	_mime = get_mime(Utils::getExtension(_path));
-	_clientRef.setBytesRead(_body.size() + _clientRef.getBytesRead());
 	std::istringstream iss(_data["Content-Length"]);
 	ssize_t len;
 	iss >> len;
 	_clientRef.setContentLength(len);
-	struct timeval tp;
-	gettimeofday(&tp, NULL);
-	long int ms = tp.tv_sec * 1000000 + tp.tv_usec; //get current timestamp in milliseconds
-	std::ostringstream oss;
-	oss << ms;
-	std::string filename = "Webserv_" + oss.str();
-	_clientRef.setFilename(filename);
+	_clientRef.setBytesRead(_body.size() + _clientRef.getBytesRead());
 	_clientRef.setContentType(_data["Content-Type"]);
-
+	if (_data["Content-Type"] != "application/x-www-form-urlencoded")
+		generateUniqueFilename();
 	// std::string filename = "file" + getDate();
 	// std::cout << std::string(30, '-') << std::endl;
 	// std::cout << "filename = " << filename << std::endl;
@@ -61,13 +54,12 @@ void Request::postReq()
 	//--------------------------------------------------------------------------
 	// std::cout << "BODY SYZE = " << _body.size() << std::endl;
 
-
 	// std::cout << std::string(30, '-') << std::endl;
 	// std::cout << "METHOD = " << _method << " PATH = " << _fullPath << std::endl;
 	// _clientRef.printClient();
 	// std::cout << std::string(30, '-') << std::endl;
 
-	if(_clientRef.getBytesRead() < _clientRef.getContentLenght())
+	if (_clientRef.getBytesRead() < _clientRef.getContentLenght())
 		_clientRef.setBobyFullyRead(false);
 	else if (_clientRef.getBytesRead() == _clientRef.getContentLenght())
 		_clientRef.setBobyFullyRead(true);
@@ -77,7 +69,8 @@ void Request::postReq()
 	if (_mime == "application/x-httpd-php")
 		throw Request::CGIcalled();
 }
-void Request::debugPrintBodyReadable(int nbLines) {
+void Request::debugPrintBodyReadable(int nbLines)
+{
 	std::istringstream stream(_body);
 	std::string line;
 	int count = 0;
@@ -86,26 +79,31 @@ void Request::debugPrintBodyReadable(int nbLines) {
 	std::cout << "=== Début du body ===" << std::endl;
 
 	// On tente d’afficher les premières lignes lisibles
-	while (std::getline(stream, line) && count < nbLines) {
+	while (std::getline(stream, line) && count < nbLines)
+	{
 		// Retirer le \r si présent
 		if (!line.empty() && line[line.size() - 1] == '\r')
 			line.erase(line.size() - 1);
 
 		// On ne print que si la ligne est lisible (ASCII)
 		bool isBinary = false;
-		for (size_t i = 0; i < line.size(); ++i) {
-			if ((unsigned char)line[i] < 32 && line[i] != '\r' && line[i] != '\n' && line[i] != '\t') {
+		for (size_t i = 0; i < line.size(); ++i)
+		{
+			if ((unsigned char)line[i] < 32 && line[i] != '\r' && line[i] != '\n' && line[i] != '\t')
+			{
 				isBinary = true;
 				break;
 			}
 		}
-		if (isBinary) break;
+		if (isBinary)
+			break;
 
 		std::cout << line << std::endl;
 		headerSize += line.size() + 2; // +2 pour \r\n
 		count++;
 
-		if (line.empty()) break;
+		if (line.empty())
+			break;
 	}
 
 	size_t remainingSize = _body.size() - headerSize;

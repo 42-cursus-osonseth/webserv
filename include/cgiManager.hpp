@@ -7,6 +7,7 @@
 #include <string.h>
 #include <exception>
 #include <stdexcept>
+#include "client.hpp"
 
 class Request;
 
@@ -22,6 +23,9 @@ private:
     std::string _path;
     std::string _response;
     std::string _contentLength;
+    std::string _filename;
+    std::string _contentType;
+    
     int _pid;
     int _bytesRead;
     char * _args[2];
@@ -30,7 +34,7 @@ private:
     int _sv_out[2];
     char _buffer[1024];
 
-    void initPostEnv(int length);
+    void initPostEnv(int length, client &client);
     void initGetenv();
     void executePostRequest();
     void executeGetRequest();
@@ -38,6 +42,7 @@ private:
 public:
     cgiManager();
     cgiManager(Request &req);
+    cgiManager(Request &req, client &client);
     ~cgiManager();
     void execute();
 };

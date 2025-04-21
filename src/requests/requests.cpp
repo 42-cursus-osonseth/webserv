@@ -171,9 +171,15 @@ void	Request::send()
 	if (!_errcode) {
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
-		if (_mime == "text/x-python" || _mime == "application/x-httpd-php")
+		if (_mime == "application/x-httpd-php")
 		{
 			cgiManager c(*this);
+			c.execute();
+			return;
+		}
+		else if(_mime == "text/x-python")
+		{
+			cgiManager c(*this,_clientRef);
 			c.execute();
 			return;
 		}

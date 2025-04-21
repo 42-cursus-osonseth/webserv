@@ -8,16 +8,19 @@ cgiManager::cgiManager()
 cgiManager::~cgiManager()
 {
 }
-void cgiManager::initPostEnv(int length)
+void cgiManager::initPostEnv(int length, client &client)
 {
     std::ostringstream oss;
     oss << length;
     std::string lenStr = oss.str();
     _contentLength = "CONTENT_LENGTH=" + lenStr;
+    _contentType = "CONTENT_TYPE=" + client.getContentType();
+    _filename = "FILENAME=" + client.getFilename();
     _env[0] = (char *)"REQUEST_METHOD=POST";
-    _env[1] = (char *)"CONTENT_TYPE=application/x-www-form-urlencoded";
+    _env[1] = (char *)_contentType.c_str();
     _env[2] = (char *)_contentLength.c_str();
-    _env[3] = NULL;
+    _env[3] = (char *)_filename.c_str();
+    _env[4] = NULL;
 }
 void cgiManager::initGetenv()
 {
@@ -26,6 +29,7 @@ void cgiManager::initGetenv()
     _env[1] = (char *)_query.c_str();
     _env[2] = NULL;
     _env[3] = NULL;
+    _env[4] = NULL;
 }
 
 cgiManager::cgiManager(Request &req) : _fd(req.getFd()), _body(req.getterBody()), _method(req.getMethod()), _query(req.getterQuery())
@@ -36,10 +40,20 @@ cgiManager::cgiManager(Request &req) : _fd(req.getFd()), _body(req.getterBody())
     _sv_out[1] = -1;
     _args[0] = const_cast<char *>(req.getPath().c_str());
     _args[1] = NULL;
-    if (_method == "POST")
-        initPostEnv(_body.size());
-    else
         initGetenv();
+    memset(_buffer, 0, sizeof(_buffer));
+}
+cgiManager::cgiManager(Request &req, client &client) : _fd(req.getFd()), _body(req.getterBody()), _method(req.getMethod())
+{
+    _sv_in[0] = -1;
+    _sv_in[1] = -1;
+    _sv_out[0] = -1;
+    _sv_out[1] = -1;
+    _args[0] = const_cast<char *>(req.getPath().c_str());
+    _args[1] = NULL;
+    initPostEnv(_body.size(), client);
+    for(int i = 0; i < 5; i++)
+        std::cout << "ENV[" << i << "] = " << _env[i] <<std::endl;
     memset(_buffer, 0, sizeof(_buffer));
 }
 
