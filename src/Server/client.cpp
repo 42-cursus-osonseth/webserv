@@ -3,7 +3,7 @@
 client::client()
 {
 }
-client::client(int fd) : _id(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true)
+client::client(int fd) : _id(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true), _currentChunkRead(0),_chunkSize(0), _isChunk(false)
 {
 }
 client::~client()
@@ -38,6 +38,18 @@ const std::string &client::getContentType() const
 {
     return _contentType;
 }
+bool client::getIsChunk() const
+{
+    return _isChunk;
+}
+size_t client::getCurrentChunkread() const
+{
+    return _currentChunkRead;
+}
+size_t  client::getChunkSize() const
+{
+    return _chunkSize;
+}
 void client::setBytesRead(ssize_t n)
 {
     _bytesRead = n;
@@ -58,6 +70,18 @@ void client::setContentType(std::string type)
 {
     _contentType = type;
 }
+void client::setIsChunck(bool b)
+{
+    _isChunk = b;
+}
+void client::setChunkSize(size_t s)
+{
+    _chunkSize = s;
+}
+void client::setCurrentChunkRead(size_t s)
+{
+    _currentChunkRead = s;
+}
 void client::printClient() const
 {
     std::cout << std::string(30,'-') << std::endl;
@@ -67,5 +91,7 @@ void client::printClient() const
     std::cout << "BOOL FULL READ = " << _bodyFullyRead << std::endl;
     std::cout << "FILENAME = " << _filename << std::endl;
     std::cout << "CONTENT TYPE = " << _contentType << std::endl;
+    std::cout << "IS CHUNK = " << _isChunk <<std::endl;
+    
     std::cout << std::string(30,'-') << std::endl;
 }

@@ -46,7 +46,7 @@ void	Request::isolateBody(std::string &fullRequest)
 
 std::string	Request::getRequest()
 {
-	char		buffer[50000] = {0};
+	char		buffer[BUFFER_SIZE] = {0};
 	ssize_t		n;
 	std::string	fullRequest;
 
@@ -96,6 +96,8 @@ void	Request::parseRequest()
 		}
 		i++;
 	}
+	if(_data.find("Transfer-Encoding") != _data.end() && _data["Transfer-Encoding"] == "chunked")
+		_clientRef.setIsChunck(true);
 	try {
 		_data.at("Host");
 	} catch (const std::out_of_range &e) {
@@ -142,15 +144,17 @@ void	Request::generateResponse()
 Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _clientRef(client)
 {
 	std::cerr << "Generating a new Request" << std::endl;
+	std::cout << "PROUT1" << std::endl;
 	try {
 		_matchingServer = NULL;
 		if(_clientRef.getBodyFullyRead()){
+		std::cout << "PROUT2" << std::endl;
 		parseRequest();
 		generateResponse();
 		
 		}
 		else
-		{
+		{	std::cout << "PROUT3" << std::endl;
 			readRemainingBody();
 			throw Request::CGIcalled();
 		}

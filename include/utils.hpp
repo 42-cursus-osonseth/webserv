@@ -16,6 +16,7 @@ public:
 	static std::string				time_string(void);
 	static std::string				itos(int);
 	static std::string				cleanupPath(std::string);
+	static size_t					htoi(const std::string &);
 };
 
 #endif

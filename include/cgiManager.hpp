@@ -25,7 +25,8 @@ private:
     std::string _contentLength;
     std::string _filename;
     std::string _contentType;
-    
+    std::string _boundary;
+
     int _pid;
     int _bytesRead;
     char * _args[2];
@@ -34,7 +35,7 @@ private:
     int _sv_out[2];
     char _buffer[1024];
 
-    void initPostEnv(int length, client &client);
+    void initPostEnv(client &client);
     void initGetenv();
     void executePostRequest();
     void executeGetRequest();

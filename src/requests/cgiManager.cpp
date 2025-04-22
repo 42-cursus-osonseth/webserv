@@ -8,10 +8,10 @@ cgiManager::cgiManager()
 cgiManager::~cgiManager()
 {
 }
-void cgiManager::initPostEnv(int length, client &client)
+void cgiManager::initPostEnv(client &client)
 {
     std::ostringstream oss;
-    oss << length;
+    oss << client.getContentLenght();
     std::string lenStr = oss.str();
     _contentLength = "CONTENT_LENGTH=" + lenStr;
     _contentType = "CONTENT_TYPE=" + client.getContentType();
@@ -51,14 +51,18 @@ cgiManager::cgiManager(Request &req, client &client) : _fd(req.getFd()), _body(r
     _sv_out[1] = -1;
     _args[0] = const_cast<char *>(req.getPath().c_str());
     _args[1] = NULL;
-    initPostEnv(_body.size(), client);
-    for(int i = 0; i < 5; i++)
-        std::cout << "ENV[" << i << "] = " << _env[i] <<std::endl;
+    initPostEnv(client);
+    // for(int i = 0; i < 5; i++)
+    //     std::cout << "ENV[" << i << "] = " << _env[i] <<std::endl;
     memset(_buffer, 0, sizeof(_buffer));
 }
 
 void cgiManager::executePostRequest()
 {
+    // std::cout << "LE GCI VA TRAITER LA REQUETE" << std::endl;
+    // std::cout  << std::string(30,'-') << std::endl;
+    // std::cout << _body << std::endl;
+    // std::cout  << std::string(30,'-') << std::endl;     
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_out) == -1)

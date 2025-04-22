@@ -13,6 +13,9 @@ private:
     std::string _body;
     std::string _filename;
     std::string _contentType;
+    size_t _currentChunkRead;
+    size_t _chunkSize;
+    bool _isChunk;
 
 public:
 
@@ -27,11 +30,17 @@ public:
     bool getBodyFullyRead() const;
     const std::string &getFilename() const;
     const std::string &getContentType() const;
+    bool getIsChunk() const;
+    size_t getCurrentChunkread() const;
+    size_t  getChunkSize() const;
     void setBytesRead(ssize_t n);
     void setContentLength(ssize_t n);
     void setBobyFullyRead(bool b);
     void setFilename(std::string name);
     void setContentType(std::string type);
+    void setIsChunck(bool b);
+    void setChunkSize(size_t s);
+    void setCurrentChunkRead(size_t s);
 
     void printClient() const;
    

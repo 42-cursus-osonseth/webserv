@@ -78,3 +78,14 @@ std::string	Utils::cleanupPath(std::string path)
 	}
 	return result;
 }
+size_t	Utils::htoi(const std::string &s)
+{
+	size_t	value;
+	s.substr(0, s.find("\r\n"));
+	
+	std::istringstream iss(s);
+	if (s.size() == 0)
+		return (0);
+	iss >> std::hex >> value;
+	return value;
+}

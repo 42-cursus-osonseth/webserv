@@ -13,6 +13,8 @@
 #include "cgiManager.hpp"
 #include "client.hpp"
 
+#define BUFFER_SIZE 50000
+
 class Request
 {
 private:
@@ -58,6 +60,7 @@ private:
 
 	void readRemainingBody();
 	void generateUniqueFilename();
+	void assemblagedebloc();
 
 	// GET related
 	void getFileContent();

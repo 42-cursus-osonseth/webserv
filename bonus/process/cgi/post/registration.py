@@ -17,3 +17,7 @@ if os.environ.get("CONTENT_TYPE") == "application/x-www-form-urlencoded":
     sys.stdout.write(f"Set-Cookie: Prenom={prenom}; Path=/\r\n")
     sys.stdout.write(f"Set-Cookie: Nom={nom}; Path=/\r\n")
     sys.stdout.write("Content-Length: 0\r\n\r\n")
+
+else 
+
+
