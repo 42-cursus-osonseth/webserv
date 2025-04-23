@@ -17,6 +17,7 @@ public:
 	static std::string				itos(int);
 	static std::string				cleanupPath(std::string);
 	static size_t					htoi(const std::string &);
+	static bool						isValidChunkSize(const std::string& str);
 };
 
 #endif

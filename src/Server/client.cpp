@@ -3,7 +3,7 @@
 client::client()
 {
 }
-client::client(int fd) : _id(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true), _currentChunkRead(0),_chunkSize(0), _isChunk(false)
+client::client(int fd) : _id(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true), _currentChunkRead(0),_chunkSize(0), _isChunk(false), _state(READING_CHUNK_SIZE)
 {
 }
 client::~client()
@@ -50,6 +50,10 @@ size_t  client::getChunkSize() const
 {
     return _chunkSize;
 }
+t_state client::GetState() const
+{
+    return _state;
+}
 void client::setBytesRead(ssize_t n)
 {
     _bytesRead = n;
@@ -81,6 +85,10 @@ void client::setChunkSize(size_t s)
 void client::setCurrentChunkRead(size_t s)
 {
     _currentChunkRead = s;
+}
+void client::setState(t_state s)
+{
+    _state = s;
 }
 void client::printClient() const
 {

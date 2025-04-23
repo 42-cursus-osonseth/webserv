@@ -1,4 +1,5 @@
 #include <request.hpp>
+
 void Request::generateUniqueFilename()
 {
 	struct timeval tp;
@@ -49,6 +50,52 @@ void Request::assemblagedebloc()
 	std::cout << _body << std::endl;
 	std::cout << std::string(30, '-') << std::endl;
 
+	std::string tmpBody = _body;
+	std::string result;
+
+	while (1)
+	{
+		if (_clientRef.GetState() == READING_CHUNK_SIZE)
+		{
+			std::string chunkSize = tmpBody.substr(0, tmpBody.find("\r\n"));
+			if (!Utils::isValidChunkSize(chunkSize))
+				std::cerr << "BLABLA BAD REQUEST" << std::endl;
+
+			_clientRef.setChunkSize(Utils::htoi(chunkSize));
+			if (_clientRef.getChunkSize() == 0)
+			{
+				if (tmpBody != "0\r\n\r\n")
+					std::cerr << "BLABLA BAD REQUEST" << std::endl;
+				_clientRef.setBobyFullyRead(true);
+				break;
+			}
+			tmpBody.erase(0, chunkSize.size() + 2);
+			_clientRef.setState(READING_CHUNK_DATA);
+		}
+		if (_clientRef.GetState() == READING_CHUNK_DATA)
+		{
+			std::string chunk = tmpBody.substr(0, _clientRef.getChunkSize());
+			result += chunk;
+			if (chunk.size() < _clientRef.getChunkSize())
+			{
+				size_t remaining = _clientRef.getChunkSize() - chunk.size();
+				_clientRef.setChunkSize(remaining);
+				break;
+			}
+			tmpBody.erase(0, chunk.size());
+			if (tmpBody.size() < 2 || tmpBody.substr(0, 2) != "\r\n") 
+				std::cerr << "BLABLA BAD REQUEST" << std::endl;
+			else
+				tmpBody.erase(0, 2);
+			_clientRef.setState(READING_CHUNK_SIZE);
+		}
+	}
+
+	std::cout << std::string(30, '-') << std::endl;
+	std::cout << "       RESULT = " << result.size()<< std::endl;
+	std::cout << std::string(30, '-') << std::endl;
+	std::cout << result << std::endl;
+	std::cout << std::string(30, '-') << std::endl;
 	// std::string blockSize = _body.substr(0, _body.find("\r\n"));
 	// std::string tmpBody = _body.substr(blockSize.size() + 2);
 	// _clientRef.setChunkSize(Utils::htoi(blockSize));

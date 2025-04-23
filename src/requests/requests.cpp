@@ -144,17 +144,15 @@ void	Request::generateResponse()
 Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _clientRef(client)
 {
 	std::cerr << "Generating a new Request" << std::endl;
-	std::cout << "PROUT1" << std::endl;
 	try {
 		_matchingServer = NULL;
 		if(_clientRef.getBodyFullyRead()){
-		std::cout << "PROUT2" << std::endl;
 		parseRequest();
 		generateResponse();
 		
 		}
 		else
-		{	std::cout << "PROUT3" << std::endl;
+		{	
 			readRemainingBody();
 			throw Request::CGIcalled();
 		}

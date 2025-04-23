@@ -13,7 +13,7 @@
 #include "cgiManager.hpp"
 #include "client.hpp"
 
-#define BUFFER_SIZE 50000
+#define BUFFER_SIZE 2000
 
 class Request
 {

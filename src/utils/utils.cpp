@@ -89,3 +89,17 @@ size_t	Utils::htoi(const std::string &s)
 	iss >> std::hex >> value;
 	return value;
 }
+bool Utils::isValidChunkSize(const std::string& str)
+{
+    
+    if (str.size() > 6)
+		return false;
+    for (size_t i = 0; i < str.size(); ++i) 
+	{
+        char c = str[i];
+        if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) 
+            return false;
+    }
+
+    return true;
+}

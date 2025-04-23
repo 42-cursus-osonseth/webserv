@@ -6,10 +6,10 @@ import socket
 host = '127.0.0.1'
 port = 8080
 path = '/process/cgi/post/registration.py'
-chunk_size = 1024
+chunk_size = 128
 
 # génère des données
-data = ('Zz' * (32 * 1024 // 2)).encode()  # 32 Ko
+data = ('Zz' * (1 * 1024 // 2)).encode()  # 32 Ko
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
@@ -38,12 +38,12 @@ while i < len(data):
 s.sendall(b"0\r\n\r\n")
 
 # lit la réponse
-response = b""
-while True:
-    part = s.recv(4096)
-    if not part:
-        break
-    response += part
+# response = b""
+# while True:
+#     part = s.recv(4096)
+#     if not part:
+#         break
+#     response += part
 
-print(response.decode(errors="ignore"))
+# print(response.decode(errors="ignore"))
 s.close()
