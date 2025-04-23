@@ -54,6 +54,10 @@ t_state client::GetState() const
 {
     return _state;
 }
+const std::string &client::getPartialChunkSize() const
+{
+    return _partialChunkSize;
+}
 void client::setBytesRead(ssize_t n)
 {
     _bytesRead = n;
@@ -89,6 +93,10 @@ void client::setCurrentChunkRead(size_t s)
 void client::setState(t_state s)
 {
     _state = s;
+}
+void client::setPartialChunkSize(std::string str)
+{
+    _partialChunkSize = str;
 }
 void client::printClient() const
 {

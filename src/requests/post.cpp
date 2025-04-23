@@ -4,7 +4,7 @@ void Request::generateUniqueFilename()
 {
 	struct timeval tp;
 	gettimeofday(&tp, NULL);
-	long int ms = tp.tv_sec * 1000000 + tp.tv_usec; // get current timestamp in milliseconds
+	long int ms = tp.tv_sec * 1000000 + tp.tv_usec;
 	std::ostringstream oss;
 	oss << ms;
 	std::string filename = "Webserv_" + oss.str();
@@ -53,18 +53,31 @@ void Request::assemblagedebloc()
 	std::string tmpBody = _body;
 	std::string result;
 
+	if (!_clientRef.getPartialChunkSize().empty())
+	{
+		tmpBody = _clientRef.getPartialChunkSize() + tmpBody;
+		_clientRef.setPartialChunkSize("");
+	}
 	while (1)
 	{
 		if (_clientRef.GetState() == READING_CHUNK_SIZE)
 		{
-			std::string chunkSize = tmpBody.substr(0, tmpBody.find("\r\n"));
+			size_t pos = tmpBody.find("\r\n");
+			if (pos == std::string::npos && tmpBody.size() > 6)
+				std::cerr << "BLABLA BAD REQUEST" << std::endl;
+			else if (pos == std::string::npos && tmpBody.size() < 7)
+			{
+				_clientRef.setPartialChunkSize(tmpBody);
+				break;
+			}
+			std::string chunkSize = tmpBody.substr(0, pos);
 			if (!Utils::isValidChunkSize(chunkSize))
 				std::cerr << "BLABLA BAD REQUEST" << std::endl;
 
 			_clientRef.setChunkSize(Utils::htoi(chunkSize));
 			if (_clientRef.getChunkSize() == 0)
 			{
-				if (tmpBody != "0\r\n\r\n")
+				if (tmpBody.substr(0, 5) != "0\r\n\r\n")
 					std::cerr << "BLABLA BAD REQUEST" << std::endl;
 				_clientRef.setBobyFullyRead(true);
 				break;
@@ -83,7 +96,7 @@ void Request::assemblagedebloc()
 				break;
 			}
 			tmpBody.erase(0, chunk.size());
-			if (tmpBody.size() < 2 || tmpBody.substr(0, 2) != "\r\n") 
+			if (tmpBody.size() < 2 || tmpBody.substr(0, 2) != "\r\n")
 				std::cerr << "BLABLA BAD REQUEST" << std::endl;
 			else
 				tmpBody.erase(0, 2);
@@ -92,7 +105,7 @@ void Request::assemblagedebloc()
 	}
 
 	std::cout << std::string(30, '-') << std::endl;
-	std::cout << "       RESULT = " << result.size()<< std::endl;
+	std::cout << "       RESULT = " << result.size() << std::endl;
 	std::cout << std::string(30, '-') << std::endl;
 	std::cout << result << std::endl;
 	std::cout << std::string(30, '-') << std::endl;
