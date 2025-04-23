@@ -13,11 +13,12 @@ class client
 {
 
 private:
-    int _id;
+    int _fd;
+    std::string _body;
+    std::string _method;
     ssize_t _contentLength;
     ssize_t _bytesRead;
     bool _bodyFullyRead;
-    std::string _body;
     std::string _filename;
     std::string _contentType;
     std::string _partialChunkSize;
@@ -25,13 +26,16 @@ private:
     size_t _chunkSize;
     bool _isChunk;
     t_state _state;
+    std::string _mime;
+    std::string _path;
+   
 
 public:
     client();
     client(int fd);
     ~client();
 
-    int getId() const;
+    int getFd() const;
     const std::string &getBody() const;
     ssize_t getContentLenght() const;
     ssize_t getBytesRead() const;
@@ -43,6 +47,9 @@ public:
     size_t getChunkSize() const;
     t_state GetState() const;
     const std::string &getPartialChunkSize() const;
+    const std::string &getMime() const;
+    const std::string &getPath() const;
+    const std::string &getMethod() const;
 
     void setBytesRead(ssize_t n);
     void setContentLength(ssize_t n);
@@ -54,6 +61,9 @@ public:
     void setCurrentChunkRead(size_t s);
     void setState(t_state s);
     void setPartialChunkSize(std::string str);
+    void SetMime(std::string str);
+    void SetPath(std::string str);
+    void SetMethod(std::string str);
 
     void printClient() const;
 };

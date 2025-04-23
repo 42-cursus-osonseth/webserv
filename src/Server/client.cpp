@@ -3,15 +3,15 @@
 client::client()
 {
 }
-client::client(int fd) : _id(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true), _currentChunkRead(0),_chunkSize(0), _isChunk(false), _state(READING_CHUNK_SIZE)
+client::client(int fd) : _fd(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true), _currentChunkRead(0),_chunkSize(0), _isChunk(false), _state(READING_CHUNK_SIZE)
 {
 }
 client::~client()
 {
 }
-int client::getId() const
+int client::getFd() const
 {
-    return _id;
+    return _fd;
 }
 
 ssize_t client::getContentLenght() const
@@ -58,6 +58,18 @@ const std::string &client::getPartialChunkSize() const
 {
     return _partialChunkSize;
 }
+const std::string &client::getMime() const
+{
+    return _mime;
+}
+const std::string &client::getPath() const
+{
+    return _path;
+}
+const std::string &client::getMethod() const
+{
+    return _method;
+}
 void client::setBytesRead(ssize_t n)
 {
     _bytesRead = n;
@@ -98,10 +110,22 @@ void client::setPartialChunkSize(std::string str)
 {
     _partialChunkSize = str;
 }
+void client::SetMime(std::string str)
+{
+    _mime = str;
+}
+void client::SetPath(std::string str)
+{
+    _path = str;
+}
+void client::SetMethod(std::string str)
+{
+    _method = str;
+}
 void client::printClient() const
 {
     std::cout << std::string(30,'-') << std::endl;
-    std::cout << "ID = " << _id << std::endl;
+    std::cout << "ID = " << _fd << std::endl;
     std::cout << "CONTENT LENGTH = " << _contentLength << std::endl;
     std::cout << "BYTES READ = " << _bytesRead << std::endl;
     std::cout << "BOOL FULL READ = " << _bodyFullyRead << std::endl;

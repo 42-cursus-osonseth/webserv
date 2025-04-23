@@ -19,18 +19,21 @@ class Request
 {
 private:
 	int _fd;
-	std::string _method;
-	std::string _path;
-	std::string _version;
-	std::map<std::string, std::string> _data;
-	std::string _body;
-	std::string _mime;
-	std::string _query;
 	std::string _processDir;
-	std::string _root;
-	std::string	_fullPath;
 	client &_clientRef;
 
+	std::string _root;
+	std::string _method;
+	std::string _path;
+	std::string	_fullPath;
+	std::string _version;
+	std::string _mime;
+	std::string _body;
+	std::string _tmpBody;
+	std::string _query;
+	std::string _chunk;
+	std::map<std::string, std::string> _data;
+	
 	t_errcodes _errcode;
 
 	std::string _responseHeader;
@@ -49,7 +52,6 @@ private:
 	std::string replaceRoot(const std::string &, const std::string &);
 	void getQuerry();
 	bool isProcessPath();
-	bool isUploadPath();
 
 	// generateResponse main subfunctions
 	void getReq();
@@ -60,7 +62,10 @@ private:
 
 	void readRemainingBody();
 	void generateUniqueFilename();
-	void assemblagedebloc();
+	void ChunkedBodyAssembler();
+	void prependPartialChunkSize();
+	bool readChunkSize();
+	bool readChunkData();
 
 	// GET related
 	void getFileContent();
@@ -76,7 +81,6 @@ private:
 	void findMatchingServer();
 	void getRessourcePath();
 
-	void debugPrintBodyReadable(int nbLines);
 public:
 	Request(int fd, client &client);
 	~Request() { std::cerr << "Closing Request" << std::endl

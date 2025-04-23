@@ -10,6 +10,7 @@ cgiManager::~cgiManager()
 }
 void cgiManager::initPostEnv(client &client)
 {
+
     std::ostringstream oss;
     oss << client.getContentLenght();
     std::string lenStr = oss.str();
@@ -20,7 +21,11 @@ void cgiManager::initPostEnv(client &client)
     _env[1] = (char *)_contentType.c_str();
     _env[2] = (char *)_contentLength.c_str();
     _env[3] = (char *)_filename.c_str();
-    _env[4] = NULL;
+    if (client.getIsChunk())
+        _env[4] = (char *)"TRANSFER_ENCODING=chunked";
+    else
+        _env[4] = NULL;
+    _env[5] = NULL;
 }
 void cgiManager::initGetenv()
 {
@@ -30,6 +35,7 @@ void cgiManager::initGetenv()
     _env[2] = NULL;
     _env[3] = NULL;
     _env[4] = NULL;
+    _env[5] = NULL;
 }
 
 cgiManager::cgiManager(Request &req) : _fd(req.getFd()), _body(req.getterBody()), _method(req.getMethod()), _query(req.getterQuery())
@@ -40,16 +46,16 @@ cgiManager::cgiManager(Request &req) : _fd(req.getFd()), _body(req.getterBody())
     _sv_out[1] = -1;
     _args[0] = const_cast<char *>(req.getPath().c_str());
     _args[1] = NULL;
-        initGetenv();
+    initGetenv();
     memset(_buffer, 0, sizeof(_buffer));
 }
-cgiManager::cgiManager(Request &req, client &client) : _fd(req.getFd()), _body(req.getterBody()), _method(req.getMethod())
+cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _body(req.getterBody()), _method(client.getMethod()), _path(client.getPath())
 {
     _sv_in[0] = -1;
     _sv_in[1] = -1;
     _sv_out[0] = -1;
     _sv_out[1] = -1;
-    _args[0] = const_cast<char *>(req.getPath().c_str());
+    _args[0] = (char *) _path.c_str();
     _args[1] = NULL;
     initPostEnv(client);
     // for(int i = 0; i < 5; i++)
@@ -62,7 +68,8 @@ void cgiManager::executePostRequest()
     // std::cout << "LE GCI VA TRAITER LA REQUETE" << std::endl;
     // std::cout  << std::string(30,'-') << std::endl;
     // std::cout << _body << std::endl;
-    // std::cout  << std::string(30,'-') << std::endl;     
+    // std::cout  << std::string(30,'-') << std::endl;
+    std::cout << " BODY SIZE IN CGI = " << _body.size() << std::endl;
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_out) == -1)
@@ -90,6 +97,7 @@ void cgiManager::executePostRequest()
             _response.append(_buffer, _bytesRead);
         close(_sv_out[0]);
     }
+    std::cout << " REPONSE ? = " << _response << std::endl;
     send(_fd, _response.c_str(), _response.size(), 0);
 }
 void cgiManager::executeGetRequest()

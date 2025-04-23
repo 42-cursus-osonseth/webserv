@@ -26,11 +26,6 @@ bool Request::isProcessPath()
 	std::string str = _fullPath.substr(_root.size(), _processDir.size());
 	return (str == _processDir);
 }
-bool Request::isUploadPath()
-{
-	std::string str = _fullPath.substr(_root.size() + _processDir.size());
-	return str == "/upload";
-}
 
 void	Request::getRessourcePath()
 {
@@ -56,5 +51,7 @@ void	Request::getRessourcePath()
 		}
 	}
 	_path = Utils::cleanupPath(_fullPath);
+	_clientRef.SetPath(_path);
+	_clientRef.SetMethod(_method);
 
 }

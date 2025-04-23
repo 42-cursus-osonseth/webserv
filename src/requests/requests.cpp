@@ -32,6 +32,7 @@ void Request::getQuerry ()
 	_path = _path.substr(0, sep_pos);
 	 
 }
+
 void	Request::isolateBody(std::string &fullRequest)
 {
 	// std::cerr << "Isolating body on: " << fullRequest << std::endl;
@@ -167,19 +168,17 @@ Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _cl
 
 void	Request::send()
 {
-	// std::cout << "MIME = " << _mime << std::endl;
-	// std::cout << "PATH = " << _path << std::endl;
 	
 	if (!_errcode) {
 		std::cerr << "Can't respond to this request" << std::endl;
 	} else {
-		if (_mime == "application/x-httpd-php")
+		if (_clientRef.getMime() == "application/x-httpd-php")
 		{
 			cgiManager c(*this);
 			c.execute();
 			return;
 		}
-		else if(_mime == "text/x-python")
+		else if(_clientRef.getMime()  == "text/x-python")
 		{
 			cgiManager c(*this,_clientRef);
 			c.execute();
