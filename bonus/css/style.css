@@ -38,23 +38,23 @@
 }
 
 .home .block-1 {
-    background-color: #000000; /* Couleur du bloc 1 */
+    background-color: #000000; 
 }
 
 .home .block-2 {
-    background-color: #000000; /* Couleur du bloc 2 */
+    background-color: #000000; 
 }
 
 .home .block-3 {
-    background-color: #000000; /* Couleur du bloc 3 */
+    background-color: #000000; 
 }
 
 .home .block-4 {
-    background-color: #000000; /* Couleur du bloc 4 */
+    background-color: #000000; 
 }
 
 .home .content-block:hover {
-    background-color: #0056b3; /* Changement de couleur au survol */
+    background-color: #0056b3; 
 }
 
 
@@ -81,26 +81,26 @@
     font-family: Arial, sans-serif;
     background: linear-gradient(to right, #ff0000, #0000ff);
     color: white;
-    flex-direction: column; /* Aligne les éléments en colonne */
+    flex-direction: column; 
 }
 
 .disconnect h1 {
     font-size: 2em;
-    margin-bottom: 20px; /* Espacement entre le titre et le lien */
+    margin-bottom: 20px; 
 }
 
 .disconnect a {
-    font-size: 1.2em; /* Taille du texte du lien */
-    color: white; /* Couleur du lien */
-    background-color: #007BFF; /* Fond du lien */
+    font-size: 1.2em; 
+    color: white;
+    background-color: #007BFF; 
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
-    margin-top: 10px; /* Espacement du lien par rapport au texte */
+    margin-top: 10px; 
 }
 
 .disconnect a:hover {
-    background-color: #0056b3; /* Couleur au survol */
+    background-color: #0056b3; 
 }
 
 .cookies {
@@ -111,7 +111,6 @@
 }
 
 .cookies header {
-    /* background-color: #000000; */
     transition: background-color 0.3s ease; 
     color: #ffffff;
     text-align: center;
@@ -125,7 +124,6 @@
 }
 
 .inscription header {
-    /* background-color: #000000; */
     transition: background-color 0.3s ease; 
     color: #ffffff;
     text-align: center;
@@ -139,6 +137,15 @@
     margin-top: 40px;
     text-align: center;
 }
+.upload-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 15px;
+}
+
 
 .select {
     margin-top: 15px;

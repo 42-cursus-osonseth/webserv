@@ -17,12 +17,17 @@
     </nav>
     <div id="welcome-message"></div>
     <div class="choix-container">
-        <h2>Upload de fichier</h2>
+        <h2>Upload de fichiers</h2>
 
         <form action="/process/cgi/post/registration.py" method="POST" enctype="multipart/form-data">
-            <input type="file" name="fichier" required class="select" />
-            <button type="submit" class="valider-btn">Envoyer</button>
+            <div class="upload-group">
+                <input type="file" name="fichier1" required class="select" />
+                <input type="file" name="fichier2"  class="select" />
+                <input type="file" name="fichier3"  class="select" />
+                <button type="submit" class="valider-btn">Envoyer</button>
+            </div>
         </form>
+        
     </div>
 
     <script src="/color.js"></script>

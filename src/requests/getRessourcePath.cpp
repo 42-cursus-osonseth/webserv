@@ -51,7 +51,7 @@ void	Request::getRessourcePath()
 		}
 	}
 	_path = Utils::cleanupPath(_fullPath);
-	_clientRef.SetPath(_path);
-	_clientRef.SetMethod(_method);
+	_clientRef.setPath(_path);
+	_clientRef.setMethod(_method);
 
 }

@@ -66,6 +66,9 @@ private:
 	void prependPartialChunkSize();
 	bool readChunkSize();
 	bool readChunkData();
+	bool findCRLF(size_t &pos);
+	bool getAndValidChunkSize(size_t &pos);
+	bool checkAndPrepareForTrailingCRLF();
 
 	// GET related
 	void getFileContent();

@@ -3,7 +3,7 @@
 client::client()
 {
 }
-client::client(int fd) : _fd(fd), _contentLength(0), _bytesRead(0), _bodyFullyRead(true), _currentChunkRead(0),_chunkSize(0), _isChunk(false), _state(READING_CHUNK_SIZE)
+client::client(int fd) : _fd(fd), _contentLength(0), _bytesRead(0), _currentChunkRead(0), _chunkSize(0), _bodyFullyRead(true), _isChunk(false), _readCRLFfirst(false), _state(READING_CHUNK_SIZE)
 {
 }
 client::~client()
@@ -26,6 +26,10 @@ bool client::getBodyFullyRead() const
 {
     return _bodyFullyRead;
 }
+bool client::getReadCRLFfirst() const
+{
+    return _readCRLFfirst;
+}
 const std::string &client::getBody() const
 {
     return _body;
@@ -46,7 +50,7 @@ size_t client::getCurrentChunkread() const
 {
     return _currentChunkRead;
 }
-size_t  client::getChunkSize() const
+size_t client::getChunkSize() const
 {
     return _chunkSize;
 }
@@ -110,28 +114,32 @@ void client::setPartialChunkSize(std::string str)
 {
     _partialChunkSize = str;
 }
-void client::SetMime(std::string str)
+void client::setMime(std::string str)
 {
     _mime = str;
 }
-void client::SetPath(std::string str)
+void client::setPath(std::string str)
 {
     _path = str;
 }
-void client::SetMethod(std::string str)
+void client::setMethod(std::string str)
 {
     _method = str;
 }
+void client::setReadCRLFfirst(bool b)
+{
+    _readCRLFfirst = b;
+}
 void client::printClient() const
 {
-    std::cout << std::string(30,'-') << std::endl;
+    std::cout << std::string(30, '-') << std::endl;
     std::cout << "ID = " << _fd << std::endl;
     std::cout << "CONTENT LENGTH = " << _contentLength << std::endl;
     std::cout << "BYTES READ = " << _bytesRead << std::endl;
     std::cout << "BOOL FULL READ = " << _bodyFullyRead << std::endl;
     std::cout << "FILENAME = " << _filename << std::endl;
     std::cout << "CONTENT TYPE = " << _contentType << std::endl;
-    std::cout << "IS CHUNK = " << _isChunk <<std::endl;
-    
-    std::cout << std::string(30,'-') << std::endl;
+    std::cout << "IS CHUNK = " << _isChunk << std::endl;
+
+    std::cout << std::string(30, '-') << std::endl;
 }

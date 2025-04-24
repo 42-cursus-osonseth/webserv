@@ -104,7 +104,6 @@ void webServer::closeWebServer()
 
 void	webServer::acceptConnection(Server const &server)
 {
-	std::cout << "on entre dans le accept connexion WEBserveur" <<std::endl;
 	struct sockaddr_in addr;
 	socklen_t addrlen = sizeof(addr);
 	int client_fd = accept(server.getSockfd(), (struct sockaddr *)&addr, &addrlen);
@@ -179,7 +178,7 @@ void webServer::start()
 					}	
 					catch(const std::exception& e)
 					{
-						std::cout << "client efface fd = " << events[i].data.fd << std::endl;
+						// std::cout << "client efface fd = " << events[i].data.fd << std::endl;
 						clients.erase(events[i].data.fd);
 						epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 						if (isClient(events[i].data.fd))
@@ -194,9 +193,7 @@ void webServer::start()
 					for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
 					{	
 						if (events[i].data.fd == it->getSockfd())
-						{
 							acceptConnection(*it);
-						}
 					}
 				}
 			}

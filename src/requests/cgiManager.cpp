@@ -69,7 +69,7 @@ void cgiManager::executePostRequest()
     // std::cout  << std::string(30,'-') << std::endl;
     // std::cout << _body << std::endl;
     // std::cout  << std::string(30,'-') << std::endl;
-    std::cout << " BODY SIZE IN CGI = " << _body.size() << std::endl;
+
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_out) == -1)
@@ -97,7 +97,7 @@ void cgiManager::executePostRequest()
             _response.append(_buffer, _bytesRead);
         close(_sv_out[0]);
     }
-    std::cout << " REPONSE ? = " << _response << std::endl;
+    // std::cout << " REPONSE  = " << _response << std::endl;
     send(_fd, _response.c_str(), _response.size(), 0);
 }
 void cgiManager::executeGetRequest()

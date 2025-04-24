@@ -10,9 +10,9 @@ void Request::generateUniqueFilename()
 	std::string filename = "Webserv_" + oss.str();
 	_clientRef.setFilename(filename);
 }
-bool Request::readChunkSize()
+bool Request::findCRLF(size_t &pos)
 {
-	size_t pos = _tmpBody.find("\r\n");
+	pos = _tmpBody.find("\r\n");
 	if (pos == std::string::npos && _tmpBody.size() > 6)
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	else if (pos == std::string::npos && _tmpBody.size() < 7)
@@ -20,6 +20,27 @@ bool Request::readChunkSize()
 		_clientRef.setPartialChunkSize(_tmpBody);
 		return false;
 	}
+	return true;
+}
+bool Request::checkAndPrepareForTrailingCRLF()
+{
+	if (_tmpBody.size() == 1)
+	{
+		_clientRef.setPartialChunkSize(_tmpBody);
+		_clientRef.setReadCRLFfirst(true);
+		_clientRef.setState(READING_CHUNK_SIZE);
+		return false;
+	}
+	if (_tmpBody.size() == 0)
+	{
+		_clientRef.setReadCRLFfirst(true);
+		_clientRef.setState(READING_CHUNK_SIZE);
+		return false;
+	}
+	return true;
+}
+bool Request::getAndValidChunkSize(size_t &pos)
+{
 	std::string chunkSize = _tmpBody.substr(0, pos);
 	if (!Utils::isValidChunkSize(chunkSize))
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
@@ -32,6 +53,22 @@ bool Request::readChunkSize()
 		return false;
 	}
 	_tmpBody.erase(0, chunkSize.size() + 2);
+	return true;
+}
+bool Request::readChunkSize()
+{
+	if (_clientRef.getReadCRLFfirst())
+	{
+		if (_tmpBody.substr(0, 2) != "\r\n")
+			throw Request::ErrcodeException(BAD_REQUEST, *this);
+		_tmpBody.erase(0, 2);
+		_clientRef.setReadCRLFfirst(false);
+	}
+	size_t pos;
+	if (!findCRLF(pos))
+		return false;
+	if (!getAndValidChunkSize(pos))
+		return false;
 	_clientRef.setState(READING_CHUNK_DATA);
 	return true;
 }
@@ -46,7 +83,9 @@ bool Request::readChunkData()
 		return false;
 	}
 	_tmpBody.erase(0, _chunk.size());
-	if (_tmpBody.size() < 2 || _tmpBody.substr(0, 2) != "\r\n")
+	if (!checkAndPrepareForTrailingCRLF())
+		return false;
+	if (_tmpBody.substr(0, 2) != "\r\n")
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	else
 		_tmpBody.erase(0, 2);
@@ -76,7 +115,7 @@ void Request::ChunkedBodyAssembler()
 }
 void Request::readRemainingBody()
 {
-	std::cout << " ON RENTRE DANS READ_REMAINING_BODY" << std::endl;
+	// std::cout << " ON RENTRE DANS READ_REMAINING_BODY" << std::endl;
 	if (_clientRef.getIsChunk())
 	{
 		_body = getRequest();
@@ -87,11 +126,6 @@ void Request::readRemainingBody()
 	{
 		_body = getRequest();
 		_clientRef.setBytesRead(_body.size() + _clientRef.getBytesRead());
-		_clientRef.printClient();
-		// std::cout << std::string(30, '-') << std::endl;
-		// std::cout << _body << std::endl;
-		// std::cout << std::string(30, '-') << std::endl;
-		// debugPrintBodyReadable(10);
 		if (_clientRef.getBytesRead() < _clientRef.getContentLenght())
 			_clientRef.setBobyFullyRead(false);
 		else if (_clientRef.getBytesRead() == _clientRef.getContentLenght())
@@ -102,9 +136,8 @@ void Request::readRemainingBody()
 }
 void Request::postReq()
 {
-
 	getRessourcePath();
-	_clientRef.SetMime(_mime = get_mime(Utils::getExtension(_path)));
+	_clientRef.setMime(_mime = get_mime(Utils::getExtension(_path)));
 	std::cout << " ---------------------------------  DATA  -----------------------------------" << std::endl;
 	for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
 		std::cout << it->first << ": " << it->second << std::endl;
@@ -133,21 +166,6 @@ void Request::postReq()
 		else
 			std::cerr << "ERROR lecture superieur au content length" << std::endl;
 	}
-
-	// std::string filename = "file" + getDate();
-	// std::cout << std::string(30, '-') << std::endl;
-	// std::cout << "filename = " << filename << std::endl;
-	// std::cout << std::string(30, '-') << std::endl;
-	//--------------------------------------------------------------------------
-
-	// debugPrintBodyReadable(10);
-	//--------------------------------------------------------------------------
-	// std::cout << "BODY SYZE = " << _body.size() << std::endl;
-
-	// std::cout << std::string(30, '-') << std::endl;
-	// std::cout << "METHOD = " << _method << " PATH = " << _fullPath << std::endl;
-	// _clientRef.printClient();
-	// std::cout << std::string(30, '-') << std::endl;
 
 	if (_mime == "application/x-httpd-php" || _mime == "text/x-python")
 		throw Request::CGIcalled();
