@@ -25,7 +25,6 @@ private:
     std::string _contentLength;
     std::string _filename;
     std::string _contentType;
-    std::string _boundary;
 
     int _pid;
     int _bytesRead;

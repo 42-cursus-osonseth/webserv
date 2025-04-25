@@ -54,7 +54,7 @@ size_t client::getChunkSize() const
 {
     return _chunkSize;
 }
-t_state client::GetState() const
+t_state client::getState() const
 {
     return _state;
 }
@@ -73,6 +73,10 @@ const std::string &client::getPath() const
 const std::string &client::getMethod() const
 {
     return _method;
+}
+const std::string &client::getBoundary() const
+{
+    return _boundary;
 }
 void client::setBytesRead(ssize_t n)
 {
@@ -130,6 +134,10 @@ void client::setReadCRLFfirst(bool b)
 {
     _readCRLFfirst = b;
 }
+void client::setBoundary(std::string str)
+{
+    _boundary = str;
+}
 void client::printClient() const
 {
     std::cout << std::string(30, '-') << std::endl;
@@ -140,6 +148,7 @@ void client::printClient() const
     std::cout << "FILENAME = " << _filename << std::endl;
     std::cout << "CONTENT TYPE = " << _contentType << std::endl;
     std::cout << "IS CHUNK = " << _isChunk << std::endl;
+    std::cout << "BOUNDARY = " << _boundary << std::endl;
 
     std::cout << std::string(30, '-') << std::endl;
 }

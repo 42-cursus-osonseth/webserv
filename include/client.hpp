@@ -22,6 +22,7 @@ private:
     bool _isChunk;
     bool _readCRLFfirst;
     t_state _state;
+    std::string _boundary;
 
     std::string _body;
     std::string _method;
@@ -48,11 +49,12 @@ public:
     bool getIsChunk() const;
     size_t getCurrentChunkread() const;
     size_t getChunkSize() const;
-    t_state GetState() const;
+    t_state getState() const;
     const std::string &getPartialChunkSize() const;
     const std::string &getMime() const;
     const std::string &getPath() const;
     const std::string &getMethod() const;
+    const std::string &getBoundary() const;
     
 
     void setBytesRead(ssize_t n);
@@ -69,6 +71,7 @@ public:
     void setPath(std::string str);
     void setMethod(std::string str);
     void setReadCRLFfirst(bool b);
+    void setBoundary(std::string str);
 
     void printClient() const;
 };

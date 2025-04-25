@@ -69,6 +69,7 @@ private:
 	bool findCRLF(size_t &pos);
 	bool getAndValidChunkSize(size_t &pos);
 	bool checkAndPrepareForTrailingCRLF();
+	void initClientData();
 
 	// GET related
 	void getFileContent();
