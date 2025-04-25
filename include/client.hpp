@@ -7,6 +7,9 @@ typedef enum
 {
     READING_CHUNK_SIZE,
     READING_CHUNK_DATA,
+    READING_BOUNDARY,
+    READING_MULTIPART_HEADER,
+    READING_MULTIPART_DATA
 } t_state;
 
 class client
@@ -23,14 +26,16 @@ private:
     bool _readCRLFfirst;
     t_state _state;
     std::string _boundary;
+    std::string _finalBoundary;
 
     std::string _body;
     std::string _method;
     std::string _filename;
     std::string _contentType;
-    std::string _partialChunkSize;
+    std::string _partialBuffer;
     std::string _mime;
     std::string _path;
+    
    
 
 public:
@@ -50,11 +55,12 @@ public:
     size_t getCurrentChunkread() const;
     size_t getChunkSize() const;
     t_state getState() const;
-    const std::string &getPartialChunkSize() const;
+    const std::string &getPartialBuffer() const;
     const std::string &getMime() const;
     const std::string &getPath() const;
     const std::string &getMethod() const;
     const std::string &getBoundary() const;
+    const std::string &getFinalBoundary() const;
     
 
     void setBytesRead(ssize_t n);
@@ -66,12 +72,13 @@ public:
     void setChunkSize(size_t s);
     void setCurrentChunkRead(size_t s);
     void setState(t_state s);
-    void setPartialChunkSize(std::string str);
+    void setPartialBuffer(std::string str);
     void setMime(std::string str);
     void setPath(std::string str);
     void setMethod(std::string str);
     void setReadCRLFfirst(bool b);
     void setBoundary(std::string str);
+    void setFinalBoundary(std::string str);
 
     void printClient() const;
 };

@@ -55,21 +55,17 @@ cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _bod
     _sv_in[1] = -1;
     _sv_out[0] = -1;
     _sv_out[1] = -1;
-    _args[0] = (char *) _path.c_str();
+    _args[0] = (char *)_path.c_str();
     _args[1] = NULL;
     initPostEnv(client);
-    // for(int i = 0; i < 5; i++)
-    //     std::cout << "ENV[" << i << "] = " << _env[i] <<std::endl;
     memset(_buffer, 0, sizeof(_buffer));
 }
 
 void cgiManager::executePostRequest()
 {
-    // std::cout << "LE GCI VA TRAITER LA REQUETE" << std::endl;
-    // std::cout  << std::string(30,'-') << std::endl;
-    // std::cout << _body << std::endl;
-    // std::cout  << std::string(30,'-') << std::endl;
-
+   
+    // for (int i = 0; i < 5; i++)
+    //     std::cout << "ENV[" << i << "] = " << _env[i] << std::endl;
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_out) == -1)
@@ -84,6 +80,7 @@ void cgiManager::executePostRequest()
         dup2(_sv_out[1], STDOUT_FILENO);
         close(_sv_in[0]);
         close(_sv_out[1]);
+        std::cout << " execve : " << _args[0] << std::endl;
         if (execve(_args[0], _args, _env) == -1)
             throw std::runtime_error("execve failed");
     }
@@ -97,11 +94,10 @@ void cgiManager::executePostRequest()
             _response.append(_buffer, _bytesRead);
         close(_sv_out[0]);
     }
-    // std::cout << " REPONSE  = " << _response << std::endl;
     send(_fd, _response.c_str(), _response.size(), 0);
 }
 void cgiManager::executeGetRequest()
-{
+{    
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if ((_pid = fork()) == -1)

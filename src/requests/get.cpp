@@ -33,6 +33,7 @@ void	Request::getReq()
 {
 	getRessourcePath();
 	_mime = get_mime(Utils::getExtension(_path));
+	_clientRef.setMime(_mime);
 	if (_mime == "text/x-python")
 		throw Request::CGIcalled();
 	getBody();

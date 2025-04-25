@@ -25,102 +25,110 @@ int Request::getFd() const
 {
 	return _fd;
 }
-void Request::getQuerry ()
+void Request::getQuerry()
 {
-	size_t	sep_pos = _path.find('?');
+	size_t sep_pos = _path.find('?');
 	_query = _path.substr(sep_pos + 1);
 	_path = _path.substr(0, sep_pos);
-	 
 }
 
-void	Request::isolateBody(std::string &fullRequest)
+void Request::isolateBody(std::string &fullRequest)
 {
 	// std::cerr << "Isolating body on: " << fullRequest << std::endl;
 
-	size_t	sep = fullRequest.find("\r\n\r\n");
-	if (sep != std::string::npos) {
+	size_t sep = fullRequest.find("\r\n\r\n");
+	if (sep != std::string::npos)
+	{
 		_body = fullRequest.substr(sep + 4);
 		fullRequest = fullRequest.substr(0, sep);
 	}
 	// std::cerr << "Body isolation managed" << std::endl;
 }
 
-std::string	Request::getRequest()
+std::string Request::getRequest()
 {
-	char		buffer[BUFFER_SIZE] = {0};
-	ssize_t		n;
-	std::string	fullRequest;
+	char buffer[BUFFER_SIZE] = {0};
+	ssize_t n;
+	std::string fullRequest;
 
 	n = recv(_fd, buffer, sizeof(buffer), 0);
 	std::cout << "N = " << n << std::endl;
-	
+
 	if (n == 0)
 		throw Request::Disconnected();
 	else if (n > 0)
-		fullRequest.append(buffer,n);
-	else {
+		fullRequest.append(buffer, n);
+	else
+	{
 		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
 	return fullRequest;
 }
 
-void	Request::parseRequest()
+void Request::parseRequest()
 {
-	std::string	fullRequest = getRequest();
+	std::string fullRequest = getRequest();
 	isolateBody(fullRequest);
 
-	std::vector<std::string>	lines = Utils::split(fullRequest.c_str(), "\r\n");
-	std::istringstream	request_line(lines[0]);
+	std::vector<std::string> lines = Utils::split(fullRequest.c_str(), "\r\n");
+	std::istringstream request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	//-----------------------------------------------------------------------
-	std::cout << std::string(30,'-') << std::endl;
+	std::cout << std::string(30, '-') << std::endl;
 	std::cout << _method << " " << _path << " " << _version << std::endl;
-	std::cout << std::string(30,'-') << std::endl;
-	for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
-		std::cout << it->first << " " << it->second << std::endl;
+	std::cout << std::string(30, '-') << std::endl;
+	// for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
+	// 	std::cout << it->first << " " << it->second << std::endl;
 	//-----------------------------------------------------------------------
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
-	long unsigned int	i = 1;
-	if (_method.empty() || _path.empty() || _version.empty()) { // Checks sur le format
+	long unsigned int i = 1;
+	if (_method.empty() || _path.empty() || _version.empty())
+	{ // Checks sur le format
 		_method = "GET";
 		_path = "/";
 		_version = "HTTP/1.1";
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	}
-	while (i < lines.size() && !lines[i].empty()) {
-		size_t	sep_pos = lines[i].find(":");
-		if (sep_pos != std::string::npos) {
-			std::string	field_name = lines[i].substr(0, sep_pos);
-			std::string	field_value = lines[i].substr(sep_pos + 2);
+	while (i < lines.size() && !lines[i].empty())
+	{
+		size_t sep_pos = lines[i].find(":");
+		if (sep_pos != std::string::npos)
+		{
+			std::string field_name = lines[i].substr(0, sep_pos);
+			std::string field_value = lines[i].substr(sep_pos + 2);
 			_data[field_name] = field_value;
 		}
 		i++;
 	}
-	if(_data.find("Transfer-Encoding") != _data.end() && _data["Transfer-Encoding"] == "chunked")
+	if (_data.find("Transfer-Encoding") != _data.end() && _data["Transfer-Encoding"] == "chunked")
 		_clientRef.setIsChunck(true);
-	try {
+	try
+	{
 		_data.at("Host");
-	} catch (const std::out_of_range &e) {
+	}
+	catch (const std::out_of_range &e)
+	{
 		std::cerr << "No host found in the header file" << std::endl;
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	}
 }
 
-std::string	Request::getHost()
+std::string Request::getHost()
 {
-	size_t	pos = _data["Host"].find(":");
+	size_t pos = _data["Host"].find(":");
 
-	if (pos == std::string::npos) {
+	if (pos == std::string::npos)
+	{
 		return _data["Host"];
 	}
 	return _data["Host"].substr(0, pos);
 }
 
-int	Request::getPort()
+int Request::getPort()
 {
-	size_t	pos = _data["Host"].find(":");
-	int		res;
+	size_t pos = _data["Host"].find(":");
+	int res;
 
 	if (pos == std::string::npos)
 		return 80;
@@ -128,70 +136,92 @@ int	Request::getPort()
 	return res;
 }
 
-void	Request::generateResponse()
+void Request::generateResponse()
 {
 	std::cerr << "Looking up: " << getHost() << "@" << Utils::itos(getPort()) << std::endl;
 	_matchingServer = Server::getServersList().front().getInstance(getHost(), getPort());
-	if (!_matchingServer) {
+	if (!_matchingServer)
+	{
 		std::cout << "No matching server" << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this); // [TBR]
 	}
-		 if (_method == "GET")		getReq();
-	else if (_method == "POST")		postReq();
-	else if (_method == "DELETE")	deleteReq();
-	else throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
+	if (_method == "GET")
+		getReq();
+	else if (_method == "POST")
+		postReq();
+	else if (_method == "DELETE")
+		deleteReq();
+	else
+		throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
 }
 
 Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _clientRef(client)
 {
 	std::cerr << "Generating a new Request" << std::endl;
-	try {
+	try
+	{
 		_matchingServer = NULL;
-		if(_clientRef.getBodyFullyRead()){
-		parseRequest();
-		generateResponse();
-		
+		if (_clientRef.getBodyFullyRead())
+		{
+			parseRequest();
+			generateResponse();
 		}
 		else
-		{	
+		{
 			readRemainingBody();
 			throw Request::CGIcalled();
 		}
-	} catch (const CGIcalled &e) {
+	}
+	catch (const CGIcalled &e)
+	{
 		std::cerr << e.what() << std::endl;
-	} catch (const Disconnected &e) {
+	}
+	catch (const Disconnected &e)
+	{
 		throw e;
-	} catch (const std::exception &e) {
+	}
+	catch (const std::exception &e)
+	{
 		std::cerr << "Encountered exception while treating request: " << e.what() << std::endl;
 	}
 }
 
-void	Request::send()
+void Request::send()
 {
-	
-	if (!_errcode) {
+
+	if (!_errcode)
+	{
 		std::cerr << "Can't respond to this request" << std::endl;
-	} else {
-		if (_clientRef.getMime() == "application/x-httpd-php")
+	}
+	else
+	{
+		if (_clientRef.getMime() == "text/x-python" && _clientRef.getContentType() == "multipart/form-data")
+		{
+			std::cout << "COUCOU2" << std::endl;
+			return;
+		}
+		
+		else if (_clientRef.getMime() == "text/x-python")
+		{
+			cgiManager c(*this, _clientRef);
+			c.execute();
+			return;
+		}
+		else if (_clientRef.getMime() == "application/x-httpd-php")
 		{
 			cgiManager c(*this);
 			c.execute();
 			return;
 		}
-		else if(_clientRef.getMime()  == "text/x-python")
-		{
-			cgiManager c(*this,_clientRef);
-			c.execute();
-			return;
-		}
+
 		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
 			perror("send");
 		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)
-			perror("send");	
+			perror("send");
 	}
 }
 
-void	Request::generateHeader()
+void Request::generateHeader()
 {
 	_responseHeader = _version + ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
 	std::cout << _version;
@@ -207,7 +237,7 @@ void	Request::generateHeader()
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
 }
 
-void	Request::dump(void)
+void Request::dump(void)
 {
 	std::cout << "-- Dumping request for " << _path << " at " << _data["Host"] << " --" << std::endl;
 	std::cout << _responseHeader << _responseBody << std::endl;

@@ -7,7 +7,7 @@ bool Request::findCRLF(size_t &pos)
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	else if (pos == std::string::npos && _tmpBody.size() < 7)
 	{
-		_clientRef.setPartialChunkSize(_tmpBody);
+		_clientRef.setPartialBuffer(_tmpBody);
 		return false;
 	}
 	return true;
@@ -16,7 +16,7 @@ bool Request::checkAndPrepareForTrailingCRLF()
 {
 	if (_tmpBody.size() == 1)
 	{
-		_clientRef.setPartialChunkSize(_tmpBody);
+		_clientRef.setPartialBuffer(_tmpBody);
 		_clientRef.setReadCRLFfirst(true);
 		_clientRef.setState(READING_CHUNK_SIZE);
 		return false;
@@ -82,10 +82,10 @@ bool Request::readChunkData()
 	_clientRef.setState(READING_CHUNK_SIZE);
 	return true;
 }
-void Request::prependPartialChunkSize()
+void Request::prependPartialBuffer()
 {
-	_tmpBody = _clientRef.getPartialChunkSize() + _tmpBody;
-	_clientRef.setPartialChunkSize("");
+	_tmpBody = _clientRef.getPartialBuffer() + _tmpBody;
+	_clientRef.setPartialBuffer("");
 }
 
 void Request::ChunkedBodyAssembler()
@@ -93,8 +93,8 @@ void Request::ChunkedBodyAssembler()
 	_tmpBody = _body;
 	_body.clear();
 
-	if (!_clientRef.getPartialChunkSize().empty())
-		prependPartialChunkSize();
+	if (!_clientRef.getPartialBuffer().empty())
+		prependPartialBuffer();
 	while (1)
 	{
 		if (_clientRef.getState() == READING_CHUNK_SIZE && !readChunkSize())

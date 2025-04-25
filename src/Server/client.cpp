@@ -58,9 +58,9 @@ t_state client::getState() const
 {
     return _state;
 }
-const std::string &client::getPartialChunkSize() const
+const std::string &client::getPartialBuffer() const
 {
-    return _partialChunkSize;
+    return _partialBuffer;
 }
 const std::string &client::getMime() const
 {
@@ -77,6 +77,10 @@ const std::string &client::getMethod() const
 const std::string &client::getBoundary() const
 {
     return _boundary;
+}
+const std::string &client::getFinalBoundary() const
+{
+    return _finalBoundary;
 }
 void client::setBytesRead(ssize_t n)
 {
@@ -114,9 +118,9 @@ void client::setState(t_state s)
 {
     _state = s;
 }
-void client::setPartialChunkSize(std::string str)
+void client::setPartialBuffer(std::string str)
 {
-    _partialChunkSize = str;
+    _partialBuffer = str;
 }
 void client::setMime(std::string str)
 {
@@ -138,10 +142,27 @@ void client::setBoundary(std::string str)
 {
     _boundary = str;
 }
+void client::setFinalBoundary(std::string str)
+{
+    _finalBoundary = str;
+}
+const char* stateToStr(t_state state)
+{
+    switch (state)
+    {
+        case READING_CHUNK_SIZE:       return "READING_CHUNK_SIZE";
+        case READING_CHUNK_DATA:       return "READING_CHUNK_DATA";
+        case READING_BOUNDARY:         return "READING_BOUNDARY";
+        case READING_MULTIPART_HEADER: return "READING_MULTIPART_HEADER";
+        case READING_MULTIPART_DATA:   return "READING_MULTIPART_DATA";
+        default:                       return "UNKNOWN";
+    }
+}
 void client::printClient() const
 {
     std::cout << std::string(30, '-') << std::endl;
     std::cout << "ID = " << _fd << std::endl;
+    std::cout << "MIME = " << _mime <<std::endl;
     std::cout << "CONTENT LENGTH = " << _contentLength << std::endl;
     std::cout << "BYTES READ = " << _bytesRead << std::endl;
     std::cout << "BOOL FULL READ = " << _bodyFullyRead << std::endl;
@@ -149,6 +170,8 @@ void client::printClient() const
     std::cout << "CONTENT TYPE = " << _contentType << std::endl;
     std::cout << "IS CHUNK = " << _isChunk << std::endl;
     std::cout << "BOUNDARY = " << _boundary << std::endl;
+    std::cout << "FINAL BOUDARY = " <<_finalBoundary << std::endl;
+    std::cout << "STATE = " << stateToStr(_state) << std::endl;
 
     std::cout << std::string(30, '-') << std::endl;
 }

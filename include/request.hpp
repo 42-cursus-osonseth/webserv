@@ -63,7 +63,7 @@ private:
 	void readRemainingBody();
 	void generateUniqueFilename();
 	void ChunkedBodyAssembler();
-	void prependPartialChunkSize();
+	void prependPartialBuffer();
 	bool readChunkSize();
 	bool readChunkData();
 	bool findCRLF(size_t &pos);
