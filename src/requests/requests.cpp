@@ -56,7 +56,7 @@ std::string Request::getRequest()
 
 	if (n == 0)
 		throw Request::Disconnected();
-	else if (n > 0)
+	if (n > 0)
 		fullRequest.append(buffer, n);
 	else
 	{
