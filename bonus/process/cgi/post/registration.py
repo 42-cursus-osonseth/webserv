@@ -14,8 +14,12 @@ if os.environ.get("TRANSFER_ENCODING", "") == "chunked" or os.environ.get("CONTE
         file_path = os.path.join(upload_path, filename)
         with open(file_path, "ab") as f:
             f.write(input_data)
-    sys.stdout.write("LE SCRIPT POUR MULTIPART OU CHUNK EST EXEC")
-
+    response_body = "Les fichiers ont bien été reçus"
+    sys.stdout.write("HTTP/1.1 200 OK\r\n")
+    sys.stdout.write("Content-Type: text/plain; charset=utf-8\r\n")
+    sys.stdout.write("Connection: keep-alive\r\n")
+    sys.stdout.write(f"Content-Length: {len(response_body.encode('utf-8'))}\r\n\r\n")
+    sys.stdout.write(response_body)
 # Vérifier le type de contenu
 elif os.environ.get("CONTENT_TYPE") == "application/x-www-form-urlencoded" :
     input_data = sys.stdin.read()

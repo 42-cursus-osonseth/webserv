@@ -70,6 +70,7 @@ private:
 	bool getAndValidChunkSize(size_t &pos);
 	bool checkAndPrepareForTrailingCRLF();
 	void initClientData();
+	void handleMultipart();
 
 	// GET related
 	void getFileContent();

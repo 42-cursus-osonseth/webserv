@@ -167,7 +167,7 @@ Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _cl
 			generateResponse();
 		}
 		else
-		{
+		{	
 			readRemainingBody();
 			throw Request::CGIcalled();
 		}

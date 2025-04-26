@@ -84,6 +84,7 @@ void webServer::setupServers()
 
 void webServer::closeWebServer()
 {
+	std::cout << "ON FERME LE SERVEUR" << std::endl;
 	for (std::vector<int>::iterator it = server_fds.begin(); it != server_fds.end(); it++)
 	{
 		if (epoll_ctl(epfd, EPOLL_CTL_DEL, *it, NULL) == -1)
@@ -178,7 +179,7 @@ void webServer::start()
 					}	
 					catch(const std::exception& e)
 					{
-						// std::cout << "client efface fd = " << events[i].data.fd << std::endl;
+						std::cout << "client efface fd = " << events[i].data.fd << std::endl;
 						clients.erase(events[i].data.fd);
 						epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, NULL);
 						if (isClient(events[i].data.fd))

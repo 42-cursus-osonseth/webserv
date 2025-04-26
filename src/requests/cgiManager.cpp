@@ -63,7 +63,7 @@ cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _bod
 
 void cgiManager::executePostRequest()
 {
-   
+
     // for (int i = 0; i < 5; i++)
     //     std::cout << "ENV[" << i << "] = " << _env[i] << std::endl;
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
@@ -80,7 +80,6 @@ void cgiManager::executePostRequest()
         dup2(_sv_out[1], STDOUT_FILENO);
         close(_sv_in[0]);
         close(_sv_out[1]);
-        std::cout << " execve : " << _args[0] << std::endl;
         if (execve(_args[0], _args, _env) == -1)
             throw std::runtime_error("execve failed");
     }
@@ -93,11 +92,27 @@ void cgiManager::executePostRequest()
         while ((_bytesRead = read(_sv_out[0], _buffer, sizeof(_buffer) - 1)) > 0)
             _response.append(_buffer, _bytesRead);
         close(_sv_out[0]);
+        waitpid(_pid, NULL, 0);
+        ssize_t bytes_sent = send(_fd, _response.c_str(), _response.size(), MSG_NOSIGNAL);
+        if (bytes_sent == -1)
+        {
+            if (errno == EPIPE)
+            {
+                std::cerr << "Client closed the connection unexpectedly." << std::endl;
+                // Traite la fermeture de la socket ici
+            }
+            else
+            {
+                std::cerr << "send failed: " << strerror(errno) << std::endl;
+            }
+        }
     }
-    send(_fd, _response.c_str(), _response.size(), 0);
+
+    // std::cout << "REPONSE" << std::endl;
+    // std::cout << _response << std::endl;
 }
 void cgiManager::executeGetRequest()
-{    
+{
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if ((_pid = fork()) == -1)
@@ -116,6 +131,7 @@ void cgiManager::executeGetRequest()
         while ((_bytesRead = read(_sv_in[1], _buffer, sizeof(_buffer) - 1)) > 0)
             _response.append(_buffer, _bytesRead);
         close(_sv_in[1]);
+        waitpid(_pid, NULL, 0);
         send(_fd, _response.c_str(), _response.size(), 0);
     }
 }
