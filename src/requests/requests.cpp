@@ -70,7 +70,6 @@ void Request::parseRequest()
 {
 	std::string fullRequest = getRequest();
 	isolateBody(fullRequest);
-
 	std::vector<std::string> lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
@@ -197,20 +196,20 @@ void Request::send()
 	{
 		if (_clientRef.getMime() == "text/x-python" && _clientRef.getContentType() == "multipart/form-data")
 		{
-			std::cout << "COUCOU2" << std::endl;
+			
 			return;
 		}
 		
 		else if (_clientRef.getMime() == "text/x-python")
 		{
 			cgiManager c(*this, _clientRef);
-			c.execute();
+			c.execute(_clientRef);
 			return;
 		}
 		else if (_clientRef.getMime() == "application/x-httpd-php")
 		{
-			cgiManager c(*this);
-			c.execute();
+			cgiManager c(*this, _clientRef);
+			c.execute(_clientRef);
 			return;
 		}
 

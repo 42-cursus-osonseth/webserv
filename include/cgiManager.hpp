@@ -36,13 +36,13 @@ private:
 
     void initPostEnv(client &client);
     void initGetenv();
-    void executePostRequest();
+    void executePostRequest(client &client);
     void executeGetRequest();
 
 public:
     cgiManager();
-    cgiManager(Request &req);
     cgiManager(Request &req, client &client);
     ~cgiManager();
-    void execute();
+    void execute(client &client);
+
 };
