@@ -1,0 +1,1327 @@
+[0;92mWebServer wait an event
+[0m[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 6[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;92mWebServer wait an event
+[0m[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 7[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 6[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 6[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 8[0m
+Generating a new Request
+client efface fd = 8
+Disconnected
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+CGI has been called
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 5[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 6[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 7[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 6[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 7[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m[0;93mClient socket event: read data : 6[0m
+Generating a new Request
+Looking up: 127.0.0.1@8080
+/ seems to match
+Closing Request
+
+[0;92mWebServer wait an event
+[0m

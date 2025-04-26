@@ -43,94 +43,109 @@ void Request::readRemainingBody()
 		handleMultipart();
 	}
 }
-void Request::handleMultipart()
+void Request::updateBodyReadStatus()
 {
-	size_t pos;
 	_clientRef.setBytesRead(_body.size() + _clientRef.getBytesRead());
 	if (_clientRef.getBytesRead() < _clientRef.getContentLenght())
 		_clientRef.setBobyFullyRead(false);
 	else if (_clientRef.getBytesRead() == _clientRef.getContentLenght())
 		_clientRef.setBobyFullyRead(true);
+}
+bool Request::readingBoundary(size_t &pos, std::string &tmpBody)
+{
+	pos = tmpBody.find(_clientRef.getBoundary());
+	if (pos != std::string::npos && tmpBody.substr(pos, _clientRef.getFinalBoundary().size()) == _clientRef.getFinalBoundary() && _clientRef.getBodyFullyRead())
+		return false;
+	if (pos == std::string::npos || tmpBody.substr(_clientRef.getBoundary().size(), 2) != "\r\n")
+		throw Request::ErrcodeException(BAD_REQUEST, *this);
+	tmpBody.erase(0, _clientRef.getBoundary().size() + 2);
+	_clientRef.setState(READING_MULTIPART_HEADER);
+	return true;
+}
+void Request::readingMultipartHeader(size_t &pos, std::string &tmpBody)
+{
+	pos = tmpBody.find("\r\n\r\n");
+	if (pos == std::string::npos)
+		throw Request::ErrcodeException(BAD_REQUEST, *this);
+	checkFilePresence(pos, tmpBody);
+}
+void Request::checkFilePresence(size_t &pos, std::string &tmpBody)
+{
+	std::string header = tmpBody.substr(0, pos);
+	pos = header.find("filename=");
+	std::string filename = header.substr(pos + 9, 2);
+	if (filename == "\"\"")
+		goToNextBoundary(pos, tmpBody);
+	else
+		goToData(pos, tmpBody);
+}
+void Request::goToNextBoundary(size_t &pos, std::string &tmpBody)
+{
+	pos = tmpBody.find(_clientRef.getBoundary());
+	tmpBody.erase(0, pos);
+	_clientRef.setState(READING_BOUNDARY);
+}
+void Request::goToData(size_t &pos, std::string &tmpBody)
+{
+	pos = tmpBody.find("\r\n\r\n");
+	generateUniqueFilename();
+	tmpBody.erase(0, pos + 4);
+	_clientRef.setState(READING_MULTIPART_DATA);
+}
+
+bool Request::readingMultipartData(size_t &pos, std::string &tmpBody)
+{
+	if (!_clientRef.getPartialBuffer().empty())
+	{
+		tmpBody = _clientRef.getPartialBuffer() + tmpBody;
+		_clientRef.setPartialBuffer("");
+	}
+	pos = tmpBody.find(_clientRef.getBoundary());
+	if (pos == std::string::npos)
+	{
+		processIncompleteMultipartData(tmpBody);
+		return false;
+	}
+	else
+		processCompleteMultipartData(pos, tmpBody);
+	return true;
+}
+void Request::processIncompleteMultipartData(std::string &tmpBody)
+{
+	std::string toSend = tmpBody.size() > 100 ? tmpBody.substr(0, tmpBody.size() - 100) : "";
+	_clientRef.setPartialBuffer(tmpBody.size() > 100 ? tmpBody.substr(tmpBody.size() - 100) : "");
+	if (!toSend.empty())
+	{
+		_body = toSend;
+		cgiManager c(*this, _clientRef);
+		c.execute(_clientRef);
+	}
+}
+void Request::processCompleteMultipartData(size_t &pos, std::string &tmpBody)
+{
+	_body = tmpBody.substr(0, pos - 2);
+	tmpBody.erase(0, pos);
+	_clientRef.setState(READING_BOUNDARY);
+	cgiManager c(*this, _clientRef);
+	c.execute(_clientRef);
+}
+
+void Request::handleMultipart()
+{
+	size_t pos;
+	updateBodyReadStatus();
 	std::string tmpBody = _body;
-	std::cout << "BODY SIZE  = " << _body.size() << std::endl;
-	std::cout << "BYTES READ = " << _clientRef.getBytesRead() << std::endl;
 	_body = "";
-	
-	// std::cout << "CLIENT INFO AVANT LA BOUCLE" << std::endl;
-	// _clientRef.printClient();
+
 	while (1)
 	{
-
-		if (_clientRef.getState() == READING_BOUNDARY)
-		{
-
-			pos = tmpBody.find(_clientRef.getBoundary());
-			if (pos != std::string::npos && tmpBody.substr(pos, _clientRef.getFinalBoundary().size()) == _clientRef.getFinalBoundary() && _clientRef.getBodyFullyRead())
-				break;
-			if (pos == std::string::npos || tmpBody.substr(_clientRef.getBoundary().size(), 2) != "\r\n")
-				throw Request::ErrcodeException(BAD_REQUEST, *this);
-			tmpBody.erase(0, _clientRef.getBoundary().size() + 2);
-			_clientRef.setState(READING_MULTIPART_HEADER);
-		}
-
+		if (_clientRef.getState() == READING_BOUNDARY && !readingBoundary(pos, tmpBody))
+			break;
 		if (_clientRef.getState() == READING_MULTIPART_HEADER)
-		{
-
-			pos = tmpBody.find("\r\n\r\n");
-			if (pos == std::string::npos)
-				throw Request::ErrcodeException(BAD_REQUEST, *this);
-
-			std::string header = tmpBody.substr(0, pos);
-			pos = header.find("filename=");
-			std::string filename = header.substr(pos + 9, 2);
-			if (filename == "\"\"")
-			{
-				pos = tmpBody.find(_clientRef.getBoundary());
-				tmpBody.erase(0, pos);
-				_clientRef.setState(READING_BOUNDARY);
-			}
-			else
-			{
-				pos = tmpBody.find("\r\n\r\n");
-				generateUniqueFilename();
-				tmpBody.erase(0, pos + 4);
-				_clientRef.setState(READING_MULTIPART_DATA);
-			}
-		}
-
-		if (_clientRef.getState() == READING_MULTIPART_DATA)
-		{
-			if (!_clientRef.getPartialBuffer().empty())
-			{
-				tmpBody = _clientRef.getPartialBuffer() + tmpBody;
-				_clientRef.setPartialBuffer("");
-			}
-			pos = tmpBody.find(_clientRef.getBoundary());
-			if (pos == std::string::npos)
-			{
-
-				std::string toSend = tmpBody.size() > 100 ? tmpBody.substr(0, tmpBody.size() - 100) : "";
-				_clientRef.setPartialBuffer(tmpBody.size() > 100 ? tmpBody.substr(tmpBody.size() - 100) : "");
-				if (!toSend.empty())
-				{
-					_body = toSend;
-					cgiManager c(*this, _clientRef);
-					c.execute(_clientRef);
-				}
-				break;
-			}
-			else
-			{
-				_body = tmpBody.substr(0, pos - 2);
-				tmpBody.erase(0, pos);
-				_clientRef.setState(READING_BOUNDARY);
-				cgiManager c(*this, _clientRef);
-				c.execute(_clientRef);
-			}
-		}
+			readingMultipartHeader(pos, tmpBody);
+		if (_clientRef.getState() == READING_MULTIPART_DATA && !readingMultipartData(pos, tmpBody))
+			break;
 	}
-	std::cout << "CLIENT INFO APRES LA BOUCLE" << std::endl;
-	_clientRef.printClient();
 }
 void Request::postReq()
 {

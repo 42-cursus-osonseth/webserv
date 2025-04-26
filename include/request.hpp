@@ -71,6 +71,15 @@ private:
 	bool checkAndPrepareForTrailingCRLF();
 	void initClientData();
 	void handleMultipart();
+	void updateBodyReadStatus();
+	bool readingBoundary(size_t &pos, std::string &tmpBody);
+	void readingMultipartHeader(size_t &pos, std::string &tmpBody);
+	bool readingMultipartData(size_t &pos, std::string &tmpBody);
+	void checkFilePresence(size_t &pos, std::string &body);
+	void goToNextBoundary(size_t &pos, std::string &tmpBody);
+	void goToData(size_t &pos, std::string &tmpBody);
+	void processIncompleteMultipartData(std::string &tmpBody);
+	void processCompleteMultipartData(size_t &pos, std::string &tmpBody);
 
 	// GET related
 	void getFileContent();
