@@ -61,6 +61,7 @@ std::string Request::getRequest()
 		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
+	// std::cout << fullRequest << std::endl;
 	return fullRequest;
 }
 
@@ -72,6 +73,7 @@ void Request::parseRequest()
 	std::istringstream request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
+	Utils::replaceLitterals(_path);
 	long unsigned int i = 1;
 	if (_method.empty() || _path.empty() || _version.empty())
 	{ // Checks sur le format

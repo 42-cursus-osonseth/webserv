@@ -103,3 +103,16 @@ bool Utils::isValidChunkSize(const std::string& str)
 
     return true;
 }
+#include <iostream>
+void	Utils::replaceLitterals(std::string &s)
+{
+	size_t pos = 0;
+
+	while ((pos = s.find("%", pos)) != std::string::npos) {
+		char	c = ((s[pos + 1] <= '9' ? s[pos + 1] - '0' : s[pos + 1] - 'A' + 10) * 16) +
+			(s[pos + 2] <= '9' ? s[pos + 2] - '0' : s[pos + 2] - 'A' + 10);
+
+		s = s.substr(0, pos) + c + s.substr(pos + 3);
+		pos += 1;
+	}
+}
