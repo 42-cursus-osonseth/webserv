@@ -52,8 +52,6 @@ std::string Request::getRequest()
 	std::string fullRequest;
 
 	n = recv(_fd, buffer, sizeof(buffer), 0);
-	std::cout << "N = " << n << std::endl;
-
 	if (n == 0)
 		throw Request::Disconnected();
 	if (n > 0)
@@ -73,13 +71,6 @@ void Request::parseRequest()
 	std::vector<std::string> lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream request_line(lines[0]);
 	request_line >> _method >> _path >> _version;
-	//-----------------------------------------------------------------------
-	std::cout << std::string(30, '-') << std::endl;
-	std::cout << _method << " " << _path << " " << _version << std::endl;
-	std::cout << std::string(30, '-') << std::endl;
-	// for (std::map<std::string, std::string>::iterator it = _data.begin(); it != _data.end(); ++it)
-	// 	std::cout << it->first << " " << it->second << std::endl;
-	//-----------------------------------------------------------------------
 	_path.find('?') != std::string::npos ? getQuerry() : void(); // si trouve un ? separe le path de la querry string
 	long unsigned int i = 1;
 	if (_method.empty() || _path.empty() || _version.empty())
@@ -195,21 +186,17 @@ void Request::send()
 	else
 	{
 		if (_clientRef.getMime() == "text/x-python" && _clientRef.getContentType() == "multipart/form-data")
-		{
-			
 			return;
-		}
-		
 		else if (_clientRef.getMime() == "text/x-python")
 		{
-			cgiManager c(*this, _clientRef);
-			c.execute(_clientRef);
+			cgiManager cgi(*this, _clientRef);
+			cgi.execute(_clientRef);
 			return;
 		}
 		else if (_clientRef.getMime() == "application/x-httpd-php")
 		{
-			cgiManager c(*this, _clientRef);
-			c.execute(_clientRef);
+			cgiManager cgi(*this, _clientRef);
+			cgi.execute(_clientRef);
 			return;
 		}
 

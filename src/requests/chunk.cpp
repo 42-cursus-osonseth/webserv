@@ -1,5 +1,16 @@
 #include <request.hpp>
 
+void Request::generateUniqueFilename()
+{
+	struct timeval tp;
+	gettimeofday(&tp, NULL);
+	long int ms = tp.tv_sec * 1000000 + tp.tv_usec;
+	std::ostringstream oss;
+	oss << ms;
+	std::string filename = "Webserv_" + oss.str();
+	_clientRef.setFilename(filename);
+}
+
 bool Request::findCRLF(size_t &pos)
 {
 	pos = _tmpBody.find("\r\n");

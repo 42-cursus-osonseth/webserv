@@ -72,14 +72,14 @@ private:
 	void initClientData();
 	void handleMultipart();
 	void updateBodyReadStatus();
-	bool readingBoundary(size_t &pos, std::string &tmpBody);
-	void readingMultipartHeader(size_t &pos, std::string &tmpBody);
-	bool readingMultipartData(size_t &pos, std::string &tmpBody);
-	void checkFilePresence(size_t &pos, std::string &body);
-	void goToNextBoundary(size_t &pos, std::string &tmpBody);
-	void goToData(size_t &pos, std::string &tmpBody);
-	void processIncompleteMultipartData(std::string &tmpBody);
-	void processCompleteMultipartData(size_t &pos, std::string &tmpBody);
+	bool readingBoundary(size_t &pos);
+	void readingMultipartHeader(size_t &pos);
+	bool readingMultipartData(size_t &pos);
+	void checkFilePresence(size_t &pos);
+	void goToNextBoundary(size_t &pos);
+	void goToData(size_t &pos);
+	void processIncompleteMultipartData();
+	void processCompleteMultipartData(size_t &pos);
 
 	// GET related
 	void getFileContent();

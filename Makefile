@@ -6,7 +6,7 @@
 #    By: max <max@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/14 16:21:25 by mekherbo          #+#    #+#              #
-#    Updated: 2025/04/25 09:48:08 by max              ###   ########.fr        #
+#    Updated: 2025/04/27 03:27:10 by max              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRC = src/main.cpp \
 	src/requests/requests.cpp \
 	src/requests/cgiManager.cpp \
 	src/requests/chunk.cpp \
+	src/requests/multipart.cpp \
 	src/Server/sortLocations.cpp 
 
 
