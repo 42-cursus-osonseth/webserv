@@ -54,44 +54,53 @@ void	Server::acceptConnection(int epfd, struct epoll_event ev)
 void	Server::initSocket()
 {
 	this->number_server = toString(findNumberHost());
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd == -1)
-		throw std::runtime_error("Error: socket creation failed on server " + number_server);
-	int opt = 1;
-	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+	for (size_t i = 0; i < listenPorts.size(); i++)
 	{
-		close(sockfd);
-		throw std::runtime_error("Error: setsockopt failed on server " + number_server);
-	}
-	addr.sin_family = AF_INET;
-	if (!listenPorts.empty())
-		addr.sin_port = htons(std::atoi(listenPorts[0].c_str()));
-	else
-		addr.sin_port = htons(8080);
-	addr.sin_addr.s_addr = inet_addr(hostAddress.c_str());
-	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
-	{
-		close(sockfd);
-		throw std::runtime_error("Error: set socket to non-blocking mode failed on server " + number_server);
-	}
-	if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-	{
-		close(sockfd);
-		throw std::runtime_error("Error: bind failed on server " + number_server);
-	}
-	if (listen(sockfd, SOMAXCONN) == -1)
-	{
-		close(sockfd);
-		throw std::runtime_error("Error: listen failed on server " + number_server);
+		sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		if (sockfd == -1)
+			throw std::runtime_error("Error: socket creation failed on server " + number_server);
+		int opt = 1;
+		if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+		{
+			close(sockfd);
+			throw std::runtime_error("Error: setsockopt failed on server " + number_server);
+		}
+		addr.sin_family = AF_INET;
+		if (!listenPorts.empty()) {
+			addr.sin_port = htons(std::atoi(listenPorts[i].c_str()));
+		}
+		else
+			addr.sin_port = htons(8088);
+		addr.sin_addr.s_addr = inet_addr(hostAddress.c_str());
+		if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1)
+		{
+			close(sockfd);
+			throw std::runtime_error("Error: set socket to non-blocking mode failed on port " + listenPorts[i] + " on server " + number_server);
+		}
+		if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) == -1)
+		{
+			close(sockfd);
+			throw std::runtime_error("Error: bind failed on port " +  listenPorts[i] + " on server " + number_server);
+		}
+		if (listen(sockfd, SOMAXCONN) == -1)
+		{
+			close(sockfd);
+			throw std::runtime_error("Error: listen failed on port " +  listenPorts[i] + " on server " + number_server);
+		}
+		std::cout << "listenPorts[i] = " << listenPorts[i] << std::endl;
+		sockfds.push_back(sockfd);
 	}
 }
 
 void	Server::closeSocket()
 {
-	if (sockfd != -1)
+	for (std::vector<int>::iterator it = sockfds.begin(); it != sockfds.end(); it++)
 	{
-		close(sockfd);
-		sockfd = -1;
+		if (*it != -1)
+		{
+			close(*it);
+			*it = -1;
+		}
 	}
 }
 
@@ -297,6 +306,11 @@ Server* Server::getInstance(const std::string& host, int port)
 const int& Server::getSockfd() const
 {
 	return sockfd;
+}
+
+const std::vector<int>& Server::getSockfds() const
+{
+	return sockfds;
 }
 
 std::string Server::getHostAddress()

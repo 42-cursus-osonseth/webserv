@@ -41,6 +41,7 @@ class Server
 		static std::list<Server> serversList;
 		std::map<int, std::string> errorPages;
 		int		sockfd;
+		std::vector<int> sockfds;
 		std::string		number_server;
 		struct sockaddr_in   addr;
 		public:
@@ -81,6 +82,7 @@ class Server
 		std::string	get_errcode_string(t_errcodes e);
 		static Server* getInstance(const std::string& host, int port);
 		const int &getSockfd() const;
+		const std::vector<int>& getSockfds() const;
 		std::string	getHostAddress();
 		const std::list<t_location>& getLocations() const;
 		const std::map<int, std::string>& getErrorPages() const;

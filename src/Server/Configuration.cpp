@@ -247,12 +247,13 @@ void	Configuration::parseMaxClients(const std::string &line, Server &server)
 	switch (toupper(arg[arg.size()-1]))
 	{
 		case 'K':
-			value /= 1024;
+			value *= 1024;
 			break;
 		case 'M':
+			value *= 1024 * 1024;
 			break;
 		case 'G':
-			value *= 1024;
+			value *= 1024 * 1024 * 1024;
 			break;
 		default:
 			throw InvalidMaxBodySizeException();

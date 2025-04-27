@@ -35,7 +35,7 @@ class webServer
 		void initEpoll();
 		void setupServers();
 		void closeWebServer();
-		void acceptConnection(Server const &server);
+		void acceptConnection(int server_fd);
 		void start();
 		void setSocketMode(int client_fd, int mode);
 

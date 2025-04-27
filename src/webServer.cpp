@@ -71,12 +71,15 @@ void webServer::setupServers()
 	for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
 	{
 		it->initSocket();
-		ev.events = EPOLLIN;
-		ev.data.fd = it->getSockfd();
-		if (epoll_ctl(epfd, EPOLL_CTL_ADD, ev.data.fd, &ev) == -1)
-			throw std::runtime_error("epoll_ctl failed");
-		std::cout << GREEN << "Server fd added: " << ev.data.fd << RESET << std::endl;
-		server_fds.push_back(ev.data.fd);
+		for (size_t i = 0; i < it->getSockfds().size(); ++i)
+		{
+			ev.events = EPOLLIN;
+			ev.data.fd = it->getSockfds()[i];
+			if (epoll_ctl(epfd, EPOLL_CTL_ADD, ev.data.fd, &ev) == -1)
+				throw std::runtime_error("epoll_ctl failed");
+			std::cout << GREEN << "Server fd added: " << ev.data.fd << RESET << std::endl;
+			server_fds.push_back(ev.data.fd);
+		}
 	}
 }
 
@@ -101,11 +104,11 @@ void webServer::closeWebServer()
 	close(epfd);
 }
 
-void webServer::acceptConnection(Server const &server)
+void webServer::acceptConnection(int server_fd)
 {
 	struct sockaddr_in addr;
 	socklen_t addrlen = sizeof(addr);
-	int client_fd = accept(server.getSockfd(), (struct sockaddr *)&addr, &addrlen);
+	int client_fd = accept(server_fd, (struct sockaddr *)&addr, &addrlen);
 	if (client_fd == -1)
 		throw std::runtime_error("accept failed");
 	if (fcntl(client_fd, F_SETFL, O_NONBLOCK) == -1 || fcntl(client_fd, F_SETFD, FD_CLOEXEC) == -1)
@@ -125,6 +128,7 @@ void webServer::acceptConnection(Server const &server)
 	client_fds.push_back(client_fd);
 	clients[client_fd] = client(client_fd);
 }
+
 void webServer::setSocketMode(int client_fd, int mode)
 {
 	memset(&ev, 0, sizeof(ev));
@@ -192,8 +196,16 @@ void webServer::start()
 				{
 					for (std::list<Server>::iterator it = serversList.begin(); it != serversList.end(); it++)
 					{
-						if (events[i].data.fd == it->getSockfd())
-							acceptConnection(*it);
+						const std::vector<int> &sockfds = it->getSockfds();
+						for (size_t j = 0; j < sockfds.size(); j++)
+						{
+							std::cerr << BLUE << server_fds[j] << RESET << '\n';
+							if (events[i].data.fd == sockfds[j])
+							{
+								acceptConnection(sockfds[j]);
+								break;
+							}
+						}
 					}
 				}
 			}
