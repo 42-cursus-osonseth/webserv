@@ -410,6 +410,8 @@ void	Configuration::parseBlock()
 	do
 	{
 		getline(infile, line);
+		if (lineNbr == 17)
+			std::cerr << line << '\n';
 		line = trim(line);
 		if (line.empty() || line[0] == '#')
 		{
@@ -430,34 +432,29 @@ void	Configuration::parseBlock()
 				break;
 			else if (line[i] == '{')
 				nestedLevel++;
-			else if (line[i] == '}')
+		}
+		if (line.find('}') != std::string::npos)
+		{
+			--nestedLevel;
+			if (nestedLevel == 0)
 			{
-				--nestedLevel;
-				if (nestedLevel == 0)
-				{
-					std::cout << "block found line: "<< lineNbr++ << '\n';
-					blockFound = true;
-					host.checkRequiredElements();
-					Server::addServer(host);
-					lineNbr++;
-					return ;
-				}
-				else if (nestedLevel < 0)
-					throw BraceNotClosedException();
-				if (locationFlag)
-				{
-					host.addLocation(currentLocation);
-					locationFlag = false;
-				}
+				std::cout << "block found line: "<< lineNbr++ << '\n';
+				blockFound = true;
+				host.checkRequiredElements();
+				Server::addServer(host);
+				lineNbr++;
+				return ;
+			}
+			else if (nestedLevel < 0)
+				throw BraceNotClosedException();
+			if (locationFlag)
+			{
+				host.addLocation(currentLocation);
+				locationFlag = false;
+				lineNbr++;
+				continue;
 			}
 		}
-		// if (lineNbr == 11){
-		// 		std::cerr << line << " [" << lineNbr << "]\n";
-		// 		std::cerr <<  currentLocation.uri << '\n';
-		// 		std::cerr <<  currentLocation.root << '\n';
-		// 		std::cerr <<  currentLocation.index << '\n';
-		// 		exit(1);
-		// }
 		if (locationFlag){
 			if (chooseLocationDirectives(line)){
 				if (line[line.size()-1] != ';')
@@ -466,8 +463,14 @@ void	Configuration::parseBlock()
 			else if (trim(line) != "{")
 				throw std::runtime_error("Error: Invalid directive for location");
 		}
-		else if (chooseDirectives(line, host) && line[line.size()-1] != ';')
-				throw MissingSemicolonException();
+		else
+		{
+			if (!chooseDirectives(line, host))
+				throw std::runtime_error("Error: Invalid directive for server");
+			if (line[line.size()-1] != ';')
+					throw MissingSemicolonException();
+		}
+		// else if (chooseDirectives(line, host) && line[line.size()-1] != ';')
 		lineNbr++;
 	} while (infile.good() && !infile.eof() && !blockFound);
 	if (nestedLevel > 0)
@@ -518,9 +521,9 @@ void	Configuration::parseFile(const std::string &filename)
 			}
 			catch(const std::exception& e)
 			{
-				std::cerr << SUPA_RED <<  e.what() << "\t line ["<< lineNbr <<"]\n\n" << RESET;
+				std ::cerr << SUPA_RED << "On server [" << nbServer + 1 <<"] in line [" << lineNbr << "] :\n" << RESET;
 				infile.close();
-				return ;
+				throw;
 			}
 		}
 		if (nbServer < 1)
