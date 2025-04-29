@@ -131,12 +131,12 @@ int Request::getPort()
 void Request::generateResponse()
 {
 	std::cerr << "Looking up: " << getHost() << "@" << Utils::itos(getPort()) << std::endl;
-	_matchingServer = Server::getServersList().front().getInstance(getHost(), getPort());
-	if (!_matchingServer)
+	if (Server::getServersList().size() == 0 || !(_matchingServer = Server::getServersList().front().getInstance(getHost(), getPort())))
 	{
 		std::cout << "No matching server" << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this); // [TBR]
 	}
+	
 	if (_method == "GET")
 		getReq();
 	else if (_method == "POST")
@@ -214,8 +214,12 @@ void Request::generateHeader()
 	_responseHeader = _version + ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
 	std::cout << _version;
 	std::cout << ' ' + Utils::itos(_errcode) + ' ' + get_errcode_string(_errcode) + "\r\n";
-	if (_matchingServer)
-		_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n"; // Config file dependent _matchingServer.getServerNames()
+	if (_matchingServer) {
+		if (_matchingServer->getServerNames().size() == 0)
+			_responseHeader += "Server: Webserv\r\n";
+		else
+			_responseHeader += "Server: " + _matchingServer->getServerNames()[0] + "\r\n"; // Config file dependent _matchingServer.getServerNames()
+	}
 	else
 		_responseHeader += "Server: Error server\r\n";
 	_responseHeader += Utils::time_string();
