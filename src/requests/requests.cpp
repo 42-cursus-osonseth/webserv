@@ -130,10 +130,10 @@ int Request::getPort()
 
 void Request::generateResponse()
 {
-	std::cerr << "Looking up: " << getHost() << "@" << Utils::itos(getPort()) << std::endl;
+	// std::cerr << "Looking up: " << getHost() << "@" << Utils::itos(getPort()) << std::endl;
 	if (Server::getServersList().size() == 0 || !(_matchingServer = Server::getServersList().front().getInstance(getHost(), getPort())))
 	{
-		std::cout << "No matching server" << std::endl;
+		// std::cout << "No matching server" << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this); // [TBR]
 	}
 	

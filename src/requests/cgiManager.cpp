@@ -10,10 +10,13 @@ cgiManager::~cgiManager()
 }
 void cgiManager::initPostEnv(client &client)
 {
-
+   
     std::ostringstream oss;
     oss << client.getContentLenght();
     std::string lenStr = oss.str();
+
+    if (!client.getUploadPath().empty())
+        _upload = "UPLOAD_PATH=" + client.getUploadPath();
     _contentLength = "CONTENT_LENGTH=" + lenStr;
     _contentType = "CONTENT_TYPE=" + client.getContentType();
     _filename = "FILENAME=" + client.getFilename();
@@ -21,11 +24,12 @@ void cgiManager::initPostEnv(client &client)
     _env[1] = (char *)_contentType.c_str();
     _env[2] = (char *)_contentLength.c_str();
     _env[3] = (char *)_filename.c_str();
+    _env[4] = (char *)_upload.c_str();
     if (client.getIsChunk())
-        _env[4] = (char *)"TRANSFER_ENCODING=chunked";
+        _env[5] = (char *)"TRANSFER_ENCODING=chunked";
     else
-        _env[4] = NULL;
-    _env[5] = NULL;
+        _env[5] = NULL;
+    _env[6] = NULL;
 }
 void cgiManager::initGetenv()
 {
@@ -36,10 +40,12 @@ void cgiManager::initGetenv()
     _env[3] = NULL;
     _env[4] = NULL;
     _env[5] = NULL;
+    _env[6] = NULL;
 }
 
 cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _body(req.getterBody()), _method(client.getMethod()), _query(req.getterQuery()), _path(client.getPath())
 {
+    std::cout << "ON RENTRE DANS LE CGI" << std::endl;
     _sv_in[0] = -1;
     _sv_in[1] = -1;
     _sv_out[0] = -1;
@@ -55,7 +61,6 @@ cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _bod
 
 void cgiManager::executePostRequest(client &client)
 {
-
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_in) == -1)
         throw std::runtime_error("socketpair failed");
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, _sv_out) == -1)
@@ -115,6 +120,8 @@ void cgiManager::executeGetRequest()
 
 void cgiManager::execute(client &client)
 {
+    for (int i = 0; i < 7; i++)
+        std::cout << "ENV[" << i << "] = " << _env[i] << std::endl;
     if (_method == "POST")
         executePostRequest(client);
     else

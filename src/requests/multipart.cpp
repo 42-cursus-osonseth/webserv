@@ -7,8 +7,7 @@ void Request::handleMultipart()
 	_tmpBody = _body;
 	_body = "";
 
-	while (1)
-	{
+	while (1) {
 		if (_clientRef.getState() == READING_BOUNDARY && !readingBoundary(pos))
 			break;
 		if (_clientRef.getState() == READING_MULTIPART_HEADER)
@@ -47,7 +46,7 @@ std::string getExtension(std::string filename)
 {
 	size_t pos = filename.find('.');
 	size_t posend = filename.find('"');
-	std::string extension = filename.substr(pos,posend);
+	std::string extension = filename.substr(pos, posend - pos);
 	return extension;
 }
 void Request::checkFilePresence(size_t &pos)
@@ -59,7 +58,8 @@ void Request::checkFilePresence(size_t &pos)
 		goToNextBoundary(pos);
 	else
 	{
-		filename = header.substr(pos + 11);
+		
+		filename = header.substr(pos + 10);
 		_extension = getExtension (filename);
 		goToData(pos);
 	}

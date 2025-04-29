@@ -2,16 +2,14 @@
 import sys
 import os
 import urllib.parse
-
+from os import environ
 
 
 if os.environ.get("TRANSFER_ENCODING", "") == "chunked" or os.environ.get("CONTENT_TYPE", "") == "multipart/form-data":
     input_data = sys.stdin.buffer.read()
     filename = os.environ.get("FILENAME")
     if filename:
-        script_dir = os.path.dirname(__file__)
-        upload_path = os.path.abspath(os.path.join(script_dir, "../../upload"))
-        file_path = os.path.join(upload_path, filename)
+        file_path = os.path.join(environ["UPLOAD_PATH"], filename)
         with open(file_path, "ab") as f:
             f.write(input_data)
     sys.stdout.write("HTTP/1.1 302 Found\r\n")

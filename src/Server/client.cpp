@@ -82,6 +82,10 @@ const std::string &client::getFinalBoundary() const
 {
     return _finalBoundary;
 }
+const std::string &client::getUploadPath() const
+{
+    return _uploadPath;
+}
 void client::setBytesRead(ssize_t n)
 {
     _bytesRead = n;
@@ -145,6 +149,10 @@ void client::setBoundary(std::string str)
 void client::setFinalBoundary(std::string str)
 {
     _finalBoundary = str;
+}
+void client::setUploadPath(std::string str)
+{
+    _uploadPath = str;
 }
 const char* stateToStr(t_state state)
 {

@@ -38,6 +38,9 @@ void Request::postReq()
 	_clientRef.setMime(_mime = get_mime(Utils::getExtension(_path)));
 	_clientRef.setContentType(_data["Content-Type"]);
 
+
+
+
 	if (_clientRef.getIsChunk())
 	{
 		_clientRef.setBobyFullyRead(false);

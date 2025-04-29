@@ -6,11 +6,9 @@ const t_location	*Request::findMatchingLocation()
 
 	for (std::list<t_location>::const_iterator it = locs.begin(); it != locs.end(); it++) {
 		if (_path.find((*it).uri, 0) == 0) {
-			std::cerr << (*it).uri << " seems to match" << std::endl;
 			return &(*it);
 		}
 	}
-	// std::cerr << "No match" << std::endl;
 	return (0);
 }
 
@@ -55,5 +53,7 @@ void	Request::getRessourcePath()
 	_path = Utils::cleanupPath(_fullPath);
 	_clientRef.setPath(_path);
 	_clientRef.setMethod(_method);
+	_clientRef.setUploadPath(loc->uploadPath);
+
 
 }

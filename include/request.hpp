@@ -33,6 +33,7 @@ private:
 	std::string _query;
 	std::string _chunk;
 	std::string _extension;
+	std::string _uploadPath;
 
 	std::map<std::string, std::string> _data;
 	

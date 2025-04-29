@@ -25,11 +25,12 @@ private:
     std::string _contentLength;
     std::string _filename;
     std::string _contentType;
+    std::string _upload;
 
     int _pid;
     int _bytesRead;
     char * _args[2];
-    char * _env[6];
+    char * _env[7];
     int _sv_in[2];
     int _sv_out[2];
     char _buffer[1024];

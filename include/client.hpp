@@ -35,6 +35,7 @@ private:
     std::string _partialBuffer;
     std::string _mime;
     std::string _path;
+    std::string _uploadPath;
     
    
 
@@ -61,6 +62,7 @@ public:
     const std::string &getMethod() const;
     const std::string &getBoundary() const;
     const std::string &getFinalBoundary() const;
+    const std::string &getUploadPath() const;
     
 
     void setBytesRead(ssize_t n);
@@ -79,6 +81,7 @@ public:
     void setReadCRLFfirst(bool b);
     void setBoundary(std::string str);
     void setFinalBoundary(std::string str);
+    void setUploadPath(std::string str);
 
     void printClient() const;
 };
