@@ -30,6 +30,8 @@ bool Request::isProcessPath()
 void	Request::getRessourcePath()
 {
 	const t_location	*loc = findMatchingLocation();
+	if (!loc)
+		throw Request::ErrcodeException(NOT_FOUND, *this);
 	_root = loc->root;
 	if (!loc || loc->root.empty())
 		throw Request::ErrcodeException(NOT_FOUND, *this);
