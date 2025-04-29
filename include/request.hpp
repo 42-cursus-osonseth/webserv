@@ -32,7 +32,8 @@ private:
 	std::string _tmpBody;
 	std::string _query;
 	std::string _chunk;
-	std::string _serverName;
+	std::string _extension;
+
 	std::map<std::string, std::string> _data;
 	
 	t_errcodes _errcode;

@@ -43,6 +43,13 @@ void Request::readingMultipartHeader(size_t &pos)
 		throw Request::ErrcodeException(BAD_REQUEST, *this);
 	checkFilePresence(pos);
 }
+std::string getExtension(std::string filename)
+{
+	size_t pos = filename.find('.');
+	size_t posend = filename.find('"');
+	std::string extension = filename.substr(pos,posend);
+	return extension;
+}
 void Request::checkFilePresence(size_t &pos)
 {
 	std::string header = _tmpBody.substr(0, pos);
@@ -51,7 +58,11 @@ void Request::checkFilePresence(size_t &pos)
 	if (filename == "\"\"")
 		goToNextBoundary(pos);
 	else
+	{
+		filename = header.substr(pos + 11);
+		_extension = getExtension (filename);
 		goToData(pos);
+	}
 }
 void Request::goToNextBoundary(size_t &pos)
 {

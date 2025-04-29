@@ -7,7 +7,10 @@ void Request::generateUniqueFilename()
 	long int ms = tp.tv_sec * 1000000 + tp.tv_usec;
 	std::ostringstream oss;
 	oss << ms;
-	std::string filename = "Webserv_" + oss.str();
+	std::string filename = "Webserv_" + oss.str() + _extension;
+	std::cout << std::string(20,'-') << std::endl;
+	std::cout << "FILENAME =" << filename << std::endl;
+	std::cout << std::string(20,'-') << std::endl;
 	_clientRef.setFilename(filename);
 }
 
