@@ -14,11 +14,11 @@ int client::getFd() const
     return _fd;
 }
 
-ssize_t client::getContentLenght() const
+size_t client::getContentLenght() const
 {
     return _contentLength;
 }
-ssize_t client::getBytesRead() const
+size_t client::getBytesRead() const
 {
     return _bytesRead;
 }
@@ -86,11 +86,11 @@ const std::string &client::getUploadPath() const
 {
     return _uploadPath;
 }
-void client::setBytesRead(ssize_t n)
+void client::setBytesRead(size_t n)
 {
     _bytesRead = n;
 }
-void client::setContentLength(ssize_t n)
+void client::setContentLength(size_t n)
 {
     _contentLength = n;
 }

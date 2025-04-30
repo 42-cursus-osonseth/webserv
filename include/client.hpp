@@ -46,8 +46,8 @@ public:
 
     int getFd() const;
     const std::string &getBody() const;
-    ssize_t getContentLenght() const;
-    ssize_t getBytesRead() const;
+    size_t getContentLenght() const;
+    size_t getBytesRead() const;
     bool getBodyFullyRead() const;
     bool getReadCRLFfirst() const;
     const std::string &getFilename() const;
@@ -65,8 +65,8 @@ public:
     const std::string &getUploadPath() const;
     
 
-    void setBytesRead(ssize_t n);
-    void setContentLength(ssize_t n);
+    void setBytesRead(size_t n);
+    void setContentLength(size_t n);
     void setBobyFullyRead(bool b);
     void setFilename(std::string name);
     void setContentType(std::string type);

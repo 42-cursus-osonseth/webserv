@@ -1,7 +1,7 @@
 #include <Server.hpp>
 #include <sys/epoll.h>
 std::list<Server> Server::serversList;
-Server::Server(): clientMaxBodySize(1), sockfd(-1) 
+Server::Server(): clientMaxBodySize(1), sockfd(-1) // ICI C'EST SET A 1 YA UN SOUCI CHEF
 {
 	server_names.clear();
 	listenPorts.clear();

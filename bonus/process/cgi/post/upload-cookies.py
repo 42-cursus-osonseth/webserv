@@ -9,6 +9,7 @@ if os.environ.get("TRANSFER_ENCODING", "") == "chunked" or os.environ.get("CONTE
     input_data = sys.stdin.buffer.read()
     filename = os.environ.get("FILENAME")
     if filename:
+        os.makedirs(environ["UPLOAD_PATH"], exist_ok=True)
         file_path = os.path.join(environ["UPLOAD_PATH"], filename)
         with open(file_path, "ab") as f:
             f.write(input_data)

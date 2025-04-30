@@ -7,6 +7,7 @@ void	Request::placeHolderErrorGen(t_errcodes err)
 	_errcode = err;
 	_responseBody = std::string("<!DOCTYPE html><html><h1>") + Utils::itos(err) + "</h1><p>" + get_errcode_string(err) + "</p></html>";
 	_version = "HTTP/1.1";
+	_mime = "text/html";
 	generateHeader();
 }
 

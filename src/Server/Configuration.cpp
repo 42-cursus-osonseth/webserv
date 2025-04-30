@@ -327,7 +327,7 @@ void	Configuration::parseUploadPath(const std::string &line)
 		throw std::invalid_argument("Error: Missing path for upload");
 	else if (isValidFile(path))
 		throw std::invalid_argument("Error: Invalid path for upload");
-	currentLocation.uploadPath = currentLocation.uri + trim(skipWord(line));
+	currentLocation.uploadPath = currentLocation.root + trim(skipWord(line));
 }
 
 void	Configuration::parseIndexLocation(const std::string &line)

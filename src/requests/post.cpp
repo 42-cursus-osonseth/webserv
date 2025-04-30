@@ -21,6 +21,11 @@ void Request::initClientData()
 	ssize_t len;
 	iss >> len;
 	_clientRef.setContentLength(len);
+	std::cout << "MAX BODY SIZE = " << _matchingServer->getClientMaxBodySize() << std::endl;
+	if (_clientRef.getContentLenght() > _matchingServer->getClientMaxBodySize())
+	{	_clientRef.setMime("");
+		throw Request::ErrcodeException(REQUEST_TOO_LARGE, *this);
+	}
 	_clientRef.setBytesRead(0);
 	pos = _data["Content-Type"].find("=");
 	if (pos != std::string::npos)
@@ -31,15 +36,11 @@ void Request::initClientData()
 	_clientRef.setState(READING_BOUNDARY);
 }
 
-
 void Request::postReq()
 {
 	getRessourcePath();
 	_clientRef.setMime(_mime = get_mime(Utils::getExtension(_path)));
 	_clientRef.setContentType(_data["Content-Type"]);
-
-
-
 
 	if (_clientRef.getIsChunk())
 	{
