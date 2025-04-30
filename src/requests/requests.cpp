@@ -228,9 +228,6 @@ void Request::generateHeader()
 	_responseHeader += "Connection: keep-alive\r\n";
 	_responseHeader += "Cache-Control: no-store\r\n\r\n";
 
-	std::cout << "---------- PRINT MAX-------------------" << std::endl;
-	std::cout << "REPONSE HEADER =" << std::endl;
-	std::cout << _responseHeader << std::endl;
 }
 
 void Request::dump(void)
