@@ -87,7 +87,7 @@ void cgiManager::executePostRequest(client &client)
         while ((_bytesRead = read(_sv_out[0], _buffer, sizeof(_buffer) - 1)) > 0)
             _response.append(_buffer, _bytesRead);
         close(_sv_out[0]);
-        if (client.getContentType() == "multipart/form-data" && !client.getBodyFullyRead())
+        if ((client.getContentType() == "multipart/form-data" || client.getIsChunk()) && !client.getBodyFullyRead())
             return;
         send(_fd, _response.c_str(), _response.size(), 0);
         waitpid(_pid, NULL, 0);
