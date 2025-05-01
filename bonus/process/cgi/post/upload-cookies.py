@@ -4,6 +4,9 @@ import os
 import urllib.parse
 from os import environ
 
+while True:
+    pass
+
 if os.environ.get("REQUEST_METHOD") != "POST":
     sys.exit(405)
 elif os.environ.get("TRANSFER_ENCODING", "") == "chunked" or os.environ.get("CONTENT_TYPE", "") == "multipart/form-data":

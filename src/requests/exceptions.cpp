@@ -23,13 +23,19 @@ void	Request::ErrcodeException::fix() const
 		try {
 			_r._path = _r._matchingServer->getErrorPages().at(_errcode);
 			_r.getFileContent();
-		} catch (const Request::ErrcodeException &e) {
+		} catch (const std::exception &e) {
 			_r.placeHolderErrorGen(_errcode);
 		}
 	} else {
 		_r.placeHolderErrorGen(_errcode);
 	}
+	_r._mime = "text/html";
 	_r.generateHeader();
+	if (_errcode == REQUEST_TIMEOUT) {
+		_r._responseHeader = _r._responseHeader.substr(0, _r._responseHeader.size() - 4);
+		std::cerr << "c tembetan" << std::endl;
+		_r._responseHeader += "Connection: closed\r\n\r\n";
+	}
 }
 
 const char	*Request::ErrcodeException::what() const throw()

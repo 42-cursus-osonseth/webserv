@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include "client.hpp"
 
+#define TIMEOUT_SECONDS 1
+
 class Request;
 
 class cgiManager

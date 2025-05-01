@@ -61,14 +61,12 @@ std::string Request::getRequest()
 		std::cerr << "Encountered error when reading from socket: " << Utils::itos(_fd) << std::endl;
 		throw Request::ErrcodeException(INTERNAL_SERVER_ERROR, *this);
 	}
-	// std::cout << fullRequest << std::endl;
 	return fullRequest;
 }
 
 void Request::parseRequest()
 {
 	std::string fullRequest = getRequest();
-	std::cerr << MAGENTA << fullRequest << std::endl << RESET;
 	isolateBody(fullRequest);
 	std::vector<std::string> lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream request_line(lines[0]);

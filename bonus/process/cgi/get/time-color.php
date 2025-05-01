@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-
+while(1);
 $query_string = getenv('QUERY_STRING');
 
 if (empty($query_string)) {
@@ -51,7 +51,7 @@ if (empty($query_string)) {
 </body>
 </html>
 HTML;
-
+    // while (1) { echo "cc"; }
     $length = strlen($html_body);
 
     echo "HTTP/1.1 200 OK\r\n";
