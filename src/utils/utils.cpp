@@ -2,6 +2,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <sstream>
+#include <unistd.h>
 
 std::vector<std::string>	Utils::split(const std::string &s, const std::string &sep)
 {
@@ -29,7 +30,9 @@ std::string	Utils::getExtension(const std::string &s)
 bool	Utils::pathIsDir(const std::string &path)
 {
 	struct stat	s;
-	
+
+	if (access(path.c_str(), F_OK))
+		return false;
 	if (stat(path.c_str(), &s))
 		perror("stat");
 	return (!!(s.st_mode & S_IFDIR));

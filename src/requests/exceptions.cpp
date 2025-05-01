@@ -19,10 +19,14 @@ Request::ErrcodeException::ErrcodeException(t_errcodes errcode, Request &r) : _e
 void	Request::ErrcodeException::fix() const
 {
 	_r._errcode = _errcode;
-	_r._path = "./pages/" + Utils::itos(_errcode) + ".html";
-	try {
-		_r.getFileContent();
-	} catch (const Request::ErrcodeException &e) {
+	if (_r._matchingServer) {
+		try {
+			_r._path = _r._matchingServer->getErrorPages().at(_errcode);
+			_r.getFileContent();
+		} catch (const Request::ErrcodeException &e) {
+			_r.placeHolderErrorGen(_errcode);
+		}
+	} else {
 		_r.placeHolderErrorGen(_errcode);
 	}
 	_r.generateHeader();

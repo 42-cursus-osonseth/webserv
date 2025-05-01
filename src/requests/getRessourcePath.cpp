@@ -38,9 +38,8 @@ void	Request::getRessourcePath()
 		throw Request::ErrcodeException(METHOD_NOT_ALLOWED, *this);
 	if (loc->redir.first != 0)
 		throw Request::Redirection(*this, loc->redir);
-	if (access(_fullPath.c_str(), F_OK))
-		throw Request::ErrcodeException(NOT_FOUND, *this);
-	else if (Utils::pathIsDir(_fullPath) && !isProcessPath()) {
+	if (Utils::pathIsDir(_fullPath) && !isProcessPath()) {
+		std::cout << BLUE << "LE CHEMIN EST UN REPERTOIRE" << RESET << std::endl;
 		if (!loc->index.empty())
 			_fullPath += loc->index;
 		else if (!loc->dirListing)
@@ -49,7 +48,8 @@ void	Request::getRessourcePath()
 			_path = Utils::cleanupPath(_fullPath);
 			throw Request::AutoIndexHandle(*this);
 		}
-	}
+	} else if (access(_fullPath.c_str(), F_OK))
+			throw Request::ErrcodeException(NOT_FOUND, *this);
 	if(((_data["Content-Type"].find("multipart/form-data") != std::string::npos || _data["transfer-encoding"] == "chunked")) && !loc->upload)
 		throw Request::ErrcodeException(FORBIDDEN, *this);
 	_path = Utils::cleanupPath(_fullPath);
