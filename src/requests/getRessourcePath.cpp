@@ -31,7 +31,6 @@ void	Request::getRessourcePath()
 	if (!loc)
 		throw Request::ErrcodeException(NOT_FOUND, *this);
 	_root = loc->root;
-	std::cout << "LOC ROOT =" << loc->root << std::endl;
 	if (!loc || loc->root.empty())
 		throw Request::ErrcodeException(NOT_FOUND, *this);
 	_fullPath = replaceRoot(loc->uri, loc->root);
@@ -51,12 +50,13 @@ void	Request::getRessourcePath()
 			throw Request::AutoIndexHandle(*this);
 		}
 	}
+	if(((_data["Content-Type"].find("multipart/form-data") != std::string::npos || _data["transfer-encoding"] == "chunked")) && !loc->upload)
+		throw Request::ErrcodeException(FORBIDDEN, *this);
 	_path = Utils::cleanupPath(_fullPath);
 	_clientRef.setPath(_path);
 	_clientRef.setMethod(_method);
 	_clientRef.setUploadPath(loc->uploadPath);
-	std::cout << "UPLOAD PATHHHHH =" << std::endl;
-	std::cout << loc->uploadPath << std::endl;
+
 
 
 }
