@@ -68,6 +68,7 @@ std::string Request::getRequest()
 void Request::parseRequest()
 {
 	std::string fullRequest = getRequest();
+	std::cerr << MAGENTA << fullRequest << std::endl << RESET;
 	isolateBody(fullRequest);
 	std::vector<std::string> lines = Utils::split(fullRequest.c_str(), "\r\n");
 	std::istringstream request_line(lines[0]);
@@ -147,7 +148,7 @@ void Request::generateResponse()
 		throw Request::ErrcodeException(NOT_IMPLEMENTED, *this);
 }
 
-Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _clientRef(client)
+Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _clientRef(client), _errcode(OK)
 {
 	std::cerr << "Generating a new Request" << std::endl;
 	try
@@ -180,28 +181,38 @@ Request::Request(int fd, client &client) : _fd(fd), _processDir("/process"), _cl
 
 void Request::send()
 {
-
 	if (!_errcode)
 	{
 		std::cerr << "Can't respond to this request" << std::endl;
 	}
 	else
 	{
-		if (_clientRef.getMime() == "text/x-python" && _clientRef.getContentType() == "multipart/form-data")
-			return;
+		if (_clientRef.getMime() == "text/x-python" && _clientRef.getContentType() == "multipart/form-data") {
+			if (_responseHeader.empty())
+				return;
+		}
 		else if (_clientRef.getMime() == "text/x-python")
 		{
-			cgiManager cgi(*this, _clientRef);
-			cgi.execute(_clientRef);
-			return;
+			try {
+				cgiManager cgi(*this, _clientRef);
+				cgi.execute(_clientRef);
+				return;
+			} catch (const std::exception &e) {
+				std::cerr << "Encountered exception while treating request: " << e.what() << std::endl;
+			}
 		}
 		else if (_clientRef.getMime() == "application/x-httpd-php")
 		{
-			cgiManager cgi(*this, _clientRef);
-			cgi.execute(_clientRef);
-			return;
+			try {
+				cgiManager cgi(*this, _clientRef);
+				cgi.execute(_clientRef);
+				return;
+			} catch (const std::exception &e) {
+				std::cerr << "Encountered exception while treating request: " << e.what() << std::endl;
+			}
 		}
 
+		std::cout << "ON EST LAAAA" << std::endl;
 		if (::send(_fd, _responseHeader.c_str(), _responseHeader.length(), MSG_NOSIGNAL) < 0)
 			perror("send");
 		if (::send(_fd, _responseBody.c_str(), _responseBody.length(), MSG_NOSIGNAL) < 0)

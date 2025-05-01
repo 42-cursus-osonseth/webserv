@@ -14,13 +14,13 @@ class Request;
 class cgiManager
 {
 private:
-
     int _fd;
     std::string _body;
     std::string _method;
     std::string _query;
     std::string _path;
-    
+    Request     &_req;
+
     std::string _response;
     std::string _contentLength;
     std::string _filename;

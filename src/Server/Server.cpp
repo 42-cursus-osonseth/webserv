@@ -87,7 +87,6 @@ void	Server::initSocket()
 			close(sockfd);
 			throw std::runtime_error("Error: listen failed on port " +  listenPorts[i] + " on server " + number_server);
 		}
-		std::cout << "listenPorts[i] = " << listenPorts[i] << std::endl;
 		sockfds.push_back(sockfd);
 	}
 }

@@ -1,9 +1,6 @@
 #include "cgiManager.hpp"
 #include "request.hpp"
 #include <stdio.h>
-cgiManager::cgiManager()
-{
-}
 
 cgiManager::~cgiManager()
 {
@@ -43,7 +40,7 @@ void cgiManager::initGetenv()
     _env[6] = NULL;
 }
 
-cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _body(req.getterBody()), _method(client.getMethod()), _query(req.getterQuery()), _path(client.getPath())
+cgiManager::cgiManager(Request &req, client &client) : _fd(client.getFd()), _body(req.getterBody()), _method(client.getMethod()), _query(req.getterQuery()), _path(client.getPath()), _req(req)
 {
     std::cout << "ON RENTRE DANS LE CGI" << std::endl;
     _sv_in[0] = -1;
@@ -80,6 +77,7 @@ void cgiManager::executePostRequest(client &client)
     }
     else
     {
+		int resp;
         close(_sv_in[0]);
         close(_sv_out[1]);
         write(_sv_in[1], _body.c_str(), _body.size());
@@ -89,9 +87,18 @@ void cgiManager::executePostRequest(client &client)
         close(_sv_out[0]);
         if ((client.getContentType() == "multipart/form-data" || client.getIsChunk()) && !client.getBodyFullyRead())
             return;
-        send(_fd, _response.c_str(), _response.size(), 0);
-        waitpid(_pid, NULL, 0);
-    }
+		waitpid(_pid, &resp, 0);
+        if (WIFEXITED(resp)) {
+			int status = WEXITSTATUS(resp);
+			std::cerr << BLUE << "CODE de retour = " << status << std::endl << RESET;
+			if (status != 0)
+			_req.execThrow(status < 200 ? status + 256 : status);
+		} else {
+			std::cerr << "CGI script terminated abnormally" << std::endl;
+            throw std::runtime_error("CGI script failed");
+		}
+		send(_fd, _response.c_str(), _response.size(), 0);
+	}
 }
 void cgiManager::executeGetRequest()
 {
@@ -109,13 +116,24 @@ void cgiManager::executeGetRequest()
     }
     else
     {
+        int resp;
+
         close(_sv_in[0]);
         while ((_bytesRead = read(_sv_in[1], _buffer, sizeof(_buffer) - 1)) > 0)
             _response.append(_buffer, _bytesRead);
         close(_sv_in[1]);
-        send(_fd, _response.c_str(), _response.size(), 0);
-        waitpid(_pid, NULL, 0);
+        waitpid(_pid, &resp, 0);
+        if (WIFEXITED(resp)) {
+			int status = WEXITSTATUS(resp);
+			std::cerr << BLUE << "CODE de retour = " << status << std::endl << RESET;
+			if (status != 0)
+			_req.execThrow(status < 200 ? status + 256 : status);
+		} else {
+			std::cerr << "CGI script terminated abnormally" << std::endl;
+            throw std::runtime_error("CGI script failed");
+        }
     }
+	send(_fd, _response.c_str(), _response.size(), 0);
 }
 
 void cgiManager::execute(client &client)

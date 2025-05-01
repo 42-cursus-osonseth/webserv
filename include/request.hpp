@@ -124,6 +124,7 @@ public:
 		~ErrcodeException() throw() {}
 		const char *what() const throw();
 	};
+	void execThrow(int status) { throw Request::ErrcodeException((t_errcodes)status, *this); }
 	class AutoIndexHandle : public std::exception
 	{
 	private:
